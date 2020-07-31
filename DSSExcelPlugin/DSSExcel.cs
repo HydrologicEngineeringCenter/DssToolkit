@@ -19,13 +19,48 @@ namespace DSSExcelPlugin
 
         public SpreadsheetGear.IWorkbookSet workbookSet = SpreadsheetGear.Factory.GetWorkbookSet();
         public SpreadsheetGear.IWorkbook workbook;
+        public IValues vals
+        {
+            get
+            {
+                return (IValues)workbook.ActiveWorksheet;
+            }
+        }
+
+        public void ChangeActiveSheet(string worksheet)
+        {
+            workbook.Worksheets[worksheet].Select();
+        }
+
+        public void ChangeActiveSheet(int worksheet)
+        {
+            workbook.Worksheets[worksheet].Select();
+        }
 
         public DSSExcel(string filename)
         {
             workbook = workbookSet.Workbooks.Open(filename);
+            ChangeActiveSheet(0);
         }
 
-        public DataTable ExcelToTimeSeriesTable(string worksheet)
+        public RecordType CheckType(string worksheet)
+        {
+            throw new NotImplementedException();
+
+        }
+
+        public bool HasIndex(string workbook)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasDate(string worksheet)
+        {
+            var vals = (IValues)(workbook.Worksheets[worksheet]);
+            throw new NotImplementedException();
+        }
+
+        public DataTable ExcelToDataTable(string worksheet)
         {
             var r = RowCount(worksheet);
             var c = ColumnCount(worksheet);
@@ -64,7 +99,23 @@ namespace DSSExcelPlugin
             return workbook.Worksheets[worksheet].Cells.CurrentRegion.ColumnCount;
         }
 
+        public TimeSeries DataTableToTimeSeries(DataTable dataTable)
+        {
+            var ts = new TimeSeries();
+            
 
+
+            return ts;
+        }
+
+        public PairedData DataTabletoPairedData(DataTable dataTable)
+        {
+            var pd = new PairedData();
+
+
+
+            return pd;
+        }
 
 
 

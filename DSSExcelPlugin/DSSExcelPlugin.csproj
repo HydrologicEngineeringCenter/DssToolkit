@@ -194,6 +194,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DSSDataTable.cs" />
     <Compile Include="DSSExcel.cs" />
     <Compile Include="DSSExcelLicensing.cs" />
     <Compile Include="Program.cs" />
