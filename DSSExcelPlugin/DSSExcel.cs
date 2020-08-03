@@ -88,6 +88,9 @@ namespace DSSExcelPlugin
             {
                 if (HasIndex(worksheet))
                 {
+                    if (ColumnCount(worksheet) != 3)
+                        return false;
+
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
                         
@@ -101,6 +104,9 @@ namespace DSSExcelPlugin
                 }
                 else
                 {
+                    if (ColumnCount(worksheet) != 2)
+                        return false;
+
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
 
@@ -125,6 +131,9 @@ namespace DSSExcelPlugin
             {
                 if (HasIndex(worksheet))
                 {
+                    if (ColumnCount(worksheet) != 3)
+                        return false;
+
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
                         DateTime dt = GetDate(vals[i, 1].Text);
@@ -137,6 +146,9 @@ namespace DSSExcelPlugin
                 }
                 else
                 {
+                    if (ColumnCount(worksheet) != 2)
+                        return false;
+
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
 
@@ -200,7 +212,14 @@ namespace DSSExcelPlugin
         public bool HasDate(string worksheet)
         {
             var vals = (IValues)(workbook.Worksheets[worksheet]);
-            throw new NotImplementedException();
+            if (HasIndex(worksheet))
+            {
+                return DateTime.TryParse(vals[RowCount(worksheet) - 1, 1].Text, out _);
+            }
+            else
+            {
+                return DateTime.TryParse(vals[RowCount(worksheet) - 1, 0].Text, out _);
+            }
         }
 
         public DataTable ExcelToDataTable(string worksheet)
@@ -260,12 +279,13 @@ namespace DSSExcelPlugin
             return pd;
         }
 
+        /// <summary>
+        /// Gets date object from a string with the format of DDMMYYYY.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         private DateTime GetDate(string date)
         {
-            var day = date.Substring(0, 2);
-            var month = date.Substring(2, 3);
-            var year = date.Substring(5, 4);
-
             return DateTime.Parse(date);
         }
 
