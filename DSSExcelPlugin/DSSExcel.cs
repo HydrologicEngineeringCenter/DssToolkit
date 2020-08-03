@@ -19,13 +19,6 @@ namespace DSSExcelPlugin
 
         public SpreadsheetGear.IWorkbookSet workbookSet = SpreadsheetGear.Factory.GetWorkbookSet();
         public SpreadsheetGear.IWorkbook workbook;
-        public IValues vals
-        {
-            get
-            {
-                return (IValues)workbook.ActiveWorksheet;
-            }
-        }
 
         public void ChangeActiveSheet(string worksheet)
         {
@@ -45,8 +38,57 @@ namespace DSSExcelPlugin
 
         public RecordType CheckType(string worksheet)
         {
-            throw new NotImplementedException();
+            if (isRegularTimeSeries(worksheet))
+                return RecordType.RegularTimeSeries;
+            else if (isIrregularTimeSeries(worksheet))
+                return RecordType.IrregularTimeSeries;
+            else if (isPairedData(worksheet))
+                return RecordType.PairedData;
+            else if (isGrid(worksheet))
+                return RecordType.Grid;
+            else if (isTin(worksheet))
+                return RecordType.Tin;
+            else if (isLocationInfo(worksheet))
+                return RecordType.LocationInfo;
+            else if (isText(worksheet))
+                return RecordType.Text;
+            else
+                return RecordType.Unknown;
+        }
 
+        private bool isRegularTimeSeries(string worksheet)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool isIrregularTimeSeries(string worksheet)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool isPairedData(string worksheet)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool isGrid(string worksheet)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool isTin(string worksheet)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool isLocationInfo(string worksheet)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool isText(string worksheet)
+        {
+            throw new NotImplementedException();
         }
 
         public bool HasIndex(string workbook)
