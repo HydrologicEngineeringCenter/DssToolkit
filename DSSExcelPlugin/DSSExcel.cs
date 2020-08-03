@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Primitives;
 using System.Data;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -36,6 +38,27 @@ namespace DSSExcelPlugin
             ChangeActiveSheet(0);
         }
 
+        /// <summary>
+        /// Returns the row index where the headers end and the data begins.
+        /// </summary>
+        /// <param name="worksheet"></param>
+        /// <returns></returns>
+        private int DataStartIndex(string worksheet)
+        {
+            IValues vals = (IValues)workbook.Worksheets[worksheet];
+            var r = RowCount(worksheet);
+            var c = ColumnCount(worksheet);
+            for (int i = 0; i < r; i++)
+            {
+                for (int j = 0; j < c; j++)
+                {
+                    if (vals[i, j].Type == SpreadsheetGear.Advanced.Cells.ValueType.Number)
+                        return i;
+                }
+            }
+            return -1;
+        }
+
         public RecordType CheckType(string worksheet)
         {
             if (isRegularTimeSeries(worksheet))
@@ -58,12 +81,75 @@ namespace DSSExcelPlugin
 
         private bool isRegularTimeSeries(string worksheet)
         {
-            throw new NotImplementedException();
+            var vals = (IValues)workbook.Worksheets[worksheet];
+            var ts = new TimeSeries();
+            var d = new List<DateTime>();
+            if (HasDate(worksheet))
+            {
+                if (HasIndex(worksheet))
+                {
+                    for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
+                    {
+                        
+                        DateTime dt = GetDate(vals[i, 1].Text);
+                        d.Add(dt);
+                    }
+                    ts.Times = d.ToArray();
+                    if (ts.IsRegular)
+                        return true;
+                    return false;
+                }
+                else
+                {
+                    for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
+                    {
+
+                        DateTime dt = GetDate(vals[i, 0].Text);
+                        d.Add(dt);
+                    }
+                    ts.Times = d.ToArray();
+                    if (ts.IsRegular)
+                        return true;
+                    return false;
+                }
+            }
+            return false;
         }
 
         private bool isIrregularTimeSeries(string worksheet)
         {
-            throw new NotImplementedException();
+            var vals = (IValues)workbook.Worksheets[worksheet];
+            var ts = new TimeSeries();
+            var d = new List<DateTime>();
+            if (HasDate(worksheet))
+            {
+                if (HasIndex(worksheet))
+                {
+                    for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
+                    {
+                        DateTime dt = GetDate(vals[i, 1].Text);
+                        d.Add(dt);
+                    }
+                    ts.Times = d.ToArray();
+                    if (ts.IsRegular)
+                        return false;
+                    return true;
+                }
+                else
+                {
+                    for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
+                    {
+
+                        DateTime dt = GetDate(vals[i, 0].Text);
+                        d.Add(dt);
+                    }
+                    ts.Times = d.ToArray();
+                    if (ts.IsRegular)
+                        return false;
+                    return true;
+                }
+            }
+            return false;
         }
 
         private bool isPairedData(string worksheet)
@@ -91,9 +177,24 @@ namespace DSSExcelPlugin
             throw new NotImplementedException();
         }
 
-        public bool HasIndex(string workbook)
+        private bool HasIndex(string worksheet)
         {
-            throw new NotImplementedException();
+            var vals = (IValues)workbook.Worksheets[worksheet];
+            var l = new List<int>();
+            var start = DataStartIndex(worksheet);
+
+            if (vals[start, 0].Type != SpreadsheetGear.Advanced.Cells.ValueType.Number && 
+                (vals[start, 0].Number != 0 && vals[start, 0].Number != 1))
+                return false;
+
+            for (int i = start; i < RowCount(worksheet); i++)
+            {
+                l.Add((int)(vals[i, 0].Number));
+            }
+
+            return l.ToArray().SequenceEqual(Enumerable.Range(1, l.Count)) || 
+                l.ToArray().SequenceEqual(Enumerable.Range(0, l.Count - 1)) ? true : false;
+
         }
 
         public bool HasDate(string worksheet)
@@ -157,6 +258,15 @@ namespace DSSExcelPlugin
 
 
             return pd;
+        }
+
+        private DateTime GetDate(string date)
+        {
+            var day = date.Substring(0, 2);
+            var month = date.Substring(2, 3);
+            var year = date.Substring(5, 4);
+
+            return DateTime.Parse(date);
         }
 
 
