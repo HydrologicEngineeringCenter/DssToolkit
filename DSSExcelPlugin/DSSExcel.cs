@@ -148,7 +148,32 @@ namespace DSSExcelPlugin
 
         private bool isPairedData(string worksheet)
         {
-            throw new NotImplementedException();
+            var vals = (IValues)workbook.Worksheets[worksheet];
+            var r = RowCount(worksheet);
+            var c = ColumnCount(worksheet);
+
+            if (HasIndex(worksheet))
+            {
+                if (ColumnCount(worksheet) < 3)
+                    return false;
+            }
+            else
+            {
+                if (ColumnCount(worksheet) < 2)
+                    return false;
+            }
+
+            for (int i = DataStartIndex(worksheet); i < r; i++)
+            {
+                for (int j = 0; i < c; i++)
+                {
+                    if (vals[i, j].Type != SpreadsheetGear.Advanced.Cells.ValueType.Number)
+                        return false;
+                }
+            }
+
+            return true;
+
         }
 
         private bool isGrid(string worksheet)
