@@ -11,8 +11,50 @@ namespace DSSExcelTests
     public class BasicFunctionsTests
     {
         [TestMethod]
+        public void CheckIfExcelSheetIsRegularTimeSeriesWithIndex()
+        {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
+            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.RegularTimeSeries);
+
+        }
+
+        [TestMethod]
+        public void CheckIfExcelSheetIsRegularTimeSeriesWithNoIndex()
+        {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\regularTimeSeries1.xlsx");
+            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.RegularTimeSeries);
+
+        }
+
+        [TestMethod]
+        public void CheckIfExcelSheetIsIrregularTimeSeriesWithIndex()
+        {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
+            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.IrregularTimeSeries);
+
+        }
+
+        [TestMethod]
+        public void CheckIfExcelSheetIsIrregularTimeSeriesWithNoIndex()
+        {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\irregularTimeSeries1.xlsx");
+            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.IrregularTimeSeries);
+
+        }
+
+        [TestMethod]
         public void GetTimeSeriesTableFromExcel()
         {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
             DSSExcel de = new DSSExcel(@"C:\Temp\test.xlsx");
             var table = de.ExcelToDataTable("sheet1");
             List<object> headers = table.Rows[0].ItemArray.ToList();

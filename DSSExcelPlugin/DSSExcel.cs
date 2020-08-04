@@ -82,39 +82,30 @@ namespace DSSExcelPlugin
         private bool isRegularTimeSeries(string worksheet)
         {
             var vals = (IValues)workbook.Worksheets[worksheet];
-            var ts = new TimeSeries();
             var d = new List<DateTime>();
             if (HasDate(worksheet))
             {
                 if (HasIndex(worksheet))
                 {
-                    if (ColumnCount(worksheet) != 3)
-                        return false;
-
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
                         
-                        DateTime dt = GetDate(vals[i, 1].Text);
+                        DateTime dt = GetDateFromExcel(vals[i, 1].Number);
                         d.Add(dt);
                     }
-                    ts.Times = d.ToArray();
-                    if (ts.IsRegular)
+                    if (IsRegular(d))
                         return true;
                     return false;
                 }
                 else
                 {
-                    if (ColumnCount(worksheet) != 2)
-                        return false;
-
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
 
-                        DateTime dt = GetDate(vals[i, 0].Text);
+                        DateTime dt = GetDateFromExcel(vals[i, 0].Number);
                         d.Add(dt);
                     }
-                    ts.Times = d.ToArray();
-                    if (ts.IsRegular)
+                    if (IsRegular(d))
                         return true;
                     return false;
                 }
@@ -125,38 +116,29 @@ namespace DSSExcelPlugin
         private bool isIrregularTimeSeries(string worksheet)
         {
             var vals = (IValues)workbook.Worksheets[worksheet];
-            var ts = new TimeSeries();
             var d = new List<DateTime>();
             if (HasDate(worksheet))
             {
                 if (HasIndex(worksheet))
                 {
-                    if (ColumnCount(worksheet) != 3)
-                        return false;
-
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
-                        DateTime dt = GetDate(vals[i, 1].Text);
+                        DateTime dt = GetDateFromExcel(vals[i, 1].Number);
                         d.Add(dt);
                     }
-                    ts.Times = d.ToArray();
-                    if (ts.IsRegular)
+                    if (IsRegular(d))
                         return false;
                     return true;
                 }
                 else
                 {
-                    if (ColumnCount(worksheet) != 2)
-                        return false;
-
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
 
-                        DateTime dt = GetDate(vals[i, 0].Text);
+                        DateTime dt = GetDateFromExcel(vals[i, 0].Number);
                         d.Add(dt);
                     }
-                    ts.Times = d.ToArray();
-                    if (ts.IsRegular)
+                    if (IsRegular(d))
                         return false;
                     return true;
                 }
@@ -214,11 +196,11 @@ namespace DSSExcelPlugin
             var vals = (IValues)(workbook.Worksheets[worksheet]);
             if (HasIndex(worksheet))
             {
-                return DateTime.TryParse(vals[RowCount(worksheet) - 1, 1].Text, out _);
+                return DateTime.TryParse(workbook.NumberToDateTime(vals[RowCount(worksheet) - 1, 1].Number).ToString(), out _);
             }
             else
             {
-                return DateTime.TryParse(vals[RowCount(worksheet) - 1, 0].Text, out _);
+                return DateTime.TryParse(workbook.NumberToDateTime(vals[RowCount(worksheet) - 1, 0].Number).ToString(), out _);
             }
         }
 
@@ -280,13 +262,37 @@ namespace DSSExcelPlugin
         }
 
         /// <summary>
-        /// Gets date object from a string with the format of DDMMYYYY.
+        /// Gets DateTime object from the double value of a date from an excel sheet.
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        private DateTime GetDate(string date)
+        private DateTime GetDateFromExcel(double date)
         {
-            return DateTime.Parse(date);
+            DateTime dt;
+            var b = DateTime.TryParse(workbook.NumberToDateTime(date).ToString(), out dt);
+            return b ? dt : new DateTime();
+        }
+
+        private bool IsRegular(List<DateTime> times)
+        {
+            var temp = times;
+            temp.Sort((a, b) => a.CompareTo(b));
+            var td = temp[1] - temp[0];
+            for (int i = 0; i < temp.Count; i++)
+            {
+                if (i == 0)
+                    continue;
+                else if (i == temp.Count - 1)
+                    break;
+                else
+                {
+                    if (temp[i + 1] - temp[i] == td) // check if time difference is the same throughout list
+                        continue;
+                    else
+                        return false;
+                }
+            }
+            return true;
         }
 
 
