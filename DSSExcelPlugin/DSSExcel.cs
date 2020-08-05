@@ -6,6 +6,7 @@ using System.ComponentModel.Composition.Primitives;
 using System.Data;
 using System.Data.SqlClient;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -90,7 +91,7 @@ namespace DSSExcelPlugin
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
                         
-                        DateTime dt = GetDateFromExcel(vals[i, 1].Number);
+                        DateTime dt = GetDateFromCell(vals[i, 1].Number);
                         d.Add(dt);
                     }
                     if (IsRegular(d))
@@ -102,7 +103,7 @@ namespace DSSExcelPlugin
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
 
-                        DateTime dt = GetDateFromExcel(vals[i, 0].Number);
+                        DateTime dt = GetDateFromCell(vals[i, 0].Number);
                         d.Add(dt);
                     }
                     if (IsRegular(d))
@@ -123,7 +124,7 @@ namespace DSSExcelPlugin
                 {
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
-                        DateTime dt = GetDateFromExcel(vals[i, 1].Number);
+                        DateTime dt = GetDateFromCell(vals[i, 1].Number);
                         d.Add(dt);
                     }
                     if (IsRegular(d))
@@ -135,7 +136,7 @@ namespace DSSExcelPlugin
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
 
-                        DateTime dt = GetDateFromExcel(vals[i, 0].Number);
+                        DateTime dt = GetDateFromCell(vals[i, 0].Number);
                         d.Add(dt);
                     }
                     if (IsRegular(d))
@@ -289,12 +290,12 @@ namespace DSSExcelPlugin
         /// <summary>
         /// Gets DateTime object from the double value of a date from an excel sheet.
         /// </summary>
-        /// <param name="date"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        private DateTime GetDateFromExcel(double date)
+        private DateTime GetDateFromCell(double value)
         {
             DateTime dt;
-            var b = DateTime.TryParse(workbook.NumberToDateTime(date).ToString(), out dt);
+            var b = DateTime.TryParse(workbook.NumberToDateTime(value).ToString(), out dt);
             return b ? dt : new DateTime();
         }
 
@@ -320,7 +321,173 @@ namespace DSSExcelPlugin
             return true;
         }
 
+        public void Import(string worksheet)
+        {
+            var t = CheckType(worksheet);
+            if (t == RecordType.RegularTimeSeries)
+                ImportRegularTimeSeries(worksheet);
+            else if (t == RecordType.IrregularTimeSeries)
+                ImportIrregularTimeSeries(worksheet);
+            else if (t == RecordType.PairedData)
+                ImportPairedData(worksheet);
+            else
+                return;
+        }
 
+        private void ImportRegularTimeSeries(string worksheet)
+        {
+            string fileName = Path.GetFileName(workbook.FullName) + RandomFileNameExtension(10) + ".dss";
+            TimeSeries ts = GetTimeSeries(worksheet);
+            DssWriter writer = new DssWriter(fileName);
+        }
 
+        private void ImportIrregularTimeSeries(string worksheet)
+        {
+            string fileName = Path.GetFileName(workbook.FullName) + RandomFileNameExtension(10) + ".dss";
+            TimeSeries ts = GetTimeSeries(worksheet);
+            DssWriter writer = new DssWriter(fileName);
+        }
+
+        private void ImportPairedData(string worksheet)
+        {
+            string fileName = Path.GetFileName(workbook.FullName) + RandomFileNameExtension(10) + ".dss";
+            PairedData pd = GetPairedData(worksheet);
+            DssWriter writer = new DssWriter(fileName);
+        }
+
+        private TimeSeries GetTimeSeries(string worksheet)
+        {
+            TimeSeries ts = new TimeSeries();
+
+            DateTime[] times = GetTimeSeriesTimes(worksheet);
+            double[] vals = GetTimeSeriesValues(worksheet);
+
+            ts.Times = times;
+            ts.Values = vals;
+
+            return ts;
+        }
+
+        private double[] GetTimeSeriesValues(string worksheet)
+        {
+            var vals = (IValues)workbook.Worksheets[worksheet];
+            var r = RowCount(worksheet);
+            var v = new List<double>();
+            if (HasIndex(worksheet))
+            {
+                for (int i = DataStartIndex(worksheet); i < r; i++)
+                {
+                    v.Add(vals[i, 2].Number);
+                }
+            }
+            else
+            {
+                for (int i = DataStartIndex(worksheet); i < r; i++)
+                {
+                    v.Add(vals[i, 1].Number);
+                }
+            }
+            return v.ToArray();
+        }
+
+        private DateTime[] GetTimeSeriesTimes(string worksheet)
+        {
+            var vals = (IValues)workbook.Worksheets[worksheet];
+            var r = RowCount(worksheet);
+            var d = new List<DateTime>();
+            if (HasIndex(worksheet))
+            {
+                for (int i = DataStartIndex(worksheet); i < r; i++)
+                {
+                    d.Add(GetDateFromCell(vals[i, 1].Number));
+                }
+            }
+            else
+            {
+                for (int i = DataStartIndex(worksheet); i < r; i++)
+                {
+                    d.Add(GetDateFromCell(vals[i, 0].Number));
+                }
+            }
+            return d.ToArray();
+        }
+
+        private PairedData GetPairedData(string worksheet)
+        {
+            PairedData pd = new PairedData();
+
+            double[] ordinates = GetPairedDataOrdinates(worksheet);
+            List<double[]> vals = GetPairedDataValues(worksheet);
+
+            pd.Ordinates = ordinates;
+            pd.Values = vals;
+
+            return pd;
+        }
+
+        private double[] GetPairedDataOrdinates(string worksheet)
+        {
+            var vals = (IValues)workbook.Worksheets[worksheet];
+            var r = RowCount(worksheet);
+            var o = new List<double>();
+            if (HasIndex(worksheet))
+            {
+                for (int i = DataStartIndex(worksheet); i < r; i++)
+                {
+                    o.Add(vals[i, 1].Number);
+                }
+            }
+            else
+            {
+                for (int i = DataStartIndex(worksheet); i < r; i++)
+                {
+                    o.Add(vals[i, 0].Number);
+                }
+            }
+            return o.ToArray();
+        }
+
+        private List<double[]> GetPairedDataValues(string worksheet)
+        {
+            var vals = (IValues)workbook.Worksheets[worksheet];
+            var r = RowCount(worksheet);
+            var c = ColumnCount(worksheet);
+            var t = new List<double>();
+            var v = new List<double[]>();
+
+            if (HasIndex(worksheet))
+            {
+                for (int i = 2; i < c; i++)
+                {
+                    for (int j = DataStartIndex(worksheet); i < r; i++)
+                    {
+                        t.Add(vals[j, i].Number);
+                    }
+                    v.Add(t.ToArray());
+                    t.Clear();
+                }
+            }
+            else
+            {
+                for (int i = 1; i < c; i++)
+                {
+                    for (int j = DataStartIndex(worksheet); i < r; i++)
+                    {
+                        t.Add(vals[j, i].Number);
+                    }
+                    v.Add(t.ToArray());
+                    t.Clear();
+                }
+            }
+            return v;
+        }
+
+        private static Random random = new Random();
+        private string RandomFileNameExtension(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
     }
 }

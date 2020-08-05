@@ -51,6 +51,62 @@ namespace DSSExcelTests
         }
 
         [TestMethod]
+        public void CheckIfExcelSheetIsPairedDataWithIndex()
+        {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\pairedData1.xlsx");
+            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.PairedData);
+
+        }
+
+        [TestMethod]
+        public void CheckIfExcelSheetIsPairedDataWithNoIndex()
+        {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\indexedPairedData1.xlsx");
+            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.PairedData);
+
+        }
+
+        [TestMethod]
+        public void GetRegularTimeSeriesFromExcel1()
+        {
+
+        }
+
+        [TestMethod]
+        public void GetRegularTimeSeriesFromExcel2()
+        {
+
+        }
+
+        [TestMethod]
+        public void GetIrregularTimeSeriesFromExcel1()
+        {
+
+        }
+
+        [TestMethod]
+        public void GetIrregularTimeSeriesFromExcel2()
+        {
+
+        }
+
+        [TestMethod]
+        public void GetPairedDataFromExcel1()
+        {
+
+        }
+
+        [TestMethod]
+        public void GetPairedDataFromExcel2()
+        {
+
+        }
+
+        [TestMethod]
         public void GetTimeSeriesTableFromExcel()
         {
             DSSExcelLicensing licensing = new DSSExcelLicensing();
