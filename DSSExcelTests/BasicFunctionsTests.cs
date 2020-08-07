@@ -16,7 +16,7 @@ namespace DSSExcelTests
             DSSExcelLicensing licensing = new DSSExcelLicensing();
             licensing.SetPersonalLicenseForTesting();
             DSSExcel de = new DSSExcel(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
-            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.RegularTimeSeries);
+            Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.RegularTimeSeries);
 
         }
 
@@ -26,7 +26,7 @@ namespace DSSExcelTests
             DSSExcelLicensing licensing = new DSSExcelLicensing();
             licensing.SetPersonalLicenseForTesting();
             DSSExcel de = new DSSExcel(@"C:\Temp\regularTimeSeries1.xlsx");
-            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.RegularTimeSeries);
+            Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.RegularTimeSeries);
 
         }
 
@@ -36,7 +36,7 @@ namespace DSSExcelTests
             DSSExcelLicensing licensing = new DSSExcelLicensing();
             licensing.SetPersonalLicenseForTesting();
             DSSExcel de = new DSSExcel(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
-            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.IrregularTimeSeries);
+            Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.IrregularTimeSeries);
 
         }
 
@@ -46,7 +46,7 @@ namespace DSSExcelTests
             DSSExcelLicensing licensing = new DSSExcelLicensing();
             licensing.SetPersonalLicenseForTesting();
             DSSExcel de = new DSSExcel(@"C:\Temp\irregularTimeSeries1.xlsx");
-            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.IrregularTimeSeries);
+            Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.IrregularTimeSeries);
 
         }
 
@@ -55,8 +55,8 @@ namespace DSSExcelTests
         {
             DSSExcelLicensing licensing = new DSSExcelLicensing();
             licensing.SetPersonalLicenseForTesting();
-            DSSExcel de = new DSSExcel(@"C:\Temp\pairedData1.xlsx");
-            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.PairedData);
+            DSSExcel de = new DSSExcel(@"C:\Temp\indexedPairedData1.xlsx");
+            Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.PairedData);
 
         }
 
@@ -65,66 +65,71 @@ namespace DSSExcelTests
         {
             DSSExcelLicensing licensing = new DSSExcelLicensing();
             licensing.SetPersonalLicenseForTesting();
-            DSSExcel de = new DSSExcel(@"C:\Temp\indexedPairedData1.xlsx");
-            Assert.AreEqual(de.CheckType("sheet1"), Hec.Dss.RecordType.PairedData);
+            DSSExcel de = new DSSExcel(@"C:\Temp\pairedData1.xlsx");
+            Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.PairedData);
 
         }
 
         [TestMethod]
         public void GetRegularTimeSeriesFromExcel1()
         {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
 
+            var ts = de.GetTimeSeries("Sheet1");
         }
 
         [TestMethod]
         public void GetRegularTimeSeriesFromExcel2()
         {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\regularTimeSeries1.xlsx");
 
+            var ts = de.GetTimeSeries("Sheet1");
         }
 
         [TestMethod]
         public void GetIrregularTimeSeriesFromExcel1()
         {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
 
+            var ts = de.GetTimeSeries("Sheet1");
         }
 
         [TestMethod]
         public void GetIrregularTimeSeriesFromExcel2()
         {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\irregularTimeSeries1.xlsx");
 
+            var ts = de.GetTimeSeries("Sheet1");
         }
 
         [TestMethod]
         public void GetPairedDataFromExcel1()
         {
+            DSSExcelLicensing licensing = new DSSExcelLicensing();
+            licensing.SetPersonalLicenseForTesting();
+            DSSExcel de = new DSSExcel(@"C:\Temp\indexedPairedData1.xlsx");
 
+            var pd = de.GetPairedData("Sheet1");
         }
 
         [TestMethod]
         public void GetPairedDataFromExcel2()
         {
-
-        }
-
-        [TestMethod]
-        public void GetTimeSeriesTableFromExcel()
-        {
             DSSExcelLicensing licensing = new DSSExcelLicensing();
             licensing.SetPersonalLicenseForTesting();
-            DSSExcel de = new DSSExcel(@"C:\Temp\test.xlsx");
-            var table = de.ExcelToDataTable("sheet1");
-            List<object> headers = table.Rows[0].ItemArray.ToList();
-            var t = headers[0].GetType();
-            var h = new List<object>() { "h1", "y1", "x2", "y2" };
-            foreach (DataRow item in table.Rows)
-            {
-                System.Diagnostics.Debug.WriteLine("{0} {1} {2} {3}", item[0].ToString(), item[1].ToString(), item[2].ToString(), 
-                    item[3].ToString());
-            }
-            Assert.AreEqual(t, typeof(string));
-            Assert.IsTrue(headers.SequenceEqual(h));
-            Assert.AreEqual(table.Columns.Count, 4);
-            Assert.AreEqual(table.Rows.Count, 4);
+            DSSExcel de = new DSSExcel(@"C:\Temp\pairedData1.xlsx");
+
+            var pd = de.GetPairedData("Sheet1");
         }
+
+
     }
 }

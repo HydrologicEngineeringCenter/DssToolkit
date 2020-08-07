@@ -219,14 +219,14 @@ namespace DSSExcelPlugin
 
         public bool HasDate(string worksheet)
         {
-            var vals = (IValues)(workbook.Worksheets[worksheet]);
+            var cells = (workbook.Worksheets[worksheet]).Cells;
             if (HasIndex(worksheet))
             {
-                return DateTime.TryParse(workbook.NumberToDateTime(vals[RowCount(worksheet) - 1, 1].Number).ToString(), out _);
+                return cells[RowCount(worksheet) - 1, 1].NumberFormatType == NumberFormatType.DateTime;
             }
             else
             {
-                return DateTime.TryParse(workbook.NumberToDateTime(vals[RowCount(worksheet) - 1, 0].Number).ToString(), out _);
+                return cells[RowCount(worksheet) - 1, 0].NumberFormatType == NumberFormatType.DateTime;
             }
         }
 
@@ -269,24 +269,6 @@ namespace DSSExcelPlugin
             return workbook.Worksheets[worksheet].Cells.CurrentRegion.ColumnCount;
         }
 
-        public TimeSeries DataTableToTimeSeries(DataTable dataTable)
-        {
-            var ts = new TimeSeries();
-            
-
-
-            return ts;
-        }
-
-        public PairedData DataTabletoPairedData(DataTable dataTable)
-        {
-            var pd = new PairedData();
-
-
-
-            return pd;
-        }
-
         /// <summary>
         /// Gets DateTime object from the double value of a date from an excel sheet.
         /// </summary>
@@ -321,46 +303,74 @@ namespace DSSExcelPlugin
             return true;
         }
 
-        public void Import(string worksheet)
+        public void Import(string destination, string worksheet)
         {
             var t = CheckType(worksheet);
             if (t == RecordType.RegularTimeSeries)
-                ImportRegularTimeSeries(worksheet);
+                ImportRegularTimeSeries(destination, worksheet);
             else if (t == RecordType.IrregularTimeSeries)
-                ImportIrregularTimeSeries(worksheet);
+                ImportIrregularTimeSeries(destination, worksheet);
             else if (t == RecordType.PairedData)
-                ImportPairedData(worksheet);
+                ImportPairedData(destination, worksheet);
             else
                 return;
         }
 
-        private void ImportRegularTimeSeries(string worksheet)
+        private void ImportRegularTimeSeries(string destination, string worksheet)
         {
-            string fileName = Path.GetFileName(workbook.FullName) + RandomFileNameExtension(10) + ".dss";
+            string fileName = destination;
+            File.Delete(fileName);
             TimeSeries ts = GetTimeSeries(worksheet);
-            DssWriter writer = new DssWriter(fileName);
+            ts.Path = new DssPath("excel", "import", "plugin", "", "", "regularTimeSeries" + RandomString(3));
+            ts.Path.Epart = TimeWindow.GetInterval(ts);
+            using (DssWriter w = new DssWriter(fileName))
+            {
+                w.Write(ts);
+            }
         }
 
-        private void ImportIrregularTimeSeries(string worksheet)
+        private string GetTimeInterval(TimeSeries ts)
         {
-            string fileName = Path.GetFileName(workbook.FullName) + RandomFileNameExtension(10) + ".dss";
-            TimeSeries ts = GetTimeSeries(worksheet);
-            DssWriter writer = new DssWriter(fileName);
+            var b = ts.Path.IsRegular;
+            TimeSpan t = ts.TimeSpanInterval();
+            return t.ToString();
         }
 
-        private void ImportPairedData(string worksheet)
+        private void ImportIrregularTimeSeries(string destination, string worksheet)
         {
-            string fileName = Path.GetFileName(workbook.FullName) + RandomFileNameExtension(10) + ".dss";
+            string fileName = destination;
+            File.Delete(fileName);
+            TimeSeries ts = GetTimeSeries(worksheet);
+            ts.Path = new DssPath("excel", "import", "plugin", "", "IR-Year", "irregularTimeSeries" + RandomString(3));
+            using (DssWriter w = new DssWriter(fileName))
+            {
+                w.Write(ts);
+
+            }
+
+        }
+
+        private void ImportPairedData(string destination, string worksheet)
+        {
+            string fileName = destination;
+            File.Delete(fileName);
             PairedData pd = GetPairedData(worksheet);
-            DssWriter writer = new DssWriter(fileName);
+            using (DssWriter w = new DssWriter(fileName))
+            {
+                w.Write(pd);
+
+            }
+
         }
 
-        private TimeSeries GetTimeSeries(string worksheet)
+        public TimeSeries GetTimeSeries(string worksheet)
         {
             TimeSeries ts = new TimeSeries();
 
             DateTime[] times = GetTimeSeriesTimes(worksheet);
             double[] vals = GetTimeSeriesValues(worksheet);
+            ts.DataType = "";
+            ts.Units = "";
 
             ts.Times = times;
             ts.Values = vals;
@@ -412,15 +422,11 @@ namespace DSSExcelPlugin
             return d.ToArray();
         }
 
-        private PairedData GetPairedData(string worksheet)
+        public PairedData GetPairedData(string worksheet)
         {
-            PairedData pd = new PairedData();
-
             double[] ordinates = GetPairedDataOrdinates(worksheet);
             List<double[]> vals = GetPairedDataValues(worksheet);
-
-            pd.Ordinates = ordinates;
-            pd.Values = vals;
+            PairedData pd = new PairedData(ordinates, vals, new List<string>(), "", "", "", "", "/excel/import/plugin//e/pairedData" + RandomString(3));
 
             return pd;
         }
@@ -459,7 +465,7 @@ namespace DSSExcelPlugin
             {
                 for (int i = 2; i < c; i++)
                 {
-                    for (int j = DataStartIndex(worksheet); i < r; i++)
+                    for (int j = DataStartIndex(worksheet); j < r; j++)
                     {
                         t.Add(vals[j, i].Number);
                     }
@@ -471,7 +477,7 @@ namespace DSSExcelPlugin
             {
                 for (int i = 1; i < c; i++)
                 {
-                    for (int j = DataStartIndex(worksheet); i < r; i++)
+                    for (int j = DataStartIndex(worksheet); j < r; j++)
                     {
                         t.Add(vals[j, i].Number);
                     }
@@ -482,8 +488,93 @@ namespace DSSExcelPlugin
             return v;
         }
 
+        public void Export(string destination, object record)
+        {
+            IWorkbookSet bookSet = Factory.GetWorkbookSet();
+            IWorkbook book = bookSet.Workbooks.Add();
+            book.SaveAs(destination, FileFormat.Excel8);
+            SetIndexColumnInExcelFile(book, record);
+            SetDateColumnInExcelFile(book, record);
+            SetOrdinateColumnInExcelFile(book, record);
+            SetValueColumnInExcelFile(book, record);
+            book.Save();
+            book.Close();
+        }
+
+        private void SetIndexColumnInExcelFile(IWorkbook book, object record)
+        {
+            if (record is TimeSeries)
+            {
+                var ts = (TimeSeries)record;
+                for (int i = 0; i < ts.Count; i++)
+                {
+                    book.Worksheets["Sheet1"].Cells[i, 0].Value = i + 1;
+
+                }
+            }
+            else if (record is PairedData)
+            {
+                var pd = (PairedData)record;
+                for (int i = 0; i < pd.XCount; i++)
+                {
+                    book.Worksheets["Sheet1"].Cells[i, 0].Value = i + 1;
+
+                }
+            }
+        }
+
+        private void SetDateColumnInExcelFile(IWorkbook book, object record)
+        {
+            if (record is TimeSeries)
+            {
+                var ts = (TimeSeries)record;
+                for (int i = 0; i < ts.Count; i++)
+                {
+                    book.Worksheets["Sheet1"].Cells[i, 1].Value = ts.Times[i];
+                }
+            }
+        }
+
+        private void SetOrdinateColumnInExcelFile(IWorkbook book, object record)
+        {
+            if (record is PairedData)
+            {
+                var pd = (PairedData)record;
+                for (int i = 0; i < pd.XCount; i++)
+                {
+                    book.Worksheets["Sheet1"].Cells[i, 1].Value = pd.Ordinates[i];
+                }
+
+            }
+        }
+
+        private void SetValueColumnInExcelFile(IWorkbook book, object record)
+        {
+            if (record is TimeSeries)
+            {
+                var ts = (TimeSeries)record;
+                for (int i = 0; i < ts.Count; i++)
+                {
+                    book.Worksheets["Sheet1"].Cells[i, 2].Value = ts.Values[i];
+                }
+
+            }
+            else if (record is PairedData)
+            {
+                var pd = (PairedData)record;
+                for (int i = 2; i < pd.YCount; i++)
+                {
+                    for (int j = 0; j < pd.XCount; j++)
+                    {
+                        book.Worksheets["Sheet1"].Cells[j, i].Value = pd.Values[j][i];
+                    }
+                }
+
+            }
+        }
+
         private static Random random = new Random();
-        private string RandomFileNameExtension(int length)
+        private string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)

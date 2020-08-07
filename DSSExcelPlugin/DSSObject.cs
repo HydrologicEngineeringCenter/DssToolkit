@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DSSExcelPlugin
 {
-    class DSSDataTable
+    class DSSObject
     {
-        public DataTable table = new DataTable();
+        private object record;
         public RecordType Type
         {
             get
@@ -20,7 +20,7 @@ namespace DSSExcelPlugin
         }
         private RecordType _recordType;
 
-        public DSSDataTable(RecordType type)
+        public DSSObject(RecordType type)
         {
             _recordType = type;
         }
