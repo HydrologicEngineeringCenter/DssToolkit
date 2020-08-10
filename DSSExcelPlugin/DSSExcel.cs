@@ -23,6 +23,24 @@ namespace DSSExcelPlugin
         public SpreadsheetGear.IWorkbookSet workbookSet = SpreadsheetGear.Factory.GetWorkbookSet();
         public SpreadsheetGear.IWorkbook workbook;
 
+        public string FileName 
+        {  
+            get
+            {
+                return workbook.Name;
+            }
+        }
+
+        public string FullName
+        {
+            get
+            {
+                return workbook.FullName;
+            }
+        }
+
+        
+
         public void ChangeActiveSheet(string worksheet)
         {
             workbook.Worksheets[worksheet].Select();
@@ -329,13 +347,6 @@ namespace DSSExcelPlugin
             }
         }
 
-        private string GetTimeInterval(TimeSeries ts)
-        {
-            var b = ts.Path.IsRegular;
-            TimeSpan t = ts.TimeSpanInterval();
-            return t.ToString();
-        }
-
         private void ImportIrregularTimeSeries(string destination, string worksheet)
         {
             string fileName = destination;
@@ -488,11 +499,20 @@ namespace DSSExcelPlugin
             return v;
         }
 
-        public void Export(string destination, object record)
+        public static void Export(string fileName, object record)
         {
             IWorkbookSet bookSet = Factory.GetWorkbookSet();
             IWorkbook book = bookSet.Workbooks.Add();
-            book.SaveAs(destination, FileFormat.Excel8);
+
+            if (fileName.EndsWith(".xls"))
+            {
+                book.SaveAs(fileName, FileFormat.Excel8);
+            }
+            else 
+            {
+                book.SaveAs(fileName + ".xls", FileFormat.Excel8);
+            } 
+
             SetIndexColumnInExcelFile(book, record);
             SetDateColumnInExcelFile(book, record);
             SetOrdinateColumnInExcelFile(book, record);
@@ -501,61 +521,70 @@ namespace DSSExcelPlugin
             book.Close();
         }
 
-        private void SetIndexColumnInExcelFile(IWorkbook book, object record)
+        private static void SetIndexColumnInExcelFile(IWorkbook book, object record)
         {
+            book.Worksheets["Sheet1"].Cells[0, 0].Value = "Index";
+            int offset = 1;
             if (record is TimeSeries)
             {
                 var ts = (TimeSeries)record;
-                for (int i = 0; i < ts.Count; i++)
+                for (int i = 0 + offset; i < ts.Count + offset; i++)
                 {
-                    book.Worksheets["Sheet1"].Cells[i, 0].Value = i + 1;
+                    book.Worksheets["Sheet1"].Cells[i, 0].Value = i - offset + 1;
 
                 }
             }
             else if (record is PairedData)
             {
                 var pd = (PairedData)record;
-                for (int i = 0; i < pd.XCount; i++)
+                for (int i = 0 + offset; i < pd.XCount + offset; i++)
                 {
-                    book.Worksheets["Sheet1"].Cells[i, 0].Value = i + 1;
+                    book.Worksheets["Sheet1"].Cells[i, 0].Value = i - offset + 1;
 
                 }
             }
         }
 
-        private void SetDateColumnInExcelFile(IWorkbook book, object record)
+        private static void SetDateColumnInExcelFile(IWorkbook book, object record)
         {
+            book.Worksheets["Sheet1"].Cells[0, 1].Value = "Date/Time";
+            int offset = 1;
             if (record is TimeSeries)
             {
                 var ts = (TimeSeries)record;
-                for (int i = 0; i < ts.Count; i++)
+                for (int i = 0 + offset; i < ts.Count + offset; i++)
                 {
-                    book.Worksheets["Sheet1"].Cells[i, 1].Value = ts.Times[i];
+                    book.Worksheets["Sheet1"].Cells[i, 1].Value = ts.Times[i - offset];
                 }
             }
         }
 
-        private void SetOrdinateColumnInExcelFile(IWorkbook book, object record)
+        private static void SetOrdinateColumnInExcelFile(IWorkbook book, object record)
         {
+            book.Worksheets["Sheet1"].Cells[0, 1].Value = "Ordinates";
+            int offset = 1;
             if (record is PairedData)
             {
                 var pd = (PairedData)record;
-                for (int i = 0; i < pd.XCount; i++)
+                for (int i = 0 + offset; i < pd.XCount + offset; i++)
                 {
-                    book.Worksheets["Sheet1"].Cells[i, 1].Value = pd.Ordinates[i];
+                    book.Worksheets["Sheet1"].Cells[i, 1].Value = pd.Ordinates[i - offset];
                 }
 
             }
         }
 
-        private void SetValueColumnInExcelFile(IWorkbook book, object record)
+        private static void SetValueColumnInExcelFile(IWorkbook book, object record)
         {
+            
             if (record is TimeSeries)
             {
                 var ts = (TimeSeries)record;
-                for (int i = 0; i < ts.Count; i++)
+                book.Worksheets["Sheet1"].Cells[0, 2].Value = "Values";
+                int offset = 1;
+                for (int i = 0 + offset; i < ts.Count + offset; i++)
                 {
-                    book.Worksheets["Sheet1"].Cells[i, 2].Value = ts.Values[i];
+                    book.Worksheets["Sheet1"].Cells[i, 2].Value = ts.Values[i - offset];
                 }
 
             }
@@ -564,9 +593,16 @@ namespace DSSExcelPlugin
                 var pd = (PairedData)record;
                 for (int i = 2; i < pd.YCount; i++)
                 {
-                    for (int j = 0; j < pd.XCount; j++)
+                    book.Worksheets["Sheet1"].Cells[0, i].Value = "Value " + (i - 1).ToString();
+
+                }
+                int offset = 1;
+
+                for (int i = 2; i < pd.YCount; i++)
+                {
+                    for (int j = 0 + offset; j < pd.XCount + offset; j++)
                     {
-                        book.Worksheets["Sheet1"].Cells[j, i].Value = pd.Values[j][i];
+                        book.Worksheets["Sheet1"].Cells[j, i].Value = pd.Values[i][j - offset];
                     }
                 }
 
