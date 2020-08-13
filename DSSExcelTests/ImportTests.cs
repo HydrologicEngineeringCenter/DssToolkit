@@ -87,7 +87,7 @@ namespace DSSExcelTests
         }
 
         [TestMethod]
-        public void CommandLIneImport2()
+        public void CommandLineImport2()
         {
             var fn = TestUtility.BasePath + "indexedRegularTimeSeries1.xlsx";
             string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport1.dss" };

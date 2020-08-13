@@ -525,16 +525,17 @@ namespace DSSExcelPlugin
 
         public static void Export(string fileName, object record)
         {
+            var fn = Path.GetDirectoryName(fileName) + "\\" + Path.GetFileNameWithoutExtension(fileName);
             IWorkbookSet bookSet = Factory.GetWorkbookSet();
             IWorkbook book = bookSet.Workbooks.Add();
 
-            if (fileName.EndsWith(".xls"))
+            if (fn.EndsWith(".xls"))
             {
-                book.SaveAs(fileName, FileFormat.Excel8);
+                book.SaveAs(fn, FileFormat.Excel8);
             }
             else 
             {
-                book.SaveAs(fileName + ".xls", FileFormat.Excel8);
+                book.SaveAs(fn + ".xls", FileFormat.Excel8);
             } 
 
             SetIndexColumnInExcelFile(book, record);
