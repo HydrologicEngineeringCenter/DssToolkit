@@ -205,39 +205,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="test-files\457373.csv" />
-    <None Include="test-files\7dadmax.csv" />
-    <None Include="test-files\AnnualSum.csv" />
-    <None Include="test-files\anti.csv" />
-    <None Include="test-files\banks.csv" />
-    <None Include="test-files\banks_raw.csv" />
-    <None Include="test-files\below Deadwood Dam.csv" />
-    <None Include="test-files\calculationtests_convert.csv" />
-    <None Include="test-files\calculationtests_jck_qu.csv" />
-    <None Include="test-files\El686_2004DailyAverageStage.csv" />
-    <None Include="test-files\El686_2004InstantaniousStage.csv" />
-    <None Include="test-files\el68d_export.csv" />
-    <None Include="test-files\heii_qd.csv" />
-    <None Include="test-files\heii_qu.csv" />
-    <None Include="test-files\heii_quAF.csv" />
-    <None Include="test-files\heii_residual.csv" />
-    <None Include="test-files\hrsiDailyModsim.csv" />
-    <None Include="test-files\InsertTestPart1.csv" />
-    <None Include="test-files\InsertTestPart2.csv" />
-    <None Include="test-files\mmddyy.csv" />
-    <None Include="test-files\periodic_begininovember.csv" />
-    <None Include="test-files\periodic_heise.csv" />
-    <None Include="test-files\rexi.csv" />
-    <None Include="test-files\sevendayavg.csv" />
-    <None Include="test-files\SimpleResponseFunction.csv" />
-    <None Include="test-files\site68_LindCouleeWasteWay1.csv" />
-    <None Include="test-files\site68_LindCouleeWasteWay1DailyAverage.csv" />
-    <None Include="test-files\site68_LindCouleeWasteWay1Stage.csv" />
-    <None Include="test-files\SpecificationTestData.csv" />
-    <None Include="test-files\temp_sparse.csv" />
-    <None Include="test-files\Trail processed 08 Q.csv" />
-    <None Include="test-files\Trail T 08.csv" />
-    <None Include="test-files\wilson.csv" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

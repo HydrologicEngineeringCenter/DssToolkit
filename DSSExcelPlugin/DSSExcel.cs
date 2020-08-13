@@ -38,7 +38,6 @@ namespace DSSExcelPlugin
                 return workbook.FullName;
             }
         }
-
         
 
         public void ChangeActiveSheet(string worksheet)

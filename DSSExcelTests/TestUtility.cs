@@ -10,7 +10,8 @@ namespace DSSExcelTests
 {
     public class TestUtility
     {
-        public static string BasePath = @"..\DSSExcelPlugin\test-files\";
+        public static string BasePath = @"..\..\..\DSSExcelPlugin\test-files\";
+        public static string OutputPath = @"..\..\..\DSSExcelPlugin\test-files\output\";
 
         public static TimeSeries CreateTimeSeries(int numberOfVals, bool regular = true)
         {
