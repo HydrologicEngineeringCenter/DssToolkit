@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSSExcelPlugin", "DSSExcelP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSSExcelTests", "DSSExcelTests\DSSExcelTests.csproj", "{731369B3-5128-4EFD-8DCA-D1125E9F8547}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSSExcel", "DSSExcel\DSSExcel.csproj", "{ECCFF267-4389-4ADD-93A8-CBFD14ACA9F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{731369B3-5128-4EFD-8DCA-D1125E9F8547}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{731369B3-5128-4EFD-8DCA-D1125E9F8547}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{731369B3-5128-4EFD-8DCA-D1125E9F8547}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECCFF267-4389-4ADD-93A8-CBFD14ACA9F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECCFF267-4389-4ADD-93A8-CBFD14ACA9F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECCFF267-4389-4ADD-93A8-CBFD14ACA9F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECCFF267-4389-4ADD-93A8-CBFD14ACA9F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

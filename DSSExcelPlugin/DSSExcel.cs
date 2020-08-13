@@ -98,6 +98,11 @@ namespace DSSExcelPlugin
                 return RecordType.Unknown;
         }
 
+        public RecordType CheckType(int worksheetIndex)
+        {
+            return CheckType(workbook.Worksheets[worksheetIndex].Name);
+        }
+
         private bool isRegularTimeSeries(string worksheet)
         {
             var vals = (IValues)workbook.Worksheets[worksheet];
@@ -235,7 +240,7 @@ namespace DSSExcelPlugin
 
         }
 
-        public bool HasDate(string worksheet)
+        private bool HasDate(string worksheet)
         {
             var cells = (workbook.Worksheets[worksheet]).Cells;
             if (HasIndex(worksheet))
@@ -275,6 +280,11 @@ namespace DSSExcelPlugin
                 Row.Clear();
             }
             return data;
+        }
+
+        public DataTable ExcelToDataTable(int worksheetIndex)
+        {
+            return ExcelToDataTable(workbook.Worksheets[worksheetIndex].Name);
         }
 
         private int RowCount(string worksheet)
@@ -334,6 +344,11 @@ namespace DSSExcelPlugin
                 return;
         }
 
+        public void Import(string destination, int worksheetIndex)
+        {
+            Import(destination, workbook.Worksheets[worksheetIndex].Name);
+        }
+
         private void ImportRegularTimeSeries(string destination, string worksheet)
         {
             string fileName = destination;
@@ -389,6 +404,11 @@ namespace DSSExcelPlugin
             return ts;
         }
 
+        public TimeSeries GetTimeSeries(int worksheetIndex)
+        {
+            return GetTimeSeries(workbook.Worksheets[worksheetIndex].Name);
+        }
+
         private double[] GetTimeSeriesValues(string worksheet)
         {
             var vals = (IValues)workbook.Worksheets[worksheet];
@@ -440,6 +460,11 @@ namespace DSSExcelPlugin
             PairedData pd = new PairedData(ordinates, vals, new List<string>(), "", "", "", "", "/excel/import/plugin//e/pairedData" + RandomString(3));
 
             return pd;
+        }
+
+        public PairedData GetPairedData(int worksheetIndex)
+        {
+            return GetPairedData(workbook.Worksheets[worksheetIndex].Name);
         }
 
         private double[] GetPairedDataOrdinates(string worksheet)
