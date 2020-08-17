@@ -35,7 +35,16 @@ namespace DSSExcelPlugin
 
                 using (DssReader r = new DssReader(args[1]))
                 {
-                    var record = r.GetTimeSeries(new DssPath(args[3]));
+                    object record;
+                    DssPath path = new DssPath(args[3]);
+                    var type = r.GetRecordType(path);
+                    if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                        record = r.GetTimeSeries(path);
+                    else if (type == RecordType.PairedData)
+                        record = r.GetPairedData(path.FullPath);
+                    else
+                        return;
+
                     DSSExcel.Export(args[2], record);
                 }
             }

@@ -90,7 +90,7 @@ namespace DSSExcelTests
         public void CommandLineImport2()
         {
             var fn = TestUtility.BasePath + "indexedRegularTimeSeries1.xlsx";
-            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport1.dss" };
+            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport2.dss" };
             if (!File.Exists(a[1]))
             {
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
@@ -104,7 +104,7 @@ namespace DSSExcelTests
         public void CommandLineImport3()
         {
             var fn = TestUtility.BasePath + "irregularTimeSeries1.xlsx";
-            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport1.dss" };
+            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport3.dss" };
             if (!File.Exists(a[1]))
             {
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
@@ -118,7 +118,7 @@ namespace DSSExcelTests
         public void CommandLineImport4()
         {
             var fn = TestUtility.BasePath + "indexedIrregularTimeSeries1.xlsx";
-            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport1.dss" };
+            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport4.dss" };
             if (!File.Exists(a[1]))
             {
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
@@ -132,7 +132,7 @@ namespace DSSExcelTests
         public void CommandLineImport5()
         {
             var fn = TestUtility.BasePath + "pairedData1.xlsx";
-            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport1.dss" };
+            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport5.dss" };
             if (!File.Exists(a[1]))
             {
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
@@ -146,7 +146,35 @@ namespace DSSExcelTests
         public void CommandLineImport6()
         {
             var fn = TestUtility.BasePath + "indexedPairedData1.xlsx";
-            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport1.dss" };
+            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport6.dss" };
+            if (!File.Exists(a[1]))
+            {
+                throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
+            }
+
+            DSSExcel de = new DSSExcel(a[1]);
+            de.Import(a[2], 0);
+        }
+
+        [TestMethod]
+        public void CommandLineImport7()
+        {
+            var fn = TestUtility.BasePath + "pairedData2.xlsx";
+            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport7.dss" };
+            if (!File.Exists(a[1]))
+            {
+                throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
+            }
+
+            DSSExcel de = new DSSExcel(a[1]);
+            de.Import(a[2], 0);
+        }
+
+        [TestMethod]
+        public void CommandLineImport8()
+        {
+            var fn = TestUtility.BasePath + "indexedPairedData2.xlsx";
+            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport8.dss" };
             if (!File.Exists(a[1]))
             {
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
