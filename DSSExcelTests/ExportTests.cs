@@ -2,11 +2,12 @@
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DSSExcelPlugin;
+using Hec.Dss.Excel;
 using Hec.Dss;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace DSSExcelTests
 {
@@ -28,7 +29,8 @@ namespace DSSExcelTests
             var fn = @"C:\Temp\exportRTS1.xls";
             File.Delete(fn);
             TimeSeries ts = TestUtility.CreateTimeSeries(10);
-            DSSExcel.Export(fn, ts);
+            ExcelWriter ew = new ExcelWriter(fn);
+            ew.Write(ts, 0);
         }
 
         [TestMethod]
@@ -37,7 +39,8 @@ namespace DSSExcelTests
             var fn = @"C:\Temp\exportITS1.xls";
             File.Delete(fn);
             TimeSeries ts = TestUtility.CreateTimeSeries(10, false);
-            DSSExcel.Export(fn, ts);
+            ExcelWriter ew = new ExcelWriter(fn);
+            ew.Write(ts, 0);
 
         }
 
@@ -47,14 +50,15 @@ namespace DSSExcelTests
             var fn = @"C:\Temp\exportPD1.xls";
             File.Delete(fn);
             PairedData pd = TestUtility.CreatePairedData(5, 10);
-            DSSExcel.Export(fn, pd);
+            ExcelWriter ew = new ExcelWriter(fn);
+            ew.Write(pd, 0);
         }
 
         [TestMethod]
         public void CommandLineExport1()
         {
             var fn = TestUtility.BasePath + "regularTimeSeries1.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "regularTimeSeries1.xlsx", "/excel/import/plugin/01May2020/15Minute/regularTimeSeriesWLF/"};
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "regularTimeSeries1.xlsx", "/excel/import/plugin//15Minute/regularTimeSeriesWLF/" };
 
             if (!File.Exists(a[1]))
             {
@@ -64,17 +68,21 @@ namespace DSSExcelTests
             using (DssReader r = new DssReader(a[1]))
             {
                 object record;
+                ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
                 path.Dpart = "";
                 var type = r.GetRecordType(path);
                 if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                {
                     record = r.GetTimeSeries(path);
+                    ew.Write(record as TimeSeries, 0);
+                }
                 else if (type == RecordType.PairedData)
+                {
                     record = r.GetPairedData(path.FullPath);
-                else
-                    return;
+                    ew.Write(record as PairedData, 0);
+                }
 
-                DSSExcel.Export(a[2], record);
             }
         }
 
@@ -92,17 +100,20 @@ namespace DSSExcelTests
             using (DssReader r = new DssReader(a[1]))
             {
                 object record;
+                ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
                 path.Dpart = "";
                 var type = r.GetRecordType(path);
                 if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                {
                     record = r.GetTimeSeries(path);
+                    ew.Write(record as TimeSeries, 0);
+                }
                 else if (type == RecordType.PairedData)
+                {
                     record = r.GetPairedData(path.FullPath);
-                else
-                    return;
-
-                DSSExcel.Export(a[2], record);
+                    ew.Write(record as PairedData, 0);
+                }
             }
         }
 
@@ -120,17 +131,20 @@ namespace DSSExcelTests
             using (DssReader r = new DssReader(a[1]))
             {
                 object record;
+                ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
                 path.Dpart = "";
                 var type = r.GetRecordType(path);
                 if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                {
                     record = r.GetTimeSeries(path);
+                    ew.Write(record as TimeSeries, 0);
+                }
                 else if (type == RecordType.PairedData)
+                {
                     record = r.GetPairedData(path.FullPath);
-                else
-                    return;
-
-                DSSExcel.Export(a[2], record);
+                    ew.Write(record as PairedData, 0);
+                }
             }
         }
 
@@ -148,17 +162,20 @@ namespace DSSExcelTests
             using (DssReader r = new DssReader(a[1]))
             {
                 object record;
+                ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
                 path.Dpart = "";
                 var type = r.GetRecordType(path);
                 if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                {
                     record = r.GetTimeSeries(path);
+                    ew.Write(record as TimeSeries, 0);
+                }
                 else if (type == RecordType.PairedData)
+                {
                     record = r.GetPairedData(path.FullPath);
-                else
-                    return;
-
-                DSSExcel.Export(a[2], record);
+                    ew.Write(record as PairedData, 0);
+                }
             }
         }
 
@@ -166,7 +183,7 @@ namespace DSSExcelTests
         public void CommandLineExport5()
         {
             var fn = TestUtility.OutputPath + "CommandLineImport5.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "pairedData1.xlsx", "/excel/import/plugin//e/pairedDataI9C/" };
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "pairedData1.xlsx", "/excel/import/plugin//e/pairedDataUP9/" };
 
             if (!File.Exists(a[1]))
             {
@@ -176,16 +193,20 @@ namespace DSSExcelTests
             using (DssReader r = new DssReader(a[1]))
             {
                 object record;
+                ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
+                path.Dpart = "";
                 var type = r.GetRecordType(path);
                 if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                {
                     record = r.GetTimeSeries(path);
+                    ew.Write(record as TimeSeries, 0);
+                }
                 else if (type == RecordType.PairedData)
+                {
                     record = r.GetPairedData(path.FullPath);
-                else
-                    return;
-
-                DSSExcel.Export(a[2], record);
+                    ew.Write(record as PairedData, 0);
+                }
             }
         }
 
@@ -193,7 +214,7 @@ namespace DSSExcelTests
         public void CommandLineExport6()
         {
             var fn = TestUtility.OutputPath + "CommandLineImport6.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedPairedData1.xlsx", "/excel/import/plugin//e/pairedDataQ26/" };
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedPairedData1.xlsx", "/excel/import/plugin//e/pairedDataSJQ/" };
 
             if (!File.Exists(a[1]))
             {
@@ -203,16 +224,20 @@ namespace DSSExcelTests
             using (DssReader r = new DssReader(a[1]))
             {
                 object record;
+                ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
+                path.Dpart = "";
                 var type = r.GetRecordType(path);
                 if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                {
                     record = r.GetTimeSeries(path);
+                    ew.Write(record as TimeSeries, 0);
+                }
                 else if (type == RecordType.PairedData)
+                {
                     record = r.GetPairedData(path.FullPath);
-                else
-                    return;
-
-                DSSExcel.Export(a[2], record);
+                    ew.Write(record as PairedData, 0);
+                }
             }
         }
 
@@ -220,7 +245,7 @@ namespace DSSExcelTests
         public void CommandLineExport7()
         {
             var fn = TestUtility.OutputPath + "CommandLineImport7.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "pairedData2.xlsx", "/excel/import/plugin//e/pairedDataB8L/" };
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "pairedData2.xlsx", "/excel/import/plugin//e/pairedDataNXN/" };
 
             if (!File.Exists(a[1]))
             {
@@ -230,16 +255,20 @@ namespace DSSExcelTests
             using (DssReader r = new DssReader(a[1]))
             {
                 object record;
+                ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
+                path.Dpart = "";
                 var type = r.GetRecordType(path);
                 if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                {
                     record = r.GetTimeSeries(path);
+                    ew.Write(record as TimeSeries, 0);
+                }
                 else if (type == RecordType.PairedData)
+                {
                     record = r.GetPairedData(path.FullPath);
-                else
-                    return;
-
-                DSSExcel.Export(a[2], record);
+                    ew.Write(record as PairedData, 0);
+                }
             }
         }
 
@@ -247,7 +276,7 @@ namespace DSSExcelTests
         public void CommandLineExport8()
         {
             var fn = TestUtility.OutputPath + "CommandLineImport8.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedPairedData2.xlsx", "/excel/import/plugin//e/pairedDataPL1/" };
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedPairedData2.xlsx", "/excel/import/plugin//e/pairedData1VA/" };
 
             if (!File.Exists(a[1]))
             {
@@ -257,67 +286,20 @@ namespace DSSExcelTests
             using (DssReader r = new DssReader(a[1]))
             {
                 object record;
+                ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
+                path.Dpart = "";
                 var type = r.GetRecordType(path);
                 if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                {
                     record = r.GetTimeSeries(path);
+                    ew.Write(record as TimeSeries, 0);
+                }
                 else if (type == RecordType.PairedData)
+                {
                     record = r.GetPairedData(path.FullPath);
-                else
-                    return;
-
-                DSSExcel.Export(a[2], record);
-            }
-        }
-
-        [TestMethod]
-        public void tempTest1()
-        {
-            var fn = TestUtility.OutputPath + "CommandLineImport5.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "pairedData1.xlsx", "/excel/import/plugin//e/pairedDataY1M/" };
-
-            if (!File.Exists(a[1]))
-            {
-                throw new FileNotFoundException("Couldn't find DSS file to import data into Excel.");
-            }
-
-            using (DssReader r = new DssReader(a[1]))
-            {
-                object record;
-                DssPath path = new DssPath(a[3]);
-                var type = r.GetRecordType(path);
-                if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
-                    record = r.GetTimeSeries(path);
-                else if (type == RecordType.PairedData)
-                    record = r.GetPairedData(path.FullPath);
-                else
-                    return;
-            }
-        }
-
-        [TestMethod]
-        public void tempTest2()
-        {
-            var fn = TestUtility.OutputPath + "CommandLineImport6.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedPairedData1.xlsx", "/excel/import/plugin//e/pairedDataZGJ/" };
-
-            if (!File.Exists(a[1]))
-            {
-                throw new FileNotFoundException("Couldn't find DSS file to import data into Excel.");
-            }
-
-            using (DssReader r = new DssReader(a[1]))
-            {
-                object record;
-                DssPath path = new DssPath(a[3]);
-                var type = r.GetRecordType(path);
-                if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
-                    record = r.GetTimeSeries(path);
-                else if (type == RecordType.PairedData)
-                    record = r.GetPairedData(path.FullPath);
-                else
-                    return;
-
+                    ew.Write(record as PairedData, 0);
+                }
             }
         }
 

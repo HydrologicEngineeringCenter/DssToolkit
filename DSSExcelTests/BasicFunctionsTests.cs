@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DSSExcelPlugin;
+using Hec.Dss.Excel;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data;
+using Hec.Dss;
 
 namespace DSSExcelTests
 {
@@ -20,7 +21,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void CheckIfExcelSheetIsRegularTimeSeriesWithIndex()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
             Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.RegularTimeSeries);
 
         }
@@ -28,7 +29,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void CheckIfExcelSheetIsRegularTimeSeriesWithNoIndex()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\regularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\regularTimeSeries1.xlsx");
             Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.RegularTimeSeries);
 
         }
@@ -36,7 +37,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void CheckIfExcelSheetIsIrregularTimeSeriesWithIndex()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
             Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.IrregularTimeSeries);
 
         }
@@ -44,7 +45,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void CheckIfExcelSheetIsIrregularTimeSeriesWithNoIndex()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\irregularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\irregularTimeSeries1.xlsx");
             Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.IrregularTimeSeries);
 
         }
@@ -52,7 +53,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void CheckIfExcelSheetIsPairedDataWithIndex()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\indexedPairedData1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\indexedPairedData1.xlsx");
             Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.PairedData);
 
         }
@@ -60,7 +61,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void CheckIfExcelSheetIsPairedDataWithNoIndex()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\pairedData1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\pairedData1.xlsx");
             Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.PairedData);
 
         }
@@ -68,42 +69,42 @@ namespace DSSExcelTests
         [TestMethod]
         public void GetRegularTimeSeriesFromExcel1()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
             var ts = de.GetTimeSeries("Sheet1");
         }
 
         [TestMethod]
         public void GetRegularTimeSeriesFromExcel2()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\regularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\regularTimeSeries1.xlsx");
             var ts = de.GetTimeSeries("Sheet1");
         }
 
         [TestMethod]
         public void GetIrregularTimeSeriesFromExcel1()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
             var ts = de.GetTimeSeries("Sheet1");
         }
 
         [TestMethod]
         public void GetIrregularTimeSeriesFromExcel2()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\irregularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\irregularTimeSeries1.xlsx");
             var ts = de.GetTimeSeries("Sheet1");
         }
 
         [TestMethod]
         public void GetPairedDataFromExcel1()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\indexedPairedData1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\indexedPairedData1.xlsx");
             var pd = de.GetPairedData("Sheet1");
         }
 
         [TestMethod]
         public void GetPairedDataFromExcel2()
         {
-            DSSExcel de = new DSSExcel(@"C:\Temp\pairedData1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\pairedData1.xlsx");
             var pd = de.GetPairedData("Sheet1");
         }
 

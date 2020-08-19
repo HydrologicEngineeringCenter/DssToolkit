@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSSExcelPlugin", "DSSExcelPlugin\DSSExcelPlugin.csproj", "{E20EA78B-0CC7-4BFF-9038-97A5E2182180}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hec.Dss.Excel", "DSSExcelPlugin\Hec.Dss.Excel.csproj", "{E20EA78B-0CC7-4BFF-9038-97A5E2182180}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSSExcelTests", "DSSExcelTests\DSSExcelTests.csproj", "{731369B3-5128-4EFD-8DCA-D1125E9F8547}"
 EndProject

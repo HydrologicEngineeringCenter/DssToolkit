@@ -2,8 +2,9 @@
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DSSExcelPlugin;
+using Hec.Dss.Excel;
 using System.IO;
+using Hec.Dss;
 
 namespace DSSExcelTests
 {
@@ -23,8 +24,8 @@ namespace DSSExcelTests
         public void ImportRegularTimeSeries1()
         {
             File.Delete(@"C:\Temp\indexedRegularTimeSeries1.dss");
-            DSSExcel de = new DSSExcel(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
-            de.Import(@"C:\Temp\indexedRegularTimeSeries1.dss", "Sheet1");
+            ExcelReader de = new ExcelReader(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
+            de.Read("Sheet1");
 
         }
 
@@ -32,8 +33,8 @@ namespace DSSExcelTests
         public void ImportIrregularTimeSeries1()
         {
             File.Delete(@"C:\Temp\indexedIrregularTimeSeries1.dss");
-            DSSExcel de = new DSSExcel(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
-            de.Import(@"C:\Temp\indexedIrregularTimeSeries1.dss", "Sheet1");
+            ExcelReader de = new ExcelReader(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
+            de.Read("Sheet1");
 
         }
 
@@ -41,8 +42,8 @@ namespace DSSExcelTests
         public void ImportPairedData1()
         {
             File.Delete(@"C:\Temp\indexedPairedData1.dss");
-            DSSExcel de = new DSSExcel(@"C:\Temp\indexedPairedData1.xlsx");
-            de.Import(@"C:\Temp\indexedPairedData1.dss", "Sheet1");
+            ExcelReader de = new ExcelReader(@"C:\Temp\indexedPairedData1.xlsx");
+            de.Read("Sheet1");
 
         }
 
@@ -50,8 +51,8 @@ namespace DSSExcelTests
         public void ImportRegularTimeSeries2()
         {
             File.Delete(@"C:\Temp\regularTimeSeries1.dss");
-            DSSExcel de = new DSSExcel(@"C:\Temp\regularTimeSeries1.xlsx");
-            de.Import(@"C:\Temp\regularTimeSeries1.dss", "Sheet1");
+            ExcelReader de = new ExcelReader(@"C:\Temp\regularTimeSeries1.xlsx");
+            de.Read("Sheet1");
 
         }
 
@@ -59,8 +60,8 @@ namespace DSSExcelTests
         public void ImportIrregularTimeSeries2()
         {
             File.Delete(@"C:\Temp\irregularTimeSeries1.dss");
-            DSSExcel de = new DSSExcel(@"C:\Temp\irregularTimeSeries1.xlsx");
-            de.Import(@"C:\Temp\irregularTimeSeries1.dss", "Sheet1");
+            ExcelReader de = new ExcelReader(@"C:\Temp\irregularTimeSeries1.xlsx");
+            de.Read("Sheet1");
 
         }
 
@@ -68,8 +69,8 @@ namespace DSSExcelTests
         public void ImportPairedData2()
         {
             File.Delete(@"C:\Temp\pairedData1.dss");
-            DSSExcel de = new DSSExcel(@"C:\Temp\pairedData1.xlsx");
-            de.Import(@"C:\Temp\pairedData1.dss", "Sheet1");
+            ExcelReader de = new ExcelReader(@"C:\Temp\pairedData1.xlsx");
+            de.Read("Sheet1");
         }
 
         [TestMethod]
@@ -82,8 +83,11 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            DSSExcel de = new DSSExcel(a[1]);
-            de.Import(a[2], 0);
+            ExcelReader de = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport1.dss"))
+            {
+                w.Write(de.Read(0) as TimeSeries);
+            }
         }
 
         [TestMethod]
@@ -96,8 +100,11 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            DSSExcel de = new DSSExcel(a[1]);
-            de.Import(a[2], 0);
+            ExcelReader de = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport2.dss"))
+            {
+                w.Write(de.Read(0) as TimeSeries);
+            }
         }
 
         [TestMethod]
@@ -110,8 +117,11 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            DSSExcel de = new DSSExcel(a[1]);
-            de.Import(a[2], 0);
+            ExcelReader de = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport3.dss"))
+            {
+                w.Write(de.Read(0) as TimeSeries);
+            }
         }
 
         [TestMethod]
@@ -124,8 +134,11 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            DSSExcel de = new DSSExcel(a[1]);
-            de.Import(a[2], 0);
+            ExcelReader de = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport4.dss"))
+            {
+                w.Write(de.Read(0) as TimeSeries);
+            }
         }
 
         [TestMethod]
@@ -138,8 +151,11 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            DSSExcel de = new DSSExcel(a[1]);
-            de.Import(a[2], 0);
+            ExcelReader de = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport5.dss"))
+            {
+                w.Write(de.Read(0) as PairedData);
+            }
         }
 
         [TestMethod]
@@ -152,8 +168,11 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            DSSExcel de = new DSSExcel(a[1]);
-            de.Import(a[2], 0);
+            ExcelReader de = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport6.dss"))
+            {
+                w.Write(de.Read(0) as PairedData);
+            }
         }
 
         [TestMethod]
@@ -166,8 +185,11 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            DSSExcel de = new DSSExcel(a[1]);
-            de.Import(a[2], 0);
+            ExcelReader de = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport7.dss"))
+            {
+                w.Write(de.Read(0) as PairedData);
+            }
         }
 
         [TestMethod]
@@ -180,8 +202,11 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            DSSExcel de = new DSSExcel(a[1]);
-            de.Import(a[2], 0);
+            ExcelReader de = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport8.dss"))
+            {
+                w.Write(de.Read(0) as PairedData);
+            }
         }
     }
 }
