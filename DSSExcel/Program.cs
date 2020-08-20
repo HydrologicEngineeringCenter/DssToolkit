@@ -60,7 +60,7 @@ namespace DSSExcel
             if (opts.Command == "import")
             {
                 if (!File.Exists(opts.ExcelFile))
-                    throw new FileNotFoundException("Couldn't find DSS file to import data into Excel.");
+                    throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
 
                 ExcelReader er = new ExcelReader(opts.ExcelFile);
                 using (DssWriter w = new DssWriter(opts.DssFile))
