@@ -26,7 +26,7 @@ namespace DSSExcel
             [Option('s', "excel-sheet", Required = true, HelpText = "The sheet in excel file used for importing or exporting data.")]
             public string Sheet { get; set; }
 
-            [Option('p', "path", Required = false, HelpText = "Path of DSS Record in the form of '/a/b/c/d/e/f/'.")]
+            [Option('p', "path", Required = false, HelpText = "Path of DSS Record in the form of '/a/b/c/d/e/f/'. (Required if exporting DSS data into excel)")]
             public string Path { get; set; }
         }
 
@@ -74,7 +74,7 @@ namespace DSSExcel
             {
                 if (opts.Path == null)
                 {
-                    Console.WriteLine("DSS record path is needed.");
+                    Console.WriteLine("DSS record path is needed for exporting data.");
                     return;
                 }
 

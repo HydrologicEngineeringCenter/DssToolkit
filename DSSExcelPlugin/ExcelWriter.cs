@@ -22,10 +22,14 @@ namespace Hec.Dss.Excel
 
         private void CreateWorkbook(string filename)
         {
-            var fn = Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + ".xls";
-            IWorkbookSet bookSet = Factory.GetWorkbookSet();
-            workbook = bookSet.Workbooks.Add();
-            workbook.FullName = fn;
+            workbook = workbookSet.Workbooks.Add();
+            if (filename.EndsWith(".xls") || filename.EndsWith(".xlsx"))
+                workbook.FullName = filename;
+            else
+            {
+                workbook.FullName = Path.GetDirectoryName(workbook.FullName) + "\\" +
+                    Path.GetFileNameWithoutExtension(workbook.FullName) + ".xlsx";
+            }
         }
 
         private static void SetIndexColumnInExcelFile(IWorkbook book, string sheet, object record)
@@ -120,6 +124,8 @@ namespace Hec.Dss.Excel
 
         public void Write(TimeSeries record, string sheet)
         {
+            if (!SheetExists(sheet))
+                AddSheet(sheet);
             SetDateColumnInExcelFile(workbook, sheet, record);
             SetValueColumnInExcelFile(workbook, sheet, record);
             if (workbook.FullName.EndsWith(".xls"))
@@ -137,6 +143,8 @@ namespace Hec.Dss.Excel
 
         public void Write(PairedData record, string sheet)
         {
+            if (!SheetExists(sheet))
+                AddSheet(sheet);
             SetOrdinateColumnInExcelFile(workbook, sheet, record);
             SetValueColumnInExcelFile(workbook, sheet, record);
             if (workbook.FullName.EndsWith(".xls"))

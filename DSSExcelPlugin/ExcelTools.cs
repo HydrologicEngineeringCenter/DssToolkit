@@ -14,10 +14,13 @@ namespace Hec.Dss.Excel
         public SpreadsheetGear.IWorkbookSet workbookSet = SpreadsheetGear.Factory.GetWorkbookSet();
         public SpreadsheetGear.IWorkbook workbook;
 
-        //public ExcelTools(string filename)
-        //{
-        //    workbook = workbookSet.Workbooks.Open(filename);
-        //}
+        public int Count 
+        { 
+            get
+            {
+                return workbook.Worksheets.Count;
+            }
+        }
 
         /// <summary>
         /// Returns the row index where the headers end and the data begins.
@@ -301,6 +304,32 @@ namespace Hec.Dss.Excel
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        protected void AddSheet(string sheet)
+        {
+            var s = workbook.Worksheets.Add();
+            s.Name = sheet;
+        }
+
+        protected bool SheetExists(string sheet)
+        {
+            return workbook.Worksheets.Contains(workbook.Worksheets[sheet]);
+        }
+
+        protected bool SheetExists(int sheetIndex)
+        {
+            return sheetIndex >= 0 && sheetIndex < Count;
+        }
+
+        protected int IndexOfSheet(string sheet)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (workbook.Worksheets[i].Name == sheet)
+                    return i;
+            }
+            return -1;
         }
     }
 }
