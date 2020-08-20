@@ -83,10 +83,15 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            ExcelReader de = new ExcelReader(a[1]);
-            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport1.dss"))
+            ExcelReader er = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(a[2]))
             {
-                w.Write(de.Read(0) as TimeSeries);
+                var t = er.CheckType("sheet1");
+                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                    w.Write(er.Read("sheet1") as TimeSeries);
+                else if (t is RecordType.PairedData)
+                    w.Write(er.Read("sheet1") as PairedData);
+
             }
         }
 
@@ -100,10 +105,15 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            ExcelReader de = new ExcelReader(a[1]);
-            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport2.dss"))
+            ExcelReader er = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(a[2]))
             {
-                w.Write(de.Read(0) as TimeSeries);
+                var t = er.CheckType("sheet1");
+                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                    w.Write(er.Read("sheet1") as TimeSeries);
+                else if (t is RecordType.PairedData)
+                    w.Write(er.Read("sheet1") as PairedData);
+
             }
         }
 
@@ -117,10 +127,15 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            ExcelReader de = new ExcelReader(a[1]);
-            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport3.dss"))
+            ExcelReader er = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(a[2]))
             {
-                w.Write(de.Read(0) as TimeSeries);
+                var t = er.CheckType("sheet1");
+                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                    w.Write(er.Read("sheet1") as TimeSeries);
+                else if (t is RecordType.PairedData)
+                    w.Write(er.Read("sheet1") as PairedData);
+
             }
         }
 
@@ -134,10 +149,15 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            ExcelReader de = new ExcelReader(a[1]);
-            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport4.dss"))
+            ExcelReader er = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(a[2]))
             {
-                w.Write(de.Read(0) as TimeSeries);
+                var t = er.CheckType("sheet1");
+                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                    w.Write(er.Read("sheet1") as TimeSeries);
+                else if (t is RecordType.PairedData)
+                    w.Write(er.Read("sheet1") as PairedData);
+
             }
         }
 
@@ -151,10 +171,15 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            ExcelReader de = new ExcelReader(a[1]);
-            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport5.dss"))
+            ExcelReader er = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(a[2]))
             {
-                w.Write(de.Read(0) as PairedData);
+                var t = er.CheckType("sheet1");
+                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                    w.Write(er.Read("sheet1") as TimeSeries);
+                else if (t is RecordType.PairedData)
+                    w.Write(er.Read("sheet1") as PairedData);
+
             }
         }
 
@@ -168,10 +193,15 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            ExcelReader de = new ExcelReader(a[1]);
-            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport6.dss"))
+            ExcelReader er = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(a[2]))
             {
-                w.Write(de.Read(0) as PairedData);
+                var t = er.CheckType("sheet1");
+                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                    w.Write(er.Read("sheet1") as TimeSeries);
+                else if (t is RecordType.PairedData)
+                    w.Write(er.Read("sheet1") as PairedData);
+
             }
         }
 
@@ -185,10 +215,15 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            ExcelReader de = new ExcelReader(a[1]);
-            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport7.dss"))
+            ExcelReader er = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(a[2]))
             {
-                w.Write(de.Read(0) as PairedData);
+                var t = er.CheckType("sheet1");
+                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                    w.Write(er.Read("sheet1") as TimeSeries);
+                else if (t is RecordType.PairedData)
+                    w.Write(er.Read("sheet1") as PairedData);
+
             }
         }
 
@@ -202,10 +237,15 @@ namespace DSSExcelTests
                 throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
             }
 
-            ExcelReader de = new ExcelReader(a[1]);
-            using (DssWriter w = new DssWriter(TestUtility.OutputPath + "CommandLineImport8.dss"))
+            ExcelReader er = new ExcelReader(a[1]);
+            using (DssWriter w = new DssWriter(a[2]))
             {
-                w.Write(de.Read(0) as PairedData);
+                var t = er.CheckType("sheet1");
+                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                    w.Write(er.Read("sheet1") as TimeSeries);
+                else if (t is RecordType.PairedData)
+                    w.Write(er.Read("sheet1") as PairedData);
+
             }
         }
     }

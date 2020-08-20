@@ -128,7 +128,7 @@ namespace Hec.Dss.Excel
                 workbook.SaveAs(workbook.FullName, FileFormat.OpenXMLWorkbook);
             else
             {
-                var name = Path.GetDirectoryName(workbook.FullName) +
+                var name = Path.GetDirectoryName(workbook.FullName) + "\\" +
                     Path.GetFileNameWithoutExtension(workbook.FullName) + ".xlsx";
                 workbook.SaveAs(name, FileFormat.OpenXMLWorkbook);
             }
@@ -140,12 +140,12 @@ namespace Hec.Dss.Excel
             SetOrdinateColumnInExcelFile(workbook, sheet, record);
             SetValueColumnInExcelFile(workbook, sheet, record);
             if (workbook.FullName.EndsWith(".xls"))
-                workbook.SaveAs(workbook.FullName, FileFormat.OpenXMLWorkbook);
+                workbook.SaveAs(workbook.FullName, FileFormat.Excel8);
             else if (workbook.FullName.EndsWith(".xlsx"))
                 workbook.SaveAs(workbook.FullName, FileFormat.OpenXMLWorkbook);
             else
             {
-                var name = Path.GetDirectoryName(workbook.FullName) + 
+                var name = Path.GetDirectoryName(workbook.FullName) + "\\" +
                     Path.GetFileNameWithoutExtension(workbook.FullName) + ".xlsx";
                 workbook.SaveAs(name, FileFormat.OpenXMLWorkbook);
             }

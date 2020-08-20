@@ -61,7 +61,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void CheckIfExcelSheetIsPairedDataWithNoIndex()
         {
-            ExcelReader de = new ExcelReader(@"C:\Temp\pairedData1.xlsx");
+            ExcelReader de = new ExcelReader(@"C:\Temp\exportPD1.xls");
             Assert.AreEqual(de.CheckType("Sheet1"), Hec.Dss.RecordType.PairedData);
 
         }

@@ -70,19 +70,17 @@ namespace DSSExcelTests
                 object record;
                 ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
-                path.Dpart = "";
                 var type = r.GetRecordType(path);
-                if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                 {
                     record = r.GetTimeSeries(path);
-                    ew.Write(record as TimeSeries, 0);
+                    ew.Write(record as TimeSeries, "sheet1");
                 }
-                else if (type == RecordType.PairedData)
+                else if (type is RecordType.PairedData)
                 {
                     record = r.GetPairedData(path.FullPath);
-                    ew.Write(record as PairedData, 0);
+                    ew.Write(record as PairedData, "sheet1");
                 }
-
             }
         }
 
@@ -102,17 +100,16 @@ namespace DSSExcelTests
                 object record;
                 ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
-                path.Dpart = "";
                 var type = r.GetRecordType(path);
-                if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                 {
                     record = r.GetTimeSeries(path);
-                    ew.Write(record as TimeSeries, 0);
+                    ew.Write(record as TimeSeries, "sheet1");
                 }
-                else if (type == RecordType.PairedData)
+                else if (type is RecordType.PairedData)
                 {
                     record = r.GetPairedData(path.FullPath);
-                    ew.Write(record as PairedData, 0);
+                    ew.Write(record as PairedData, "sheet1");
                 }
             }
         }
@@ -133,17 +130,16 @@ namespace DSSExcelTests
                 object record;
                 ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
-                path.Dpart = "";
                 var type = r.GetRecordType(path);
-                if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                 {
                     record = r.GetTimeSeries(path);
-                    ew.Write(record as TimeSeries, 0);
+                    ew.Write(record as TimeSeries, "sheet1");
                 }
-                else if (type == RecordType.PairedData)
+                else if (type is RecordType.PairedData)
                 {
                     record = r.GetPairedData(path.FullPath);
-                    ew.Write(record as PairedData, 0);
+                    ew.Write(record as PairedData, "sheet1");
                 }
             }
         }
@@ -164,17 +160,16 @@ namespace DSSExcelTests
                 object record;
                 ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
-                path.Dpart = "";
                 var type = r.GetRecordType(path);
-                if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                 {
                     record = r.GetTimeSeries(path);
-                    ew.Write(record as TimeSeries, 0);
+                    ew.Write(record as TimeSeries, "sheet1");
                 }
-                else if (type == RecordType.PairedData)
+                else if (type is RecordType.PairedData)
                 {
                     record = r.GetPairedData(path.FullPath);
-                    ew.Write(record as PairedData, 0);
+                    ew.Write(record as PairedData, "sheet1");
                 }
             }
         }
@@ -195,17 +190,16 @@ namespace DSSExcelTests
                 object record;
                 ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
-                path.Dpart = "";
                 var type = r.GetRecordType(path);
-                if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                 {
                     record = r.GetTimeSeries(path);
-                    ew.Write(record as TimeSeries, 0);
+                    ew.Write(record as TimeSeries, "sheet1");
                 }
-                else if (type == RecordType.PairedData)
+                else if (type is RecordType.PairedData)
                 {
                     record = r.GetPairedData(path.FullPath);
-                    ew.Write(record as PairedData, 0);
+                    ew.Write(record as PairedData, "sheet1");
                 }
             }
         }
@@ -226,17 +220,16 @@ namespace DSSExcelTests
                 object record;
                 ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
-                path.Dpart = "";
                 var type = r.GetRecordType(path);
-                if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                 {
                     record = r.GetTimeSeries(path);
-                    ew.Write(record as TimeSeries, 0);
+                    ew.Write(record as TimeSeries, "sheet1");
                 }
-                else if (type == RecordType.PairedData)
+                else if (type is RecordType.PairedData)
                 {
                     record = r.GetPairedData(path.FullPath);
-                    ew.Write(record as PairedData, 0);
+                    ew.Write(record as PairedData, "sheet1");
                 }
             }
         }
@@ -257,17 +250,16 @@ namespace DSSExcelTests
                 object record;
                 ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
-                path.Dpart = "";
                 var type = r.GetRecordType(path);
-                if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                 {
                     record = r.GetTimeSeries(path);
-                    ew.Write(record as TimeSeries, 0);
+                    ew.Write(record as TimeSeries, "sheet1");
                 }
-                else if (type == RecordType.PairedData)
+                else if (type is RecordType.PairedData)
                 {
                     record = r.GetPairedData(path.FullPath);
-                    ew.Write(record as PairedData, 0);
+                    ew.Write(record as PairedData, "sheet1");
                 }
             }
         }
@@ -288,17 +280,16 @@ namespace DSSExcelTests
                 object record;
                 ExcelWriter ew = new ExcelWriter(a[2]);
                 DssPath path = new DssPath(a[3]);
-                path.Dpart = "";
                 var type = r.GetRecordType(path);
-                if (type == RecordType.RegularTimeSeries || type == RecordType.IrregularTimeSeries)
+                if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                 {
                     record = r.GetTimeSeries(path);
-                    ew.Write(record as TimeSeries, 0);
+                    ew.Write(record as TimeSeries, "sheet1");
                 }
-                else if (type == RecordType.PairedData)
+                else if (type is RecordType.PairedData)
                 {
                     record = r.GetPairedData(path.FullPath);
-                    ew.Write(record as PairedData, 0);
+                    ew.Write(record as PairedData, "sheet1");
                 }
             }
         }
