@@ -59,6 +59,9 @@ namespace DSSExcel
             licensing.SetPersonalLicense();
             if (opts.Command == "import")
             {
+                if (!File.Exists(opts.ExcelFile))
+                    throw new FileNotFoundException("Couldn't find DSS file to import data into Excel.");
+
                 ExcelReader er = new ExcelReader(opts.ExcelFile);
                 using (DssWriter w = new DssWriter(opts.DssFile))
                 {
@@ -79,9 +82,7 @@ namespace DSSExcel
                 }
 
                 if (!File.Exists(opts.DssFile))
-                {
                     throw new FileNotFoundException("Couldn't find DSS file to import data into Excel.");
-                }
 
                 using (DssReader r = new DssReader(opts.DssFile))
                 {
