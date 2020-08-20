@@ -342,5 +342,5 @@ healthchecksdb
 
 
 DSSExcelLicensing.cs
-DSSExcelTests/test-files/**
-DSSExcelTests/test-files/output/**
+DSSExcelTests/test-files/*.*
+DSSExcelTests/test-files/output/*.*
