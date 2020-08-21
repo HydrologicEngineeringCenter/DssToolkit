@@ -88,7 +88,7 @@ namespace DSSExcelTests
         public void CommandLineExport2()
         {
             var fn = TestUtility.BasePath + "indexedRegularTimeSeries1.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedRegularTimeSeries1.xlsx", "/excel/import/plugin/01May2020/15Minute/regularTimeSeriesZ1K/" };
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedRegularTimeSeries1.xlsx", "/excel/import/plugin//15Minute/regularTimeSeriesZ1K/" };
 
             if (!File.Exists(a[1]))
             {
@@ -178,7 +178,7 @@ namespace DSSExcelTests
         public void CommandLineExport5()
         {
             var fn = TestUtility.OutputPath + "CommandLineImport5.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "pairedData1.xlsx", "/excel/import/plugin//e/pairedDataUP9/" };
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "pairedData1.xlsx", "/import/pairedData1/sheet1//excel/pairedDataOWS/" };
 
             if (!File.Exists(a[1]))
             {
@@ -208,7 +208,7 @@ namespace DSSExcelTests
         public void CommandLineExport6()
         {
             var fn = TestUtility.OutputPath + "CommandLineImport6.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedPairedData1.xlsx", "/excel/import/plugin//e/pairedDataSJQ/" };
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedPairedData1.xlsx", "/import/indexedPairedData1/sheet1//excel/pairedDataPWB/" };
 
             if (!File.Exists(a[1]))
             {
@@ -238,7 +238,7 @@ namespace DSSExcelTests
         public void CommandLineExport7()
         {
             var fn = TestUtility.OutputPath + "CommandLineImport7.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "pairedData2.xlsx", "/excel/import/plugin//e/pairedDataNXN/" };
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "pairedData2.xlsx", "/import/pairedData2/sheet1//excel/pairedData7RQ/" };
 
             if (!File.Exists(a[1]))
             {
@@ -268,7 +268,7 @@ namespace DSSExcelTests
         public void CommandLineExport8()
         {
             var fn = TestUtility.OutputPath + "CommandLineImport8.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedPairedData2.xlsx", "/excel/import/plugin//e/pairedData1VA/" };
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedPairedData2.xlsx", "/import/indexedPairedData2/sheet1//excel/pairedDataOL8/" };
 
             if (!File.Exists(a[1]))
             {
