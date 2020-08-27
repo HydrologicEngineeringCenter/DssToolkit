@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DSSExcelCLI.Properties
+namespace DSSExcel.Properties
 {
 
 

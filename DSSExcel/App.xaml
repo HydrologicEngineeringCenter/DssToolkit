@@ -1,7 +1,7 @@
-﻿<Application x:Class="DSSExcelCLI.App"
+﻿<Application x:Class="DSSExcel.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:DSSExcelCLI"
+             xmlns:local="clr-namespace:DSSExcel"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
