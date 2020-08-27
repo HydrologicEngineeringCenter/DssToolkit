@@ -32,9 +32,9 @@ namespace Hec.Dss.Excel
             IValues vals = (IValues)workbook.Worksheets[worksheet];
             var r = RowCount(worksheet);
             var c = ColumnCount(worksheet);
-            for (int i = 0; i < r; i++)
+            for (int j = 0; j < c; j++)
             {
-                for (int j = 0; j < c; j++)
+                for (int i = 0; i < r; i++)
                 {
                     if (vals[i, j].Type == SpreadsheetGear.Advanced.Cells.ValueType.Number)
                         return i;
@@ -312,9 +312,21 @@ namespace Hec.Dss.Excel
             s.Name = sheet;
         }
 
+        protected void AddSheet(int sheetIndex)
+        {
+            var s = workbook.Worksheets.Add();
+            if (!SheetExists(sheetIndex))
+                AddSheet(sheetIndex);
+        }
+
         protected bool SheetExists(string sheet)
         {
-            return workbook.Worksheets.Contains(workbook.Worksheets[sheet]);
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                if (workbook.Worksheets[i].Name.ToLower() == sheet.ToLower())
+                    return true;
+            }
+            return false;
         }
 
         protected bool SheetExists(int sheetIndex)

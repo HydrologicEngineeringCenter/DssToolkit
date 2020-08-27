@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,10 +16,14 @@ namespace Hec.Dss.Excel
 
         public ExcelWriter(string filename)
         {
-            if (!File.Exists(filename))
-                CreateWorkbook(filename);
-            else
+            if (File.Exists(filename))
                 workbook = workbookSet.Workbooks.Open(filename);
+            else if (File.Exists(filename + ".xls"))
+                workbook = workbookSet.Workbooks.Open(filename + ".xls");
+            else if (File.Exists(filename + ".xlsx"))
+                workbook = workbookSet.Workbooks.Open(filename + ".xlsx");
+            else
+                CreateWorkbook(filename);
         }
 
         private void CreateWorkbook(string filename)
@@ -28,8 +33,8 @@ namespace Hec.Dss.Excel
                 workbook.FullName = filename;
             else
             {
-                workbook.FullName = Path.GetDirectoryName(workbook.FullName) + "\\" +
-                    Path.GetFileNameWithoutExtension(workbook.FullName) + ".xlsx";
+                workbook.FullName = Path.GetDirectoryName(filename) + "\\" +
+                    Path.GetFileNameWithoutExtension(filename) + ".xlsx";
             }
         }
 
@@ -102,7 +107,6 @@ namespace Hec.Dss.Excel
                     Path.GetFileNameWithoutExtension(workbook.FullName) + ".xlsx";
                 workbook.SaveAs(name, FileFormat.OpenXMLWorkbook);
             }
-            workbook.Close();
         }
 
         private void SetTimeSeriesValueColumnInExcelFile(IWorkbook workbook, string sheet, TimeSeries ts, int rowOffset, int colOffset)
@@ -175,6 +179,8 @@ namespace Hec.Dss.Excel
 
         public void Write(TimeSeries record, int sheetIndex)
         {
+            if (!SheetExists(sheetIndex))
+                AddSheet(sheetIndex);
             Write(record, workbook.Worksheets[sheetIndex].Name);
         }
 

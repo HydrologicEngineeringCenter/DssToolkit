@@ -8,7 +8,7 @@ using CommandLine;
 using Hec.Dss;
 using Hec.Dss.Excel;
 
-namespace DSSExcel
+namespace DSSExcelCLI
 {
     class Program
     {
@@ -23,10 +23,10 @@ namespace DSSExcel
             [Option('e', "excel-file", Required = true, HelpText = "The destination file where the source file will export or import data.")]
             public string ExcelFile { get; set; }
 
-            [Option('s', "excel-sheet", Required = true, HelpText = "The sheet in excel file used for importing or exporting data.", Separator = ',')]
+            [Option('s', "excel-sheet", Required = false, HelpText = "The sheet in excel file used for importing or exporting data.", Separator = ',')]
             public IEnumerable<string> Sheets { get; set; }
 
-            [Option('p', "path", Required = false, HelpText = "Path of DSS Record in the form of '/a/b/c/d/e/f/'. (Required if exporting DSS data into excel)", Separator = ',')]
+            [Option('p', "path", Required = false, HelpText = "Path of DSS Record in the form of '/a/b/c/d/e/f/'.", Separator = ',')]
             public IEnumerable<string> Paths { get; set; }
         }
 
@@ -64,14 +64,29 @@ namespace DSSExcel
                 ExcelReader er = new ExcelReader(opts.ExcelFile);
                 using (DssWriter w = new DssWriter(opts.DssFile))
                 {
-                    foreach (var sheet in opts.Sheets)
+                    if (opts.Sheets.ToList<string>().Count == 0)
                     {
-                        var t = er.CheckType(sheet);
-                        if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
-                            w.Write(er.Read(sheet) as TimeSeries);
-                        else if (t is RecordType.PairedData)
-                            w.Write(er.Read(sheet) as PairedData);
+                        for (int i = 0; i < er.Count; i++)
+                        {
+                            var t = er.CheckType(i);
+                            if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                                w.Write(er.Read(i) as TimeSeries);
+                            else if (t is RecordType.PairedData)
+                                w.Write(er.Read(i) as PairedData);
+                        }
                     }
+                    else
+                    {
+                        foreach (var sheet in opts.Sheets)
+                        {
+                            var t = er.CheckType(sheet);
+                            if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                                w.Write(er.Read(sheet) as TimeSeries);
+                            else if (t is RecordType.PairedData)
+                                w.Write(er.Read(sheet) as PairedData);
+                        }
+                    }
+                    
                 }
             }
             else if (opts.Command == "export")
@@ -83,27 +98,42 @@ namespace DSSExcel
                 {
                     object record;
                     ExcelWriter ew = new ExcelWriter(opts.ExcelFile);
-                    for (int i = 0; i < opts.Sheets.ToList<string>().Count; i++)
+                    if (opts.Sheets.ToList<string>().Count == 0)
                     {
-                        DssPath p = new DssPath(opts.Paths.ElementAt(i));
-                        var type = r.GetRecordType(p);
-                        if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
+                        for (int i = 0; i < opts.Paths.ToList<string>().Count; i++)
                         {
-                            record = r.GetTimeSeries(p);
-                            ew.Write(record as TimeSeries, opts.Sheets.ElementAt(i));
-                        }
-                        else if (type is RecordType.PairedData)
-                        {
-                            record = r.GetPairedData(p.FullPath);
-                            ew.Write(record as PairedData, opts.Sheets.ElementAt(i));
+                            DssPath p = new DssPath(opts.Paths.ElementAt(i));
+                            var type = r.GetRecordType(p);
+                            if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
+                            {
+                                record = r.GetTimeSeries(p);
+                                ew.Write(record as TimeSeries, i);
+                            }
+                            else if (type is RecordType.PairedData)
+                            {
+                                record = r.GetPairedData(p.FullPath);
+                                ew.Write(record as PairedData, i);
+                            }
                         }
                     }
-                    
-                        
-                    
-                    
-
-
+                    else
+                    {
+                        for (int i = 0; i < opts.Sheets.ToList<string>().Count; i++)
+                        {
+                            DssPath p = new DssPath(opts.Paths.ElementAt(i));
+                            var type = r.GetRecordType(p);
+                            if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
+                            {
+                                record = r.GetTimeSeries(p);
+                                ew.Write(record as TimeSeries, opts.Sheets.ElementAt(i));
+                            }
+                            else if (type is RecordType.PairedData)
+                            {
+                                record = r.GetPairedData(p.FullPath);
+                                ew.Write(record as PairedData, opts.Sheets.ElementAt(i));
+                            }
+                        }
+                    }
                 }
             }
         }
