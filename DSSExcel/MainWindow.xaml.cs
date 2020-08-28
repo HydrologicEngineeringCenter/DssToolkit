@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Hec.Dss;
+using Hec.Dss.Excel;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +26,42 @@ namespace DSSExcel
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void DssFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                DssPathCollection c;
+                using (DssReader r = new DssReader(openFileDialog.FileName))
+                {
+                    c = r.GetCatalog();
+                    foreach (var path in c)
+                    {
+                        DssPathList.Items.Add(path);
+                    }
+                }
+
+                DssFilePath.Text = openFileDialog.FileName;
+            }
+        }
+
+        private void ExcelFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ExcelReader er = new ExcelReader(openFileDialog.FileName);
+                foreach (var sheet in er.workbook.Worksheets)
+                {
+                    SheetList.Items.Add(sheet);
+                }
+
+                ExcelFilePath.Text = openFileDialog.FileName;
+            }
         }
     }
 }

@@ -5,25 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DSSExcel"
         mc:Ignorable="d"
-        Title="DSSExcel" Height="277" Width="602" MinWidth="480" MinHeight="450">
+        Title="DSSExcel" Height="396" Width="602" MinWidth="480" MinHeight="450">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="147*"/>
-            <ColumnDefinition Width="326*"/>
+            <ColumnDefinition Width="185"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="104*"/>
-            <RowDefinition Height="315*"/>
+            <RowDefinition Height="104"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="43"/>
         </Grid.RowDefinitions>
-        <Button Content="Choose DSS File..." Margin="19,30,10,0" VerticalAlignment="Top" Height="20"/>
-        <Button Content="Choose Excel File..." Margin="19,71,10,0" VerticalAlignment="Top" Height="20"/>
+        <Button x:Name="DssFileButton" Content="Choose DSS File..." Margin="19,30,10,0" VerticalAlignment="Top" Height="20" Click="DssFileButton_Click"/>
+        <Button x:Name="ExcelFileButton" Content="Choose Excel File..." Margin="19,71,10,0" VerticalAlignment="Top" Height="20" Click="ExcelFileButton_Click"/>
         <TextBox x:Name="DssFilePath" Height="20" Margin="10,30,16,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" Background="#FFF3F3F3" BorderBrush="#FFBBBBBB" Grid.Column="1"/>
         <TextBox x:Name="ExcelFilePath" Height="20" Margin="10,71,16,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" Background="#FFF3F3F3" BorderBrush="#FFBBBBBB" Grid.Column="1"/>
-        <Button Content="Import" Margin="19,285,0,0" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="107" Height="20"/>
-        <Button Content="Export" Margin="0,285,16,0" Grid.Row="1" VerticalAlignment="Top" Grid.Column="1" HorizontalAlignment="Right" Width="107" Height="20"/>
-        <ListBox x:Name="SheetList" Height="100" Margin="19,34,16,0" Grid.Row="1" VerticalAlignment="Top" Grid.ColumnSpan="2" BorderBrush="#FFB3ABAD"/>
-        <ListBox x:Name="DssPathList" Height="100" Margin="19,161,16,0" Grid.Row="1" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="19,11,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Select Excel Sheets:" VerticalAlignment="Top" Width="139" BorderBrush="{x:Null}" FontSize="14" Grid.ColumnSpan="2"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="19,138,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Select DSS Paths:" VerticalAlignment="Top" Width="128" BorderBrush="{x:Null}" FontSize="14"/>
+        <Button Content="Import" Margin="19,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="107" Height="20"/>
+        <Button Content="Export" Margin="0,0,16,10" Grid.Row="3" VerticalAlignment="Bottom" Grid.Column="1" HorizontalAlignment="Right" Width="107" Height="20"/>
+        <ListBox x:Name="SheetList" Margin="19,39,16,10" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#FFB3ABAD"/>
+        <ListBox x:Name="DssPathList" Margin="19,36,16,32" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="19,16,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Select Excel Sheets:" VerticalAlignment="Top" Width="139" BorderBrush="{x:Null}" FontSize="14"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="19,13,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Select DSS Paths:" VerticalAlignment="Top" Width="128" BorderBrush="{x:Null}" FontSize="14"/>
     </Grid>
 </Window>
