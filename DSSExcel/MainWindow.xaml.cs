@@ -3,6 +3,8 @@ using Hec.Dss.Excel;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition.Primitives;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +25,8 @@ namespace DSSExcel
     /// </summary>
     public partial class MainWindow : Window
     {
+        public bool HasExcelFile { get; set; }
+        public bool HasDssFile { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -43,9 +47,12 @@ namespace DSSExcel
                     {
                         DssPathList.Items.Add(path.FullPath);
                     }
+                    HasDssFile = true;
                 }
 
                 DssFilePath.Text = openFileDialog.FileName;
+                ImportButton.IsEnabled = CanImport();
+                ExportButton.IsEnabled = CanExport();
             }
         }
 
@@ -61,9 +68,47 @@ namespace DSSExcel
                 {
                     SheetList.Items.Add(sheet);
                 }
-
+                HasExcelFile = true;
                 ExcelFilePath.Text = openFileDialog.FileName;
+                ImportButton.IsEnabled = CanImport();
+                ExportButton.IsEnabled = CanExport();
             }
+        }
+
+        private void SheetList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ImportButton.IsEnabled = CanImport();
+        }
+
+        private void DssPathList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ExportButton.IsEnabled = CanExport();
+        }
+
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private bool CanImport()
+        {
+            if (HasDssFile && SheetList.SelectedItems.Count > 0)
+                return true;
+            else
+                return false;
+        }
+
+        private bool CanExport()
+        {
+            if (HasExcelFile && DssPathList.SelectedItems.Count > 0)
+                return true;
+            else
+                return false;
         }
     }
 }
