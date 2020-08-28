@@ -38,9 +38,10 @@ namespace DSSExcel
                 using (DssReader r = new DssReader(openFileDialog.FileName))
                 {
                     c = r.GetCatalog();
+                    DssPathList.Items.Clear();
                     foreach (var path in c)
                     {
-                        DssPathList.Items.Add(path);
+                        DssPathList.Items.Add(path.FullPath);
                     }
                 }
 
@@ -55,6 +56,7 @@ namespace DSSExcel
             if (openFileDialog.ShowDialog() == true)
             {
                 ExcelReader er = new ExcelReader(openFileDialog.FileName);
+                SheetList.Items.Clear();
                 foreach (var sheet in er.workbook.Worksheets)
                 {
                     SheetList.Items.Add(sheet);
