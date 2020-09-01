@@ -1,0 +1,14 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DSSExcel"
+        xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Class="DSSExcel.DSSExcelVisualEditor"
+        mc:Ignorable="d"
+        Title="DSSExcel Visual Selector" Height="450" Width="800">
+    <Grid>
+        <Controls:WorkbookView x:Name="ExcelWorkbook" Margin="0,22,0,26"/>
+        <Controls:FormulaBar x:Name="ExcelWorkbookFormulaBar" HorizontalAlignment="Left" VerticalAlignment="Top" Width="792"/>
+    </Grid>
+</Window>

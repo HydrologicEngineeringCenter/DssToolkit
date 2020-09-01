@@ -55,8 +55,6 @@ namespace DSSExcelCLI
 
         private static void Run(Options opts)
         {
-            DSSExcelLicensing licensing = new DSSExcelLicensing();
-            licensing.SetPersonalLicense();
             if (opts.Command == "import")
             {
                 VerifyImportArgs(opts);

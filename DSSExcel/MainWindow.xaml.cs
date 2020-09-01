@@ -6,8 +6,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics;
 using System.IO;
+using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
+using SpreadsheetGear;
+using System.Windows.Media;
 
 namespace DSSExcel
 {
@@ -21,8 +24,6 @@ namespace DSSExcel
         public MainWindow()
         {
             InitializeComponent();
-            DSSExcelLicensing l = new DSSExcelLicensing();
-            l.SetPersonalLicense();
         }
 
         private void DssFileButton_Click(object sender, RoutedEventArgs e)
@@ -107,6 +108,7 @@ namespace DSSExcel
                                 w.Write(er.Read(i) as TimeSeries);
                             else if (t is RecordType.PairedData)
                                 w.Write(er.Read(i) as PairedData);
+                            
                         }
                     }
                     else
@@ -266,6 +268,18 @@ namespace DSSExcel
                 return true;
             else
                 return false;
+        }
+
+        private void VisualEditorButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ExcelFilePath.Text == "")
+            {
+                MessageBox.Show("Need to select an existing excel file first.", "DSSExcel Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            ExcelReader r = new ExcelReader(ExcelFilePath.Text);
+            DSSExcelVisualEditor d = new DSSExcelVisualEditor(r.workbook);
+            d.ShowDialog();
         }
     }
 }
