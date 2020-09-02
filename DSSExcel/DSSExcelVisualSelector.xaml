@@ -6,9 +6,19 @@
         xmlns:local="clr-namespace:DSSExcel"
         xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Class="DSSExcel.DSSExcelVisualEditor"
         mc:Ignorable="d"
-        Title="DSSExcel Visual Selector" Height="450" Width="800">
+        Title="DSSExcel Visual Selector" Height="645.418" Width="1031.5">
     <Grid>
-        <Controls:WorkbookView x:Name="ExcelWorkbook" Margin="0,22,0,26"/>
-        <Controls:FormulaBar x:Name="ExcelWorkbookFormulaBar" HorizontalAlignment="Left" VerticalAlignment="Top" Width="792"/>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="66"/>
+        </Grid.RowDefinitions>
+        <Controls:WorkbookView x:Name="ExcelWorkbook" Margin="166,22,0,17"/>
+        <Controls:FormulaBar x:Name="ExcelWorkbookFormulaBar" VerticalAlignment="Top" Margin="166,0,0,0"/>
+        <Button Content="Import" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" Height="25" Grid.Row="1"/>
+        <ListBox Margin="0,22,0,17" BorderBrush="Black" HorizontalAlignment="Left" Width="166">
+            <ListBoxItem Content="Date/Time" BorderBrush="#FFB8B8B8"/>
+            <ListBoxItem Content="Ordinates" BorderBrush="#FFB8B8B8"/>
+            <ListBoxItem Content="Values" BorderBrush="#FFB8B8B8"/>
+        </ListBox>
     </Grid>
 </Window>
