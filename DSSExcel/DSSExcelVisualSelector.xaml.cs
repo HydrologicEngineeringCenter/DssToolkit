@@ -78,10 +78,30 @@ namespace DSSExcel
 
         private bool CheckRecordComponents()
         {
+
             if (!CheckDates(Dates))
                 return false;
 
+            if (!AreSelectionsCompatible())
+                return false;
+
+            if (!CheckOrdinates())
+                return false;
+
+            if (!CheckValues())
+                return false;
+
             return true;
+        }
+
+        private bool CheckValues()
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool CheckOrdinates()
+        {
+            throw new NotImplementedException();
         }
 
         private void ImportButton_Click(object sender, RoutedEventArgs e)
@@ -132,6 +152,11 @@ namespace DSSExcel
                 }
             }
             return true;
+        }
+
+        private bool AreSelectionsCompatible()
+        {
+
         }
     }
 }
