@@ -12,11 +12,11 @@
             <RowDefinition/>
             <RowDefinition Height="66"/>
         </Grid.RowDefinitions>
-        <Controls:WorkbookView x:Name="ExcelWorkbook" Margin="166,22,0,17"/>
+        <Controls:WorkbookView x:Name="ExcelWorkbook" Margin="166,22,0,17" RangeSelectionChanged="ExcelWorkbook_RangeSelectionChanged"/>
         <Controls:FormulaBar x:Name="ExcelWorkbookFormulaBar" VerticalAlignment="Top" Margin="166,0,0,0"/>
-        <Button Content="Import" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" Height="25" Grid.Row="1"/>
-        <ListBox Margin="0,22,0,17" BorderBrush="Black" HorizontalAlignment="Left" Width="166">
-            <ListBoxItem Content="Date/Time" BorderBrush="#FFB8B8B8"/>
+        <Button x:Name="ImportButton" Content="Import" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" Height="25" Grid.Row="1" Click="ImportButton_Click"/>
+        <ListBox x:Name="RecordComponent" Margin="0,22,0,17" BorderBrush="Black" HorizontalAlignment="Left" Width="166" SelectionChanged="RecordComponent_SelectionChanged">
+            <ListBoxItem Content="Date/Time" BorderBrush="#FFB8B8B8" IsSelected="True"/>
             <ListBoxItem Content="Ordinates" BorderBrush="#FFB8B8B8"/>
             <ListBoxItem Content="Values" BorderBrush="#FFB8B8B8"/>
         </ListBox>
