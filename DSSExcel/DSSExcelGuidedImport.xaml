@@ -9,6 +9,7 @@
         Title="Select Data Type" Height="500" Width="700">
     <Grid>
         <uc:SelectDataTypePage x:Name="DataTypePage" Click="SelectDataTypePage_Click"/>
-        <uc:DateSelectPage x:Name="DatePage"/>
+        <uc:DateSelectPage x:Name="DatePage" NextClick="DatePage_NextClick" BackClick="DatePage_BackClick" Visibility="Collapsed" Height="Auto" Width="Auto"/>
+        <uc:ValueSelectPage x:Name="ValuePage" NextClick="ValuePage_NextClick" BackClick="ValuePage_BackClick" Visibility="Collapsed"/>
     </Grid>
 </Window>

@@ -31,7 +31,7 @@ namespace DSSExcel
             PairedDataSummary.Visibility = Visibility.Collapsed;
             TimeSeriesImage.Visibility = Visibility.Visible;
             TimeSeriesSummary.Visibility = Visibility.Visible;
-            DataTypeSelectButton.IsEnabled = true;
+            DataTypeSelectNextButton.IsEnabled = true;
         }
 
         private void PairedDataOption_Selected(object sender, RoutedEventArgs e)
@@ -40,7 +40,7 @@ namespace DSSExcel
             TimeSeriesSummary.Visibility = Visibility.Collapsed;
             PairedDataImage.Visibility = Visibility.Visible;
             PairedDataSummary.Visibility = Visibility.Visible;
-            DataTypeSelectButton.IsEnabled = true;
+            DataTypeSelectNextButton.IsEnabled = true;
         }
 
         public event RoutedEventHandler Click;

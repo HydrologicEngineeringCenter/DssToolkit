@@ -238,6 +238,9 @@
     <Compile Include="SelectDataTypePage.xaml.cs">
       <DependentUpon>SelectDataTypePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ValueSelectPage.xaml.cs">
+      <DependentUpon>ValueSelectPage.xaml</DependentUpon>
+    </Compile>
     <Page Include="DateSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -266,6 +269,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectDataTypePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ValueSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

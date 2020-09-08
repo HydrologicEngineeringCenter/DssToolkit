@@ -29,5 +29,28 @@ namespace DSSExcel
             DataTypePage.Visibility = Visibility.Collapsed;
             DatePage.Visibility = Visibility.Visible;
         }
+
+        private void DatePage_NextClick(object sender, RoutedEventArgs e)
+        {
+            DatePage.Visibility = Visibility.Collapsed;
+            ValuePage.Visibility = Visibility.Visible;
+        }
+
+        private void DatePage_BackClick(object sender, RoutedEventArgs e)
+        {
+            DatePage.Visibility = Visibility.Collapsed;
+            DataTypePage.Visibility = Visibility.Visible;
+        }
+
+        private void ValuePage_NextClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ValuePage_BackClick(object sender, RoutedEventArgs e)
+        {
+            ValuePage.Visibility = Visibility.Collapsed;
+            DatePage.Visibility = Visibility.Visible;
+        }
     }
 }

@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace DSSExcel
 {
     /// <summary>
-    /// Interaction logic for DateSelect.xaml
+    /// Interaction logic for ValueSelectPage.xaml
     /// </summary>
-    public partial class DateSelectPage : UserControl
+    public partial class ValueSelectPage : UserControl
     {
-        public DateSelectPage()
+        public ValueSelectPage()
         {
             InitializeComponent();
         }
@@ -28,12 +28,12 @@ namespace DSSExcel
         public event RoutedEventHandler NextClick;
         public event RoutedEventHandler BackClick;
 
-        private void DateSelectNextButton_Click(object sender, RoutedEventArgs e)
+        private void ValueSelectNextButton_Click(object sender, RoutedEventArgs e)
         {
             this.NextClick?.Invoke(this, e);
         }
 
-        private void DateSelectBackButton_Click(object sender, RoutedEventArgs e)
+        private void ValueSelectBackButton_Click(object sender, RoutedEventArgs e)
         {
             this.BackClick?.Invoke(this, e);
         }
