@@ -229,6 +229,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DateSelectPage.xaml.cs">
+      <DependentUpon>DateSelectPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DSSExcelGuidedImport.xaml.cs">
+      <DependentUpon>DSSExcelGuidedImport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SelectDataTypePage.xaml.cs">
+      <DependentUpon>SelectDataTypePage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="DateSelectPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DSSExcelVisualSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -248,6 +261,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="DSSExcelGuidedImport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectDataTypePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -281,6 +302,12 @@
       <Project>{e20ea78b-0cc7-4bff-9038-97a5e2182180}</Project>
       <Name>Hec.Dss.Excel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="photos\regularTimeSeriesExample.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="photos\pairedDataExample.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />

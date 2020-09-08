@@ -6,16 +6,16 @@
         xmlns:local="clr-namespace:DSSExcel"
         xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Class="DSSExcel.DSSExcelVisualEditor"
         mc:Ignorable="d"
-        Title="DSSExcel Visual Selector" Height="645.418" Width="1031.5">
+        Title="Select Data Ranges" Height="568.918" Width="1031.5">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="66"/>
+            <RowDefinition Height="58"/>
         </Grid.RowDefinitions>
-        <Controls:WorkbookView x:Name="ExcelWorkbook" Margin="166,22,0,17" RangeSelectionChanged="ExcelWorkbook_RangeSelectionChanged"/>
-        <Controls:FormulaBar x:Name="ExcelWorkbookFormulaBar" VerticalAlignment="Top" Margin="166,0,0,0"/>
+        <Controls:WorkbookView x:Name="ExcelWorkbook" Margin="166,22,0,28" RangeSelectionChanged="ExcelWorkbook_RangeSelectionChanged"/>
+        <Controls:FormulaBar x:Name="ExcelWorkbookFormulaBar" VerticalAlignment="Top" Margin="166,0,0,0" Height="22"/>
         <Button x:Name="ImportButton" Content="Import" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" Height="25" Grid.Row="1" Click="ImportButton_Click"/>
-        <ListBox x:Name="RecordComponent" Margin="0,22,0,17" BorderBrush="Black" HorizontalAlignment="Left" Width="166" SelectionChanged="RecordComponent_SelectionChanged">
+        <ListBox x:Name="RecordComponent" Margin="0,22,0,28" BorderBrush="Black" HorizontalAlignment="Left" Width="166" SelectionChanged="RecordComponent_SelectionChanged">
             <ListBoxItem Content="Date/Time" BorderBrush="#FFB8B8B8" IsSelected="True"/>
             <ListBoxItem Content="Ordinates" BorderBrush="#FFB8B8B8"/>
             <ListBoxItem Content="Values" BorderBrush="#FFB8B8B8"/>

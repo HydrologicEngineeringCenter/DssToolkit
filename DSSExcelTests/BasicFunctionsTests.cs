@@ -11,13 +11,6 @@ namespace DSSExcelTests
     [TestClass]
     public class BasicFunctionsTests
     {
-
-        public BasicFunctionsTests()
-        {
-            DSSExcelLicensing licensing = new DSSExcelLicensing();
-            licensing.SetPersonalLicenseForTesting();
-        }
-
         [TestMethod]
         public void CheckIfExcelSheetIsRegularTimeSeriesWithIndex()
         {

@@ -14,12 +14,6 @@ namespace DSSExcelTests
     [TestClass]
     public class ImportTests
     {
-        public ImportTests()
-        {
-            DSSExcelLicensing licensing = new DSSExcelLicensing();
-            licensing.SetPersonalLicenseForTesting();
-        }
-
         [TestMethod]
         public void ImportRegularTimeSeries1()
         {

@@ -278,8 +278,8 @@ namespace DSSExcel
                 return;
             }
             ExcelReader r = new ExcelReader(ExcelFilePath.Text);
-            DSSExcelVisualEditor d = new DSSExcelVisualEditor(r.workbook);
-            d.ShowDialog();
+            DSSExcelGuidedImport s = new DSSExcelGuidedImport();
+            s.ShowDialog();
         }
     }
 }

@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="DSSExcel.SelectDataType"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DSSExcel"
+             mc:Ignorable="d">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+        <ListBox HorizontalAlignment="Left" Width="177" Grid.RowSpan="2">
+            <ListBoxItem x:Name="TimeSeriesOption" Content="Time Series" Selected="TimeSeriesOption_Selected"/>
+            <ListBoxItem x:Name="PairedDataOption" Content="Paired Data" Selected="PairedDataOption_Selected"/>
+        </ListBox>
+        <TextBlock x:Name="TimeSeriesSummary" Margin="182,0,-80,189" HorizontalAlignment="Left" Width="432" Visibility="Collapsed"><Run Text="Import a Time Series record by selecting data ranges in existing excel files."/><LineBreak/><LineBreak/><Run Text="Time Series usually have two columns: date/time, and values."/></TextBlock>
+        <TextBlock x:Name="PairedDataSummary" Margin="182,0,0,189" Width="479" HorizontalAlignment="Left" Visibility="Collapsed"><Run Text="Import a Paired Data record by selecting data ranges in an existing excel file."/><LineBreak/><Run/><LineBreak/><Run Text="Paired Data usually have many columns, with a single ordinates column and multiple value columns."/></TextBlock>
+        <Image x:Name="TimeSeriesImage" Source="photos/regularTimeSeriesExample.png" Margin="177,75,0,10" Visibility="Collapsed"/>
+        <Image x:Name="PairedDataImage" Source="photos/pairedDataExample.png" Margin="177,75,0,10" Visibility="Collapsed"/>
+        <Button x:Name="DataTypeSelectButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="75" Grid.Row="1" IsEnabled="False"/>
+    </Grid>
+</UserControl>

@@ -141,6 +141,7 @@ namespace DSSExcel
                 return false;
             }
 
+            ExcelWorkbook.ActiveWorkbookSet.GetLock();
             for (int i = 0; i < selection.RowCount; i++)
             {
                 if (selection[i, 0].NumberFormatType != NumberFormatType.DateTime &&
@@ -151,12 +152,13 @@ namespace DSSExcel
                     return false;
                 }
             }
+            ExcelWorkbook.ActiveWorkbookSet.ReleaseLock();
             return true;
         }
 
         private bool AreSelectionsCompatible()
         {
-
+            throw new NotImplementedException();
         }
     }
 }

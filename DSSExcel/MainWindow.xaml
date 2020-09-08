@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DSSExcel"
         mc:Ignorable="d"
-        Title="DSSExcel" Height="466" Width="246" MinWidth="480" MinHeight="450">
+        Title="DSSExcel" Height="466" Width="563" MinWidth="550" MinHeight="450">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="185"/>
@@ -27,9 +27,9 @@
         <ListBox x:Name="DssPathList" Margin="19,44,16,10" Grid.Row="2" Grid.ColumnSpan="2" SelectionMode="Multiple" Background="#FFF3F3F3" SelectionChanged="DssPathList_SelectionChanged"/>
         <TextBlock HorizontalAlignment="Left" Margin="19,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Select DSS Paths:" VerticalAlignment="Top" Height="23" Width="120" FontSize="14"/>
         <TextBlock HorizontalAlignment="Left" Margin="19,16,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Select Excel Sheets:" VerticalAlignment="Top" Height="23" Width="120" FontSize="14"/>
-        <Menu HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="472" Grid.ColumnSpan="2">
+        <Menu Height="22" VerticalAlignment="Top" Grid.ColumnSpan="2">
             <MenuItem Header="Options" Height="22" Width="61">
-                <MenuItem x:Name="VisualEditorButton" Header="Open Visual Editor..." Click="VisualEditorButton_Click"/>
+                <MenuItem x:Name="VisualEditorButton" Header="Open Visual Selector..." Click="VisualEditorButton_Click"/>
             </MenuItem>
         </Menu>
     </Grid>
