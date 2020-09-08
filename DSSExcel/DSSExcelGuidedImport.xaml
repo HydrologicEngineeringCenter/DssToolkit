@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Select Data Type" Height="500" Width="700">
     <Grid>
-        <uc:SelectDataType/>
-        <uc:DateSelectPage Visibility="Collapsed"/>
+        <uc:SelectDataTypePage x:Name="DataTypePage" Click="SelectDataTypePage_Click"/>
+        <uc:DateSelectPage x:Name="DatePage"/>
     </Grid>
 </Window>

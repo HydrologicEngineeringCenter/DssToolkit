@@ -18,9 +18,9 @@ namespace DSSExcel
     /// <summary>
     /// Interaction logic for SelectDataType.xaml
     /// </summary>
-    public partial class SelectDataType : UserControl
+    public partial class SelectDataTypePage : UserControl
     {
-        public SelectDataType()
+        public SelectDataTypePage()
         {
             InitializeComponent();
         }
@@ -41,6 +41,12 @@ namespace DSSExcel
             PairedDataImage.Visibility = Visibility.Visible;
             PairedDataSummary.Visibility = Visibility.Visible;
             DataTypeSelectButton.IsEnabled = true;
+        }
+
+        public event RoutedEventHandler Click;
+        void DataTypeSelectButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Click?.Invoke(this, e);
         }
     }
 }

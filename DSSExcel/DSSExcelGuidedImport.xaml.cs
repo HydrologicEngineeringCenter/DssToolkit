@@ -23,5 +23,11 @@ namespace DSSExcel
         {
             InitializeComponent();
         }
+
+        private void SelectDataTypePage_Click(object sender, RoutedEventArgs e)
+        {
+            DataTypePage.Visibility = Visibility.Collapsed;
+            DatePage.Visibility = Visibility.Visible;
+        }
     }
 }
