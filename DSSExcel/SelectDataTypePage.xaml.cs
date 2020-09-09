@@ -31,7 +31,8 @@ namespace DSSExcel
             PairedDataSummary.Visibility = Visibility.Collapsed;
             TimeSeriesImage.Visibility = Visibility.Visible;
             TimeSeriesSummary.Visibility = Visibility.Visible;
-            DataTypeSelectNextButton.IsEnabled = true;
+            TimeSeriesNextButton.Visibility = Visibility.Visible;
+            PairedDataNextButton.Visibility = Visibility.Collapsed;
         }
 
         private void PairedDataOption_Selected(object sender, RoutedEventArgs e)
@@ -40,13 +41,26 @@ namespace DSSExcel
             TimeSeriesSummary.Visibility = Visibility.Collapsed;
             PairedDataImage.Visibility = Visibility.Visible;
             PairedDataSummary.Visibility = Visibility.Visible;
-            DataTypeSelectNextButton.IsEnabled = true;
+            PairedDataNextButton.Visibility = Visibility.Visible;
+            TimeSeriesNextButton.Visibility = Visibility.Collapsed;
         }
 
-        public event RoutedEventHandler Click;
-        void DataTypeSelectButton_Click(object sender, RoutedEventArgs e)
+        public event RoutedEventHandler TimeSeriesNextClick;
+        public event RoutedEventHandler PairedDataNextClick;
+
+        private void TimeSeriesNextButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Click?.Invoke(this, e);
+            this.TimeSeriesNextClick?.Invoke(this, e);
+        }
+
+        private void PairedDataNextButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.PairedDataNextClick?.Invoke(this, e);
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            TimeSeriesOption.IsSelected = true;
         }
     }
 }

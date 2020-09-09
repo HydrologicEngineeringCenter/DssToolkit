@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpreadsheetGear;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,19 +19,20 @@ namespace DSSExcel
     /// <summary>
     /// Interaction logic for ValueSelectPage.xaml
     /// </summary>
-    public partial class ValueSelectPage : UserControl
+    public partial class TimeSeriesValueSelectPage : UserControl
     {
-        public ValueSelectPage()
+        IRange Values;
+        public TimeSeriesValueSelectPage()
         {
             InitializeComponent();
         }
 
-        public event RoutedEventHandler NextClick;
+        public event RoutedEventHandler ImportClick;
         public event RoutedEventHandler BackClick;
 
-        private void ValueSelectNextButton_Click(object sender, RoutedEventArgs e)
+        private void ValueSelectImportButton_Click(object sender, RoutedEventArgs e)
         {
-            this.NextClick?.Invoke(this, e);
+            this.ImportClick?.Invoke(this, e);
         }
 
         private void ValueSelectBackButton_Click(object sender, RoutedEventArgs e)

@@ -235,11 +235,17 @@
     <Compile Include="DSSExcelGuidedImport.xaml.cs">
       <DependentUpon>DSSExcelGuidedImport.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OrdinateSelectPage.xaml.cs">
+      <DependentUpon>OrdinateSelectPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PairedDataValueSelectPage.xaml.cs">
+      <DependentUpon>PairedDataValueSelectPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelectDataTypePage.xaml.cs">
       <DependentUpon>SelectDataTypePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ValueSelectPage.xaml.cs">
-      <DependentUpon>ValueSelectPage.xaml</DependentUpon>
+    <Compile Include="TimeSeriesValueSelectPage.xaml.cs">
+      <DependentUpon>TimeSeriesValueSelectPage.xaml</DependentUpon>
     </Compile>
     <Page Include="DateSelectPage.xaml">
       <SubType>Designer</SubType>
@@ -268,11 +274,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="OrdinateSelectPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PairedDataValueSelectPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SelectDataTypePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ValueSelectPage.xaml">
+    <Page Include="TimeSeriesValueSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

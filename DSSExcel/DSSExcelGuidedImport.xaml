@@ -8,8 +8,10 @@
         mc:Ignorable="d"
         Title="Select Data Type" Height="500" Width="700">
     <Grid>
-        <uc:SelectDataTypePage x:Name="DataTypePage" Click="SelectDataTypePage_Click"/>
+        <uc:SelectDataTypePage x:Name="DataTypePage" TimeSeriesNextClick="DataTypePage_TimeSeriesNextClick" PairedDataNextClick="DataTypePage_PairedDataNextClick" Height="Auto" Width="Auto"/>
         <uc:DateSelectPage x:Name="DatePage" NextClick="DatePage_NextClick" BackClick="DatePage_BackClick" Visibility="Collapsed" Height="Auto" Width="Auto"/>
-        <uc:ValueSelectPage x:Name="ValuePage" NextClick="ValuePage_NextClick" BackClick="ValuePage_BackClick" Visibility="Collapsed"/>
+        <uc:OrdinateSelectPage x:Name="OrdinatePage" NextClick="OrdinatePage_NextClick" BackClick="OrdinatePage_BackClick" Visibility="Collapsed" Height="Auto" Width="Auto"/>
+        <uc:TimeSeriesValueSelectPage x:Name="TimeSeriesValuePage" ImportClick="TimeSeriesValuePage_ImportClick" BackClick="TimeSeriesValuePage_BackClick" Visibility="Collapsed" Height="Auto" Width="Auto"/>
+        <uc:PairedDataValueSelectPage x:Name="PairedDataValuePage" ImportClick="PairedDataValuePage_ImportClick" BackClick="PairedDataValuePage_BackClick" Visibility="Collapsed"/>
     </Grid>
 </Window>

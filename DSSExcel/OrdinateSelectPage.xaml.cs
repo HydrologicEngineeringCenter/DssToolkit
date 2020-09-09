@@ -17,12 +17,12 @@ using System.Windows.Shapes;
 namespace DSSExcel
 {
     /// <summary>
-    /// Interaction logic for DateSelect.xaml
+    /// Interaction logic for OrdinateSelectPage.xaml
     /// </summary>
-    public partial class DateSelectPage : UserControl
+    public partial class OrdinateSelectPage : UserControl
     {
-        IRange Dates;
-        public DateSelectPage()
+        IRange Ordinates;
+        public OrdinateSelectPage()
         {
             InitializeComponent();
         }
@@ -30,14 +30,15 @@ namespace DSSExcel
         public event RoutedEventHandler NextClick;
         public event RoutedEventHandler BackClick;
 
-        private void DateSelectNextButton_Click(object sender, RoutedEventArgs e)
+        private void OrdinateSelectNextButton_Click(object sender, RoutedEventArgs e)
         {
             this.NextClick?.Invoke(this, e);
         }
 
-        private void DateSelectBackButton_Click(object sender, RoutedEventArgs e)
+        private void OrdinateSelectBackButton_Click(object sender, RoutedEventArgs e)
         {
             this.BackClick?.Invoke(this, e);
         }
+        
     }
 }

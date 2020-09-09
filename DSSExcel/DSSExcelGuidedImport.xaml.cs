@@ -24,7 +24,13 @@ namespace DSSExcel
             InitializeComponent();
         }
 
-        private void SelectDataTypePage_Click(object sender, RoutedEventArgs e)
+        private void DataTypePage_PairedDataNextClick(object sender, RoutedEventArgs e)
+        {
+            DataTypePage.Visibility = Visibility.Collapsed;
+            OrdinatePage.Visibility = Visibility.Visible;
+        }
+
+        private void DataTypePage_TimeSeriesNextClick(object sender, RoutedEventArgs e)
         {
             DataTypePage.Visibility = Visibility.Collapsed;
             DatePage.Visibility = Visibility.Visible;
@@ -33,7 +39,7 @@ namespace DSSExcel
         private void DatePage_NextClick(object sender, RoutedEventArgs e)
         {
             DatePage.Visibility = Visibility.Collapsed;
-            ValuePage.Visibility = Visibility.Visible;
+            TimeSeriesValuePage.Visibility = Visibility.Visible;
         }
 
         private void DatePage_BackClick(object sender, RoutedEventArgs e)
@@ -42,15 +48,38 @@ namespace DSSExcel
             DataTypePage.Visibility = Visibility.Visible;
         }
 
-        private void ValuePage_NextClick(object sender, RoutedEventArgs e)
+        private void OrdinatePage_NextClick(object sender, RoutedEventArgs e)
+        {
+            OrdinatePage.Visibility = Visibility.Collapsed;
+            PairedDataValuePage.Visibility = Visibility.Visible;
+        }
+
+        private void OrdinatePage_BackClick(object sender, RoutedEventArgs e)
+        {
+            OrdinatePage.Visibility = Visibility.Collapsed;
+            DataTypePage.Visibility = Visibility.Visible;
+        }
+
+        private void TimeSeriesValuePage_ImportClick(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void ValuePage_BackClick(object sender, RoutedEventArgs e)
+        private void TimeSeriesValuePage_BackClick(object sender, RoutedEventArgs e)
         {
-            ValuePage.Visibility = Visibility.Collapsed;
+            TimeSeriesValuePage.Visibility = Visibility.Collapsed;
             DatePage.Visibility = Visibility.Visible;
+        }
+
+        private void PairedDataValuePage_ImportClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PairedDataValuePage_BackClick(object sender, RoutedEventArgs e)
+        {
+            PairedDataValuePage.Visibility = Visibility.Collapsed;
+            OrdinatePage.Visibility = Visibility.Visible;
         }
     }
 }

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DSSExcel"
-             mc:Ignorable="d">
+             mc:Ignorable="d" MinWidth="550" MinHeight="350" Loaded="UserControl_Loaded">
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -18,6 +18,7 @@
         <TextBlock x:Name="PairedDataSummary" Margin="182,0,0,189" Width="479" HorizontalAlignment="Left" Visibility="Collapsed"><Run Text="Import a Paired Data record by selecting data ranges in an existing excel file."/><LineBreak/><Run/><LineBreak/><Run Text="Paired Data usually have many columns, with a single ordinates column and multiple value columns."/></TextBlock>
         <Image x:Name="TimeSeriesImage" Source="photos/regularTimeSeriesExample.png" Margin="177,75,0,10" Visibility="Collapsed"/>
         <Image x:Name="PairedDataImage" Source="photos/pairedDataExample.png" Margin="177,75,0,10" Visibility="Collapsed"/>
-        <Button x:Name="DataTypeSelectNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="75" Grid.Row="1" IsEnabled="False" Click="DataTypeSelectButton_Click"/>
+        <Button x:Name="TimeSeriesNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="23" Grid.Row="1" Click="TimeSeriesNextButton_Click" Visibility="Collapsed"/>
+        <Button x:Name="PairedDataNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="23" Grid.Row="1" Click="PairedDataNextButton_Click" Visibility="Collapsed"/>
     </Grid>
 </UserControl>

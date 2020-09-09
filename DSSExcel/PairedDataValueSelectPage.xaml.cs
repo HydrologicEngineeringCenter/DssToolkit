@@ -1,5 +1,4 @@
-﻿using SpreadsheetGear;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,27 +16,27 @@ using System.Windows.Shapes;
 namespace DSSExcel
 {
     /// <summary>
-    /// Interaction logic for DateSelect.xaml
+    /// Interaction logic for PairedDataValueSelectPage.xaml
     /// </summary>
-    public partial class DateSelectPage : UserControl
+    public partial class PairedDataValueSelectPage : UserControl
     {
-        IRange Dates;
-        public DateSelectPage()
+        public PairedDataValueSelectPage()
         {
             InitializeComponent();
         }
 
-        public event RoutedEventHandler NextClick;
+        public event RoutedEventHandler ImportClick;
         public event RoutedEventHandler BackClick;
 
-        private void DateSelectNextButton_Click(object sender, RoutedEventArgs e)
+        private void ValueSelectImportButton_Click(object sender, RoutedEventArgs e)
         {
-            this.NextClick?.Invoke(this, e);
+            this.ImportClick?.Invoke(this, e);
         }
 
-        private void DateSelectBackButton_Click(object sender, RoutedEventArgs e)
+        private void ValueSelectBackButton_Click(object sender, RoutedEventArgs e)
         {
             this.BackClick?.Invoke(this, e);
         }
+        
     }
 }
