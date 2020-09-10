@@ -21,7 +21,7 @@ namespace DSSExcel
     /// </summary>
     public partial class OrdinateSelectPage : UserControl
     {
-        IRange Ordinates;
+        public IRange Ordinates;
         public OrdinateSelectPage()
         {
             InitializeComponent();
@@ -39,6 +39,10 @@ namespace DSSExcel
         {
             this.BackClick?.Invoke(this, e);
         }
-        
+
+        private void ExcelView_RangeSelectionChanged(object sender, SpreadsheetGear.Windows.Controls.RangeSelectionChangedEventArgs e)
+        {
+            Ordinates = ExcelView.RangeSelection;
+        }
     }
 }

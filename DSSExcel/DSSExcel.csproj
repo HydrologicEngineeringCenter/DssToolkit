@@ -235,6 +235,9 @@
     <Compile Include="DSSExcelGuidedImport.xaml.cs">
       <DependentUpon>DSSExcelGuidedImport.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DSSPathPage.xaml.cs">
+      <DependentUpon>DSSPathPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OrdinateSelectPage.xaml.cs">
       <DependentUpon>OrdinateSelectPage.xaml</DependentUpon>
     </Compile>
@@ -252,6 +255,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DSSExcelVisualSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DSSPathPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

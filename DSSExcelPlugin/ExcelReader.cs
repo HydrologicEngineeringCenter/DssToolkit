@@ -201,5 +201,40 @@ namespace Hec.Dss.Excel
             return Read(workbook.Worksheets[sheetIndex].Name);
         }
 
+        public static TimeSeries GetTimeSeries(IRange DateTimes, IRange Values)
+        {
+            var ts = new TimeSeries();
+            ts.Times = RangeToDateTimes(DateTimes);
+            ts.Values = RangeToTimeSeriesValues(Values);
+            return ts;
+        }
+
+        private static double[] RangeToTimeSeriesValues(IRange values)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static DateTime[] RangeToDateTimes(IRange dateTimes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static PairedData GetPairedData(IRange Ordinates, IRange Values)
+        {
+            var pd = new PairedData();
+            pd.Ordinates = RangeToOrdinates(Ordinates);
+            pd.Values = RangeToPairedDataValues(Values);
+            return pd;
+        }
+
+        private static List<double[]> RangeToPairedDataValues(IRange values)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static double[] RangeToOrdinates(IRange ordinates)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpreadsheetGear;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,23 +21,29 @@ namespace DSSExcel
     /// </summary>
     public partial class PairedDataValueSelectPage : UserControl
     {
+        public IRange Values;
+
         public PairedDataValueSelectPage()
         {
             InitializeComponent();
         }
 
-        public event RoutedEventHandler ImportClick;
+        public event RoutedEventHandler NextClick;
         public event RoutedEventHandler BackClick;
 
-        private void ValueSelectImportButton_Click(object sender, RoutedEventArgs e)
+        private void ValueSelectNextButton_Click(object sender, RoutedEventArgs e)
         {
-            this.ImportClick?.Invoke(this, e);
+            this.NextClick?.Invoke(this, e);
         }
 
         private void ValueSelectBackButton_Click(object sender, RoutedEventArgs e)
         {
             this.BackClick?.Invoke(this, e);
         }
-        
+
+        private void ExcelView_RangeSelectionChanged(object sender, SpreadsheetGear.Windows.Controls.RangeSelectionChangedEventArgs e)
+        {
+            Values = ExcelView.RangeSelection;
+        }
     }
 }

@@ -12,7 +12,7 @@
             <RowDefinition/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
-        <Controls:WorkbookView Margin="0,69,0,10" RangeSelectionBorderBrush="#D00F87FB"/>
+        <Controls:WorkbookView x:Name="ExcelView" Margin="0,69,0,10" RangeSelectionBorderBrush="#D00F87FB" RangeSelectionChanged="ExcelView_RangeSelectionChanged"/>
         <Button x:Name="OrdinateSelectBackButton" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" Click="OrdinateSelectBackButton_Click" Grid.Row="1" Height="23"/>
         <Button x:Name="OrdinateSelectNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Click="OrdinateSelectNextButton_Click" Grid.Row="1" Height="23"/>
         <Controls:FormulaBar Margin="0,43,0,0" VerticalAlignment="Top" Height="26"/>

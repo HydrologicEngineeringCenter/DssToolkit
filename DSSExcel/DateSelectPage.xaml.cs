@@ -21,7 +21,7 @@ namespace DSSExcel
     /// </summary>
     public partial class DateSelectPage : UserControl
     {
-        IRange Dates;
+        public IRange Dates;
         public DateSelectPage()
         {
             InitializeComponent();
@@ -38,6 +38,11 @@ namespace DSSExcel
         private void DateSelectBackButton_Click(object sender, RoutedEventArgs e)
         {
             this.BackClick?.Invoke(this, e);
+        }
+
+        private void ExcelView_RangeSelectionChanged(object sender, SpreadsheetGear.Windows.Controls.RangeSelectionChangedEventArgs e)
+        {
+            Dates = ExcelView.RangeSelection;
         }
     }
 }

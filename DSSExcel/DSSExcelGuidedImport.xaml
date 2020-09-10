@@ -6,12 +6,13 @@
         xmlns:uc="clr-namespace:DSSExcel"
         xmlns:local="clr-namespace:DSSExcel"
         mc:Ignorable="d"
-        Title="Select Data Type" Height="500" Width="700">
+        Height="500" Width="700">
     <Grid>
         <uc:SelectDataTypePage x:Name="DataTypePage" TimeSeriesNextClick="DataTypePage_TimeSeriesNextClick" PairedDataNextClick="DataTypePage_PairedDataNextClick" Height="Auto" Width="Auto"/>
         <uc:DateSelectPage x:Name="DatePage" NextClick="DatePage_NextClick" BackClick="DatePage_BackClick" Visibility="Collapsed" Height="Auto" Width="Auto"/>
         <uc:OrdinateSelectPage x:Name="OrdinatePage" NextClick="OrdinatePage_NextClick" BackClick="OrdinatePage_BackClick" Visibility="Collapsed" Height="Auto" Width="Auto"/>
-        <uc:TimeSeriesValueSelectPage x:Name="TimeSeriesValuePage" ImportClick="TimeSeriesValuePage_ImportClick" BackClick="TimeSeriesValuePage_BackClick" Visibility="Collapsed" Height="Auto" Width="Auto"/>
-        <uc:PairedDataValueSelectPage x:Name="PairedDataValuePage" ImportClick="PairedDataValuePage_ImportClick" BackClick="PairedDataValuePage_BackClick" Visibility="Collapsed"/>
+        <uc:TimeSeriesValueSelectPage x:Name="TimeSeriesValuePage" NextClick="TimeSeriesValuePage_NextClick" BackClick="TimeSeriesValuePage_BackClick" Visibility="Collapsed" Height="Auto" Width="Auto"/>
+        <uc:PairedDataValueSelectPage x:Name="PairedDataValuePage" NextClick="PairedDataValuePage_NextClick" BackClick="PairedDataValuePage_BackClick" Visibility="Collapsed"/>
+        <uc:DSSPathPage x:Name="PathPage" ImportClick="PathPage_ImportClick" BackClick="PathPage_BackClick" Visibility="Collapsed"/>
     </Grid>
 </Window>

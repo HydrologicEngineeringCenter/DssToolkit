@@ -278,7 +278,7 @@ namespace DSSExcel
                 return;
             }
             ExcelReader r = new ExcelReader(ExcelFilePath.Text);
-            DSSExcelGuidedImport s = new DSSExcelGuidedImport();
+            DSSExcelGuidedImport s = new DSSExcelGuidedImport(r.workbook.FullName);
             s.ShowDialog();
         }
     }
