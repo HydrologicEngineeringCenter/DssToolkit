@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DSSExcel"
-             xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Class="DSSExcel.TimeSeriesValueSelectPage"
+             xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Name="TimeSeriesValuePage" x:Class="DSSExcel.TimeSeriesValueSelectPage"
              mc:Ignorable="d" Background="White" MinWidth="550" MinHeight="350">
     <Grid>
         <Grid.RowDefinitions>

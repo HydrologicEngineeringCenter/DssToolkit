@@ -232,8 +232,8 @@
     <Compile Include="DateSelectPage.xaml.cs">
       <DependentUpon>DateSelectPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DSSExcelGuidedImport.xaml.cs">
-      <DependentUpon>DSSExcelGuidedImport.xaml</DependentUpon>
+    <Compile Include="DSSExcelManualImport.xaml.cs">
+      <DependentUpon>DSSExcelManualImport.xaml</DependentUpon>
     </Compile>
     <Compile Include="DSSPathPage.xaml.cs">
       <DependentUpon>DSSPathPage.xaml</DependentUpon>
@@ -277,7 +277,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="DSSExcelGuidedImport.xaml">
+    <Page Include="DSSExcelManualImport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

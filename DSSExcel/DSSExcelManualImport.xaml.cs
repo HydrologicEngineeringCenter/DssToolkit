@@ -13,16 +13,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Hec.Dss.Excel;
+using Hec.Dss;
 
 namespace DSSExcel
 {
     /// <summary>
     /// Interaction logic for SelectDataType.xaml
     /// </summary>
-    public partial class DSSExcelGuidedImport : Window
+    public partial class DSSExcelManualImport : Window
     {
         ExcelReader r;
-        public DSSExcelGuidedImport(string filename)
+        TimeSeries ts;
+        PairedData pd;
+        public DSSExcelManualImport(string filename)
         {
             InitializeComponent();
             r = new ExcelReader(filename);
@@ -32,16 +35,18 @@ namespace DSSExcel
             PairedDataValuePage.ExcelView.ActiveWorkbook = r.workbook;
         }
 
-        private void DataTypePage_PairedDataNextClick(object sender, RoutedEventArgs e)
+        private void RecordTypePage_PairedDataNextClick(object sender, RoutedEventArgs e)
         {
-            DataTypePage.Visibility = Visibility.Collapsed;
+            RecordTypePage.Visibility = Visibility.Collapsed;
             OrdinatePage.Visibility = Visibility.Visible;
+            Title = "Select Ordinate Range";
         }
 
-        private void DataTypePage_TimeSeriesNextClick(object sender, RoutedEventArgs e)
+        private void RecordTypePage_TimeSeriesNextClick(object sender, RoutedEventArgs e)
         {
-            DataTypePage.Visibility = Visibility.Collapsed;
+            RecordTypePage.Visibility = Visibility.Collapsed;
             DatePage.Visibility = Visibility.Visible;
+            Title = "Select Date/Time Range";
         }
 
         private void DatePage_NextClick(object sender, RoutedEventArgs e)
@@ -50,6 +55,7 @@ namespace DSSExcel
                 return;
             DatePage.Visibility = Visibility.Collapsed;
             TimeSeriesValuePage.Visibility = Visibility.Visible;
+            Title = "Select Value Range";
         }
 
         private bool CheckDates(IRange dates)
@@ -69,6 +75,8 @@ namespace DSSExcel
                 {
                     MessageBox.Show("All values selected for Date/Time don't follow the date and time format.", "Date/Time Selection Error",
                         MessageBoxButton.OK, MessageBoxImage.Error);
+                    DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+
                     return false;
                 }
             }
@@ -79,7 +87,8 @@ namespace DSSExcel
         private void DatePage_BackClick(object sender, RoutedEventArgs e)
         {
             DatePage.Visibility = Visibility.Collapsed;
-            DataTypePage.Visibility = Visibility.Visible;
+            RecordTypePage.Visibility = Visibility.Visible;
+            Title = "Select Record Type";
         }
 
         private void OrdinatePage_NextClick(object sender, RoutedEventArgs e)
@@ -88,6 +97,7 @@ namespace DSSExcel
                 return;
             OrdinatePage.Visibility = Visibility.Collapsed;
             PairedDataValuePage.Visibility = Visibility.Visible;
+            Title = "Select Value Range";
         }
 
         private bool CheckOrdinates(IRange ordinates)
@@ -104,8 +114,10 @@ namespace DSSExcel
             {
                 if (ordinates[i, 0].NumberFormatType != NumberFormatType.Number)
                 {
-                    MessageBox.Show("All values selected for ordinates are not numbers.", "Ordinate Selection Error",
+                    MessageBox.Show("All selected ordinates must be numbers.", "Ordinate Selection Error",
                         MessageBoxButton.OK, MessageBoxImage.Error);
+                    OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+
                     return false;
                 }
             }
@@ -116,7 +128,8 @@ namespace DSSExcel
         private void OrdinatePage_BackClick(object sender, RoutedEventArgs e)
         {
             OrdinatePage.Visibility = Visibility.Collapsed;
-            DataTypePage.Visibility = Visibility.Visible;
+            RecordTypePage.Visibility = Visibility.Visible;
+            Title = "Select Record Type";
         }
 
         private void TimeSeriesValuePage_NextClick(object sender, RoutedEventArgs e)
@@ -124,7 +137,10 @@ namespace DSSExcel
             if (!CheckTimeSeriesValues(TimeSeriesValuePage.Values))
                 return;
             TimeSeriesValuePage.Visibility = Visibility.Collapsed;
+            PathPage.PreviousPage = TimeSeriesValuePage;
+            PathPage.ShowPath(RecordType.RegularTimeSeries);
             PathPage.Visibility = Visibility.Visible;
+            Title = "Create Time Series Path";
         }
 
         private bool CheckTimeSeriesValues(IRange values)
@@ -141,11 +157,23 @@ namespace DSSExcel
             {
                 if (values[i, 0].NumberFormatType != NumberFormatType.Number)
                 {
-                    MessageBox.Show("All selected values are not numbers.", "Value Selection Error",
+                    MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
                         MessageBoxButton.OK, MessageBoxImage.Error);
+                    TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+
                     return false;
                 }
             }
+
+            if (values.RowCount != DatePage.Dates.RowCount)
+            {
+                MessageBox.Show("The row count of selected values must match the row count of selected date/times.", "Value Selection Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+
+                return false;
+            }
+
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             return true;
         }
@@ -154,14 +182,19 @@ namespace DSSExcel
         {
             TimeSeriesValuePage.Visibility = Visibility.Collapsed;
             DatePage.Visibility = Visibility.Visible;
+            Title = "Select Date/Time Range";
         }
 
         private void PairedDataValuePage_NextClick(object sender, RoutedEventArgs e)
         {
             if (!CheckPairedDataValues(PairedDataValuePage.Values))
                 return;
+            
             PairedDataValuePage.Visibility = Visibility.Collapsed;
+            PathPage.PreviousPage = PairedDataValuePage;
+            PathPage.ShowPath(RecordType.PairedData);
             PathPage.Visibility = Visibility.Visible;
+            Title = "Create Paired Data Path";
         }
 
         private bool CheckPairedDataValues(IRange values)
@@ -173,12 +206,24 @@ namespace DSSExcel
                 {
                     if (values[i, j].NumberFormatType != NumberFormatType.Number)
                     {
-                        MessageBox.Show("All selected values are not numbers.", "Value Selection Error",
+                        MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
                             MessageBoxButton.OK, MessageBoxImage.Error);
+                        PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+
                         return false;
                     }
                 }
             }
+
+            if (values.RowCount != OrdinatePage.Ordinates.RowCount)
+            {
+                MessageBox.Show("The row count of selected values must match the row count of selected ordinates.", "Value Selection Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+
+                return false;
+            }
+
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             return true;
         }
@@ -187,6 +232,7 @@ namespace DSSExcel
         {
             PairedDataValuePage.Visibility = Visibility.Collapsed;
             OrdinatePage.Visibility = Visibility.Visible;
+            Title = "Select Ordinate Range";
         }
 
         private void PathPage_ImportClick(object sender, RoutedEventArgs e)
@@ -196,7 +242,9 @@ namespace DSSExcel
 
         private void PathPage_BackClick(object sender, RoutedEventArgs e)
         {
-
+            PathPage.Visibility = Visibility.Collapsed;
+            PathPage.PreviousPage.Visibility = Visibility.Visible;
+            Title = "Select Value Range";
         }
     }
 }

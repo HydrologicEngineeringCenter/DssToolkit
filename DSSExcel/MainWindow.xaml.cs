@@ -52,6 +52,11 @@ namespace DSSExcel
 
         private void ExcelFileButton_Click(object sender, RoutedEventArgs e)
         {
+            GetExcelFile();
+        }
+
+        private bool GetExcelFile()
+        {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx";
             if (openFileDialog.ShowDialog() == true)
@@ -66,7 +71,9 @@ namespace DSSExcel
                 ExcelFilePath.Text = openFileDialog.FileName;
                 ImportButton.IsEnabled = CanImport();
                 ExportButton.IsEnabled = CanExport();
+                return true;
             }
+            return false;
         }
 
         private void SheetList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -270,15 +277,15 @@ namespace DSSExcel
                 return false;
         }
 
-        private void VisualEditorButton_Click(object sender, RoutedEventArgs e)
+        private void ManualImportButton_Click(object sender, RoutedEventArgs e)
         {
             if (ExcelFilePath.Text == "")
             {
-                MessageBox.Show("Need to select an existing excel file first.", "DSSExcel Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                if (!GetExcelFile())
+                    return;
             }
             ExcelReader r = new ExcelReader(ExcelFilePath.Text);
-            DSSExcelGuidedImport s = new DSSExcelGuidedImport(r.workbook.FullName);
+            DSSExcelManualImport s = new DSSExcelManualImport(r.workbook.FullName);
             s.ShowDialog();
         }
     }

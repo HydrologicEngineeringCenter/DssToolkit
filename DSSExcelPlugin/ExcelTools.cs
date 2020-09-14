@@ -276,6 +276,22 @@ namespace Hec.Dss.Excel
             return b ? dt : new DateTime();
         }
 
+        public static DateTime[] GetTimeSeriesTimes(IRange range)
+        {
+            IWorkbookSet wbs = SpreadsheetGear.Factory.GetWorkbookSet();
+            IWorkbook wb = wbs.Workbooks.Add();
+            var vals = (IValues)range;
+            var r = range.RowCount;
+            var d = new List<DateTime>();
+            for (int i = 0; i < r; i++)
+            {
+                DateTime dt;
+                var b = DateTime.TryParse(wb.NumberToDateTime(vals[i, 0].Number).ToString(), out dt);
+                d.Add(b ? dt : new DateTime());
+            }
+            return d.ToArray();
+        }
+
         protected bool IsRegular(List<DateTime> times)
         {
             var temp = times;

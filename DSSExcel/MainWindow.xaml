@@ -17,10 +17,10 @@
             <RowDefinition Height="127*"/>
             <RowDefinition Height="43"/>
         </Grid.RowDefinitions>
-        <Button x:Name="DssFileButton" Content="Choose DSS File..." Margin="19,56,10,0" VerticalAlignment="Top" Height="20" Click="DssFileButton_Click"/>
-        <Button x:Name="ExcelFileButton" Content="Choose Excel File..." Margin="19,91,10,0" VerticalAlignment="Top" Height="20" Click="ExcelFileButton_Click"/>
-        <TextBox x:Name="DssFilePath" Height="20" Margin="10,56,16,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" Background="#FFF3F3F3" BorderBrush="#FFBBBBBB" Grid.Column="1" Focusable="False"/>
-        <TextBox x:Name="ExcelFilePath" Height="20" Margin="10,91,16,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" Background="#FFF3F3F3" BorderBrush="#FFBBBBBB" Grid.Column="1" Focusable="False"/>
+        <Button x:Name="DssFileButton" Content="Choose DSS File..." Margin="19,56,59,0" VerticalAlignment="Top" Height="20" Click="DssFileButton_Click"/>
+        <Button x:Name="ExcelFileButton" Content="Choose Excel File..." Margin="19,91,59,0" VerticalAlignment="Top" Height="20" Click="ExcelFileButton_Click"/>
+        <TextBox x:Name="DssFilePath" Height="20" Margin="158,56,16,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" Background="#FFF3F3F3" BorderBrush="#FFBBBBBB" Focusable="False" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="ExcelFilePath" Height="20" Margin="158,91,16,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" Background="#FFF3F3F3" BorderBrush="#FFBBBBBB" Focusable="False" Grid.ColumnSpan="2"/>
         <Button x:Name="ImportButton" Content="Import" Margin="19,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="107" Height="20" IsEnabled="False" Click="ImportButton_Click"/>
         <Button x:Name="ExportButton" Content="Export" Margin="0,0,16,10" Grid.Row="3" VerticalAlignment="Bottom" Grid.Column="1" HorizontalAlignment="Right" Width="107" Height="20" IsEnabled="False" Click="ExportButton_Click"/>
         <ListBox x:Name="SheetList" Margin="19,44,16,10" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#FFB3ABAD" SelectionMode="Multiple" Background="#FFF3F3F3" SelectionChanged="SheetList_SelectionChanged"/>
@@ -29,7 +29,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="19,16,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Select Excel Sheets:" VerticalAlignment="Top" Height="23" Width="120" FontSize="14"/>
         <Menu Height="22" VerticalAlignment="Top" Grid.ColumnSpan="2">
             <MenuItem Header="Options" Height="22" Width="61">
-                <MenuItem x:Name="VisualEditorButton" Header="Open Visual Selector..." Click="VisualEditorButton_Click"/>
+                <MenuItem x:Name="ManualImportButton" Header="Manual Import..." Click="ManualImportButton_Click"/>
             </MenuItem>
         </Menu>
     </Grid>
