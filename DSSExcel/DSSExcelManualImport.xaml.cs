@@ -280,11 +280,10 @@ namespace DSSExcel
                 PathPage.ResetPath();
                 PathPage.Visibility = Visibility.Collapsed;
                 RecordTypePage.Visibility = Visibility.Visible;
+                Title = "Select Record Type";
             }
             else
-            {
                 this.Close();
-            }
         }
 
         private void PathPage_BackClick(object sender, RoutedEventArgs e)
