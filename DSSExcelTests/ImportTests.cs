@@ -17,7 +17,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportRegularTimeSeries1()
         {
-            File.Delete(@"C:\Temp\indexedRegularTimeSeries1.dss");
+            File.Delete(TestUtility.BasePath + "indexedRegularTimeSeries1.dss");
             ExcelReader de = new ExcelReader(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
             de.Read("Sheet1");
 
@@ -26,7 +26,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportIrregularTimeSeries1()
         {
-            File.Delete(@"C:\Temp\indexedIrregularTimeSeries1.dss");
+            File.Delete(TestUtility.BasePath + "indexedIrregularTimeSeries1.dss");
             ExcelReader de = new ExcelReader(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
             de.Read("Sheet1");
 
@@ -35,7 +35,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportPairedData1()
         {
-            File.Delete(@"C:\Temp\indexedPairedData1.dss");
+            File.Delete(TestUtility.BasePath + "indexedPairedData1.dss");
             ExcelReader de = new ExcelReader(@"C:\Temp\indexedPairedData1.xlsx");
             de.Read("Sheet1");
 
@@ -44,7 +44,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportRegularTimeSeries2()
         {
-            File.Delete(@"C:\Temp\regularTimeSeries1.dss");
+            File.Delete(TestUtility.BasePath + "regularTimeSeries1.dss");
             ExcelReader de = new ExcelReader(@"C:\Temp\regularTimeSeries1.xlsx");
             de.Read("Sheet1");
 
@@ -53,7 +53,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportIrregularTimeSeries2()
         {
-            File.Delete(@"C:\Temp\irregularTimeSeries1.dss");
+            File.Delete(TestUtility.BasePath + "irregularTimeSeries1.dss");
             ExcelReader de = new ExcelReader(@"C:\Temp\irregularTimeSeries1.xlsx");
             de.Read("Sheet1");
 
@@ -62,7 +62,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportPairedData2()
         {
-            File.Delete(@"C:\Temp\pairedData1.dss");
+            File.Delete(TestUtility.BasePath + "pairedData1.dss");
             ExcelReader de = new ExcelReader(@"C:\Temp\pairedData1.xlsx");
             de.Read("Sheet1");
         }
@@ -199,48 +199,5 @@ namespace DSSExcelTests
             }
         }
 
-        [TestMethod]
-        public void CommandLineImport7()
-        {
-            var fn = TestUtility.BasePath + "pairedData2.xlsx";
-            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport7.dss" };
-            if (!File.Exists(a[1]))
-            {
-                throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
-            }
-
-            ExcelReader er = new ExcelReader(a[1]);
-            using (DssWriter w = new DssWriter(a[2]))
-            {
-                var t = er.CheckType("sheet1");
-                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
-                    w.Write(er.Read("sheet1") as TimeSeries);
-                else if (t is RecordType.PairedData)
-                    w.Write(er.Read("sheet1") as PairedData);
-
-            }
-        }
-
-        [TestMethod]
-        public void CommandLineImport8()
-        {
-            var fn = TestUtility.BasePath + "indexedPairedData2.xlsx";
-            string[] a = new string[] { "import", fn, TestUtility.OutputPath + "CommandLineImport8.dss" };
-            if (!File.Exists(a[1]))
-            {
-                throw new FileNotFoundException("Couldn't find Excel file to import data into DSS.");
-            }
-
-            ExcelReader er = new ExcelReader(a[1]);
-            using (DssWriter w = new DssWriter(a[2]))
-            {
-                var t = er.CheckType("sheet1");
-                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
-                    w.Write(er.Read("sheet1") as TimeSeries);
-                else if (t is RecordType.PairedData)
-                    w.Write(er.Read("sheet1") as PairedData);
-
-            }
-        }
     }
 }
