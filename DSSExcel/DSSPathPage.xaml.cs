@@ -150,5 +150,14 @@ namespace DSSExcel
                 ShowPairedDataPath();
             }
         }
+
+        public void ResetPath()
+        {
+            tsPathGenerated = false;
+            pdPathGenerated = false;
+            tsPath = new DssPath();
+            pdPath = new DssPath();
+            PreviousPage = null;
+        }
     }
 }

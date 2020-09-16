@@ -285,13 +285,23 @@ namespace DSSExcel
                     else if (record is PairedData)
                         w.Write(record as PairedData);
                 }
-                DisplayImportStatus();
+                DisplayImportStatus(openFileDialog.FileName);
             }
         }
 
-        private void DisplayImportStatus()
+        private void DisplayImportStatus(string filename)
         {
-            MessageBox.Show("Import successful.", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            var r = MessageBox.Show("Import to " + filename + " succeeded. Would you like to import another record?", "Import Success", MessageBoxButton.YesNo, MessageBoxImage.Information);
+            if (r == MessageBoxResult.Yes)
+            {
+                PathPage.ResetPath();
+                PathPage.Visibility = Visibility.Collapsed;
+                RecordTypePage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.Close();
+            }
         }
 
         private void PathPage_BackClick(object sender, RoutedEventArgs e)
