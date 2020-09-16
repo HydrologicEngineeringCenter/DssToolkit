@@ -340,7 +340,3 @@ ASALocalRun/
 healthchecksdb
 
 
-
-DSSExcelLicensing.cs
-DSSExcelTests/test-files/*.*
-DSSExcelTests/test-files/output/*.*

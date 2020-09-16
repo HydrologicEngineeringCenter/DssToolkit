@@ -17,8 +17,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportRegularTimeSeries1()
         {
-            File.Delete(TestUtility.BasePath + "indexedRegularTimeSeries1.dss");
-            ExcelReader de = new ExcelReader(@"C:\Temp\indexedRegularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(TestUtility.BasePath + "indexedRegularTimeSeries1.xlsx");
             de.Read("Sheet1");
 
         }
@@ -26,8 +25,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportIrregularTimeSeries1()
         {
-            File.Delete(TestUtility.BasePath + "indexedIrregularTimeSeries1.dss");
-            ExcelReader de = new ExcelReader(@"C:\Temp\indexedIrregularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(TestUtility.BasePath + "indexedIrregularTimeSeries1.xlsx");
             de.Read("Sheet1");
 
         }
@@ -35,8 +33,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportPairedData1()
         {
-            File.Delete(TestUtility.BasePath + "indexedPairedData1.dss");
-            ExcelReader de = new ExcelReader(@"C:\Temp\indexedPairedData1.xlsx");
+            ExcelReader de = new ExcelReader(TestUtility.BasePath + "indexedPairedData1.xlsx");
             de.Read("Sheet1");
 
         }
@@ -44,8 +41,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportRegularTimeSeries2()
         {
-            File.Delete(TestUtility.BasePath + "regularTimeSeries1.dss");
-            ExcelReader de = new ExcelReader(@"C:\Temp\regularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(TestUtility.BasePath + "regularTimeSeries1.xlsx");
             de.Read("Sheet1");
 
         }
@@ -53,8 +49,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportIrregularTimeSeries2()
         {
-            File.Delete(TestUtility.BasePath + "irregularTimeSeries1.dss");
-            ExcelReader de = new ExcelReader(@"C:\Temp\irregularTimeSeries1.xlsx");
+            ExcelReader de = new ExcelReader(TestUtility.BasePath + "irregularTimeSeries1.xlsx");
             de.Read("Sheet1");
 
         }
@@ -62,8 +57,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void ImportPairedData2()
         {
-            File.Delete(TestUtility.BasePath + "pairedData1.dss");
-            ExcelReader de = new ExcelReader(@"C:\Temp\pairedData1.xlsx");
+            ExcelReader de = new ExcelReader(TestUtility.BasePath + "pairedData1.xlsx");
             de.Read("Sheet1");
         }
 

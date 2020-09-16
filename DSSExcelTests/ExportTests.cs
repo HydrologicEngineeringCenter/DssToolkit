@@ -51,8 +51,8 @@ namespace DSSExcelTests
         [TestMethod]
         public void CommandLineExport1()
         {
-            var fn = TestUtility.BasePath + "regularTimeSeries1.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "regularTimeSeries1.xlsx", "/excel/import/plugin//15Minute/regularTimeSeriesWLF/" };
+            var fn = TestUtility.BasePath + "l.dss";
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "l.xlsx", "/Elmore/Atlanta Summit/PRECIP-CUM//IR-Year/SNOTEL/" };
 
             if (!File.Exists(a[1]))
             {
@@ -81,8 +81,8 @@ namespace DSSExcelTests
         [TestMethod]
         public void CommandLineExport2()
         {
-            var fn = TestUtility.BasePath + "indexedRegularTimeSeries1.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedRegularTimeSeries1.xlsx", "/excel/import/plugin//15Minute/regularTimeSeriesZ1K/" };
+            var fn = TestUtility.BasePath + "snotel_example.dss";
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "snotel_example.xlsx", "/ELMORE/ATLANTA SUMMIT/PRECIP-CUM//IR-MONTH/SNOTEL/" };
 
             if (!File.Exists(a[1]))
             {
@@ -111,8 +111,8 @@ namespace DSSExcelTests
         [TestMethod]
         public void CommandLineExport3()
         {
-            var fn = TestUtility.BasePath + "irregularTimeSeries1.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "irregularTimeSeries1.xlsx", "/excel/import/plugin/01Jan2020/IR-Year/irregularTimeSeries52Z/" };
+            var fn = TestUtility.BasePath + "stevenson_elev.dss";
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "stevenson_elev.xlsx", "//Stevenson/Elev//15Minute/DCP-raw/" };
 
             if (!File.Exists(a[1]))
             {
@@ -141,8 +141,8 @@ namespace DSSExcelTests
         [TestMethod]
         public void CommandLineExport4()
         {
-            var fn = TestUtility.BasePath + "indexedIrregularTimeSeries1.dss";
-            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "indexedIrregularTimeSeries1.xlsx", "/excel/import/plugin/01Jan2020/IR-Year/irregularTimeSeriesM7I/" };
+            var fn = TestUtility.BasePath + "WolfCreek_USGS_FlowMeasurements.dss";
+            string[] a = new string[] { "export", fn, TestUtility.OutputPath + "WolfCreek_USGS_FlowMeasurements.xlsx", "/CARUTHERS C/IVANPAH CA/FLOW//15Minute/USGS/" };
 
             if (!File.Exists(a[1]))
             {
