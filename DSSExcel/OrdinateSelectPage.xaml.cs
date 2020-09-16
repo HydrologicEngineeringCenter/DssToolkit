@@ -1,4 +1,5 @@
 ﻿using SpreadsheetGear;
+using SpreadsheetGear.Windows.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,7 @@ namespace DSSExcel
 
         public event RoutedEventHandler NextClick;
         public event RoutedEventHandler BackClick;
+        public event EventHandler TabSelectionChanged;
 
         private void OrdinateSelectNextButton_Click(object sender, RoutedEventArgs e)
         {
@@ -43,6 +45,11 @@ namespace DSSExcel
         private void ExcelView_RangeSelectionChanged(object sender, SpreadsheetGear.Windows.Controls.RangeSelectionChangedEventArgs e)
         {
             Ordinates = ExcelView.RangeSelection;
+        }
+
+        private void ExcelView_ActiveTabChanged(object sender, ActiveTabChangedEventArgs e)
+        {
+            this.TabSelectionChanged?.Invoke(this, e);
         }
     }
 }

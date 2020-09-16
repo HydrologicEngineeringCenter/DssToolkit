@@ -11,7 +11,7 @@
             <RowDefinition/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
-        <Controls:WorkbookView x:Name="ExcelView" Margin="0,69,0,10" RangeSelectionBorderBrush="#D013D400" RangeSelectionChanged="ExcelView_RangeSelectionChanged"/>
+        <Controls:WorkbookView x:Name="ExcelView" Margin="0,69,0,10" RangeSelectionBorderBrush="#D013D400" RangeSelectionChanged="ExcelView_RangeSelectionChanged" ActiveTabChanged="ExcelView_ActiveTabChanged"/>
         <Button x:Name="DateSelectNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="23" Click="DateSelectNextButton_Click" Grid.Row="1" RenderTransformOrigin="0.467,1"/>
         <Button x:Name="DateSelectBackButton" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" Height="23" Click="DateSelectBackButton_Click" Grid.Row="1"/>
         <TextBlock Margin="10,0" TextWrapping="Wrap" Text="Select date/time range:" Height="43" VerticalAlignment="Top" FontSize="20"/>

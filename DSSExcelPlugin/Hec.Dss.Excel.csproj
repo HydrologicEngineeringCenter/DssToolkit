@@ -46,9 +46,8 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SpreadsheetGear2017.Core, Version=8.4.1.101, Culture=neutral, PublicKeyToken=39c186f5904944ec, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\SpreadsheetGear\SpreadsheetGear 2017 for .NET\DotNet40\Bin\SpreadsheetGear2017.Core.dll</HintPath>
+    <Reference Include="SpreadsheetGear2017.Core">
+      <HintPath>..\..\..\utils\SpreadsheetGear\SpreadsheetGear 2017 for .NET\DotNet40\Bin\SpreadsheetGear2017.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

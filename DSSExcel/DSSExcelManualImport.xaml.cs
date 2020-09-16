@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Hec.Dss.Excel;
 using Hec.Dss;
+using Microsoft.Win32;
 
 namespace DSSExcel
 {
@@ -22,13 +23,10 @@ namespace DSSExcel
     /// </summary>
     public partial class DSSExcelManualImport : Window
     {
-        ExcelReader r;
-        TimeSeries ts;
-        PairedData pd;
         public DSSExcelManualImport(string filename)
         {
             InitializeComponent();
-            r = new ExcelReader(filename);
+            ExcelReader r = new ExcelReader(filename);
             DatePage.ExcelView.ActiveWorkbook = r.workbook;
             OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
             TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
@@ -112,7 +110,8 @@ namespace DSSExcel
             OrdinatePage.ExcelView.ActiveWorkbookSet.GetLock();
             for (int i = 0; i < ordinates.RowCount; i++)
             {
-                if (ordinates[i, 0].NumberFormatType != NumberFormatType.Number)
+                if (ordinates[i, 0].NumberFormatType != NumberFormatType.Number &&
+                    ordinates[i, 0].NumberFormatType != NumberFormatType.General)
                 {
                     MessageBox.Show("All selected ordinates must be numbers.", "Ordinate Selection Error",
                         MessageBoxButton.OK, MessageBoxImage.Error);
@@ -155,7 +154,8 @@ namespace DSSExcel
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
             for (int i = 0; i < values.RowCount; i++)
             {
-                if (values[i, 0].NumberFormatType != NumberFormatType.Number)
+                if (values[i, 0].NumberFormatType != NumberFormatType.Number && 
+                    values[i, 0].NumberFormatType != NumberFormatType.General)
                 {
                     MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
                         MessageBoxButton.OK, MessageBoxImage.Error);
@@ -204,7 +204,8 @@ namespace DSSExcel
             {
                 for (int j = 0; j < values.ColumnCount; j++)
                 {
-                    if (values[i, j].NumberFormatType != NumberFormatType.Number)
+                    if (values[i, j].NumberFormatType != NumberFormatType.Number && 
+                        values[i, j].NumberFormatType != NumberFormatType.General)
                     {
                         MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
                             MessageBoxButton.OK, MessageBoxImage.Error);
@@ -237,7 +238,60 @@ namespace DSSExcel
 
         private void PathPage_ImportClick(object sender, RoutedEventArgs e)
         {
+            if (PathPage.currentRecordType == RecordType.RegularTimeSeries || PathPage.currentRecordType == RecordType.IrregularTimeSeries)
+                ImportTimeSeries();
+            if (PathPage.currentRecordType == RecordType.PairedData)
+                ImportPairedData();
+        }
 
+        private void ImportPairedData()
+        {
+            OrdinatePage.ExcelView.ActiveWorkbookSet.GetLock();
+            PairedDataValuePage.ExcelView.ActiveWorkbookSet.GetLock();
+            PairedData pd = ExcelTools.GetPairedData(OrdinatePage.Ordinates, PairedDataValuePage.Values, PathPage.Apart, PathPage.Bpart,
+                PathPage.Cpart, PathPage.Dpart, PathPage.Epart, PathPage.Fpart);
+            pd.TypeIndependent = "type1";
+            pd.TypeDependent = "type2";
+            pd.UnitsIndependent = "unit1";
+            pd.UnitsDependent = "unit2";
+            OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+
+            WriteRecord(pd);
+        }
+
+        private void ImportTimeSeries()
+        {
+            DatePage.ExcelView.ActiveWorkbookSet.GetLock();
+            TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
+            TimeSeries ts = ExcelTools.GetTimeSeries(DatePage.Dates, TimeSeriesValuePage.Values, PathPage.Apart, PathPage.Bpart,
+                PathPage.Cpart, PathPage.Dpart, PathPage.Epart, PathPage.Fpart);
+            DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+
+            WriteRecord(ts);
+        }
+
+        private void WriteRecord(object record)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                using (DssWriter w = new DssWriter(openFileDialog.FileName))
+                {
+                    if (record is TimeSeries)
+                        w.Write(record as TimeSeries);
+                    else if (record is PairedData)
+                        w.Write(record as PairedData);
+                }
+                DisplayImportStatus();
+            }
+        }
+
+        private void DisplayImportStatus()
+        {
+            MessageBox.Show("Import successful.", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void PathPage_BackClick(object sender, RoutedEventArgs e)
@@ -245,6 +299,34 @@ namespace DSSExcel
             PathPage.Visibility = Visibility.Collapsed;
             PathPage.PreviousPage.Visibility = Visibility.Visible;
             Title = "Select Value Range";
+        }
+
+        private void DatePage_TabSelectionChanged(object sender, EventArgs e)
+        {
+            ChangeAllActiveExcelTabs(DatePage.ExcelView.ActiveSheet);
+        }
+
+        private void OrdinatePage_TabSelectionChanged(object sender, EventArgs e)
+        {
+            ChangeAllActiveExcelTabs(OrdinatePage.ExcelView.ActiveSheet);
+        }
+
+        private void TimeSeriesValuePage_TabSelectionChanged(object sender, EventArgs e)
+        {
+            ChangeAllActiveExcelTabs(TimeSeriesValuePage.ExcelView.ActiveSheet);
+        }
+
+        private void PairedDataValuePage_TabSelectionChanged(object sender, EventArgs e)
+        {
+            ChangeAllActiveExcelTabs(PairedDataValuePage.ExcelView.ActiveSheet);
+        }
+
+        private void ChangeAllActiveExcelTabs(ISheet activeSheet)
+        {
+            DatePage.ExcelView.ActiveSheet = activeSheet;
+            OrdinatePage.ExcelView.ActiveSheet = activeSheet;
+            TimeSeriesValuePage.ExcelView.ActiveSheet = activeSheet;
+            PairedDataValuePage.ExcelView.ActiveSheet = activeSheet;
         }
     }
 }

@@ -11,7 +11,7 @@
             <RowDefinition/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
-        <Controls:WorkbookView x:Name="ExcelView" Margin="0,69,0,10" RangeSelectionBorderBrush="Red" RangeSelectionChanged="ExcelView_RangeSelectionChanged"/>
+        <Controls:WorkbookView x:Name="ExcelView" Margin="0,69,0,10" RangeSelectionBorderBrush="Red" RangeSelectionChanged="ExcelView_RangeSelectionChanged" ActiveTabChanged="ExcelView_ActiveTabChanged"/>
         <Button x:Name="ValueSelectNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Click="ValueSelectNextButton_Click" RenderTransformOrigin="0.467,1" Grid.Row="1" Height="23"/>
         <Button x:Name="ValueSelectBackButton" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" Click="ValueSelectBackButton_Click" Grid.Row="1" Height="23"/>
         <TextBlock Margin="10,0" TextWrapping="Wrap" Text="Select value range:" Height="43" VerticalAlignment="Top" FontSize="20"/>

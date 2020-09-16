@@ -11,7 +11,7 @@ namespace Hec.Dss.Excel
 {
     public abstract class ExcelTools
     {
-        public SpreadsheetGear.IWorkbookSet workbookSet = SpreadsheetGear.Factory.GetWorkbookSet();
+        public SpreadsheetGear.IWorkbookSet workbookSet = Factory.GetWorkbookSet();
         public SpreadsheetGear.IWorkbook workbook;
 
         public int Count 
@@ -292,7 +292,7 @@ namespace Hec.Dss.Excel
             return d.ToArray();
         }
 
-        protected bool IsRegular(List<DateTime> times)
+        public static bool IsRegular(List<DateTime> times)
         {
             var temp = times;
             temp.Sort((a, b) => a.CompareTo(b));
@@ -359,5 +359,96 @@ namespace Hec.Dss.Excel
             }
             return -1;
         }
+
+        public static TimeSeries GetTimeSeries(IRange DateTimes, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
+        {
+            var ts = new TimeSeries();
+            ts.Times = RangeToDateTimes(DateTimes);
+            ts.Values = RangeToTimeSeriesValues(Values);
+            if (CheckTimeSeriesType(ts.Times) == RecordType.RegularTimeSeries)
+            {
+                ts.Path = new DssPath(Apart, Bpart, Cpart, "", "", Fpart, RecordType.RegularTimeSeries, "type", "units");
+                ts.Path.Epart = TimeWindow.GetInterval(ts);
+            }
+            else
+                ts.Path = new DssPath(Apart, Bpart, Cpart, "", "IR-Year", Fpart, RecordType.IrregularTimeSeries, "type", "units");
+            return ts;
+        }
+
+        private static double[] RangeToTimeSeriesValues(IRange values)
+        {
+            var d = new List<double>();
+
+            for (int i = 0; i < values.RowCount; i++)
+            {
+                d.Add(double.Parse(values[i, 0].Value.ToString()));
+            }
+
+            return d.ToArray();
+        }
+
+        public static DateTime[] RangeToDateTimes(IRange dateTimes)
+        {
+            var r = new List<DateTime>();
+            IWorkbookSet wbs = Factory.GetWorkbookSet();
+            IWorkbook wb = wbs.Workbooks.Add();
+            for (int i = 0; i < dateTimes.RowCount; i++)
+            {
+                DateTime tmp;
+                var b = DateTime.TryParse(wb.NumberToDateTime(double.Parse(dateTimes.Cells[i, 0].Value.ToString())).ToString(), out tmp);
+                r.Add(b ? tmp : new DateTime());
+            }
+            return r.ToArray();
+        }
+
+        public static PairedData GetPairedData(IRange Ordinates, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
+        {
+            var pd = new PairedData();
+            pd.Ordinates = RangeToOrdinates(Ordinates);
+            pd.Values = RangeToPairedDataValues(Values);
+            var p = new DssPath(Apart, Bpart, Cpart, Dpart, Epart, Fpart, RecordType.PairedData, "type", "units");
+            pd.Path = p;
+            return pd;
+        }
+
+        public static List<double[]> RangeToPairedDataValues(IRange values)
+        {
+            var d = new List<List<double>>();
+
+            for (int i = 0; i < values.ColumnCount; i++)
+            {
+                d.Add(new List<double>());
+                for (int j = 0; j < values.RowCount; j++)
+                {
+                    d[i].Add(double.Parse(values[j, i].Value.ToString()));
+                }
+            }
+
+            var r = new List<double[]>();
+            for (int i = 0; i < d.Count; i++)
+            {
+                r.Add(d[i].ToArray());
+            }
+
+            return r;
+        }
+
+        public static double[] RangeToOrdinates(IRange ordinates)
+        {
+            var d = new List<double>();
+
+            for (int i = 0; i < ordinates.RowCount; i++)
+            {
+                d.Add(double.Parse(ordinates[i, 0].Value.ToString()));
+            }
+
+            return d.ToArray();
+        }
+
+        public static RecordType CheckTimeSeriesType(DateTime[] times)
+        {
+            return IsRegular(times.ToList()) ? RecordType.RegularTimeSeries : RecordType.IrregularTimeSeries;
+        }
+
     }
 }

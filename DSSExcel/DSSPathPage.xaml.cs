@@ -22,11 +22,68 @@ namespace DSSExcel
     public partial class DSSPathPage : UserControl
     {
         public UserControl PreviousPage;
+        public RecordType currentRecordType;
         private bool tsPathGenerated = false;
         private bool pdPathGenerated = false;
         private DssPath tsPath = new DssPath();
         private DssPath pdPath = new DssPath();
 
+        public string Apart 
+        {
+            get
+            {
+                return ApartTextBox.Text;
+            }
+        }
+        public string Bpart 
+        {
+            get
+            {
+                return BpartTextBox.Text;
+            }
+        }
+        public string Cpart 
+        {
+            get
+            {
+                return CpartTextBox.Text;
+            }
+        }
+        public string Dpart 
+        {
+            get
+            {
+                return DpartTextBox.Text;
+            }
+        }
+        public string Epart 
+        {
+            get
+            {
+                return EpartTextBox.Text;
+            }
+        }
+        public string Fpart 
+        {
+            get
+            {
+                return FpartTextBox.Text;
+            }
+        }
+
+
+        public string GetPath 
+        { 
+            get
+            {
+                return "/" + Apart +
+                    "/" + Bpart +
+                    "/" + Cpart +
+                    "/" + Dpart +
+                    "/" + Epart +
+                    "/" + Fpart + "/";
+            }
+        }
         public DSSPathPage()
         {
             InitializeComponent();
@@ -83,9 +140,15 @@ namespace DSSExcel
         public void ShowPath(object record)
         {
             if (record is RecordType.IrregularTimeSeries || record is RecordType.RegularTimeSeries)
+            {
+                currentRecordType = RecordType.RegularTimeSeries;
                 ShowTimeSeriesPath();
+            }
             else if (record is RecordType.PairedData)
+            {
+                currentRecordType = RecordType.PairedData;
                 ShowPairedDataPath();
+            }
         }
     }
 }

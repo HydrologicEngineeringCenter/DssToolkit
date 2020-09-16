@@ -1,4 +1,5 @@
 ﻿using SpreadsheetGear;
+using SpreadsheetGear.Windows.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,7 @@ namespace DSSExcel
 
         public event RoutedEventHandler NextClick;
         public event RoutedEventHandler BackClick;
+        public event EventHandler TabSelectionChanged;
 
         private void DateSelectNextButton_Click(object sender, RoutedEventArgs e)
         {
@@ -40,9 +42,15 @@ namespace DSSExcel
             this.BackClick?.Invoke(this, e);
         }
 
+
         private void ExcelView_RangeSelectionChanged(object sender, SpreadsheetGear.Windows.Controls.RangeSelectionChangedEventArgs e)
         {
             Dates = ExcelView.RangeSelection;
+        }
+
+        private void ExcelView_ActiveTabChanged(object sender, SpreadsheetGear.Windows.Controls.ActiveTabChangedEventArgs e)
+        {
+            this.TabSelectionChanged?.Invoke(this, e);
         }
     }
 }
