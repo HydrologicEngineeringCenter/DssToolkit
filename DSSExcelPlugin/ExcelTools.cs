@@ -450,5 +450,49 @@ namespace Hec.Dss.Excel
             return IsRegular(times.ToList()) ? RecordType.RegularTimeSeries : RecordType.IrregularTimeSeries;
         }
 
+        public static bool IsDateRange(IRange range)
+        {
+            for (int i = 0; i < range.RowCount; i++)
+            {
+                if (range[i, 0].NumberFormatType != NumberFormatType.Number &&
+                    range[i, 0].NumberFormatType != NumberFormatType.General)
+                return false;
+            }
+            return true;
+        }
+
+        public static bool IsOrdinateRange(IRange range)
+        {
+            return IsValueRange(range);
+        }
+
+        public static bool IsValueRange(IRange range)
+        {
+            for (int i = 0; i < range.RowCount; i++)
+            {
+                if (!IsValue(range[i,0]))
+                return false;
+            }
+            return true;
+        }
+
+        public static bool IsValuesRange(IRange range)
+        {
+            for (int i = 0; i < range.RowCount; i++)
+            {
+                for (int j = 0; j < range.ColumnCount; j++)
+                {
+                    if (!IsValue(range[i, j]))
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        public static bool IsValue(IRange value)
+        {
+            return value.NumberFormatType != NumberFormatType.Number &&
+                     value.NumberFormatType != NumberFormatType.General;
+        }
     }
 }

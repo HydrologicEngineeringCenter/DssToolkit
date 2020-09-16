@@ -66,18 +66,15 @@ namespace DSSExcel
             }
 
             DatePage.ExcelView.ActiveWorkbookSet.GetLock();
-            for (int i = 0; i < dates.RowCount; i++)
+            
+            if (!ExcelTools.IsDateRange(dates))
             {
-                if (dates[i, 0].NumberFormatType != NumberFormatType.DateTime &&
-                    dates[i, 0].NumberFormatType != NumberFormatType.Date)
-                {
-                    MessageBox.Show("All values selected for Date/Time don't follow the date and time format.", "Date/Time Selection Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-
-                    return false;
-                }
+                MessageBox.Show("All values selected for Date/Time don't follow the date and time format.", "Date/Time Selection Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+                return false;
             }
+
             DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             return true;
         }
@@ -108,18 +105,15 @@ namespace DSSExcel
             }
 
             OrdinatePage.ExcelView.ActiveWorkbookSet.GetLock();
-            for (int i = 0; i < ordinates.RowCount; i++)
+            if (!ExcelTools.IsOrdinateRange(ordinates))
             {
-                if (ordinates[i, 0].NumberFormatType != NumberFormatType.Number &&
-                    ordinates[i, 0].NumberFormatType != NumberFormatType.General)
-                {
-                    MessageBox.Show("All selected ordinates must be numbers.", "Ordinate Selection Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-
-                    return false;
-                }
+                MessageBox.Show("All selected ordinates must be numbers.", "Ordinate Selection Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+                return false;
             }
+            
+
             OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             return true;
         }
@@ -152,17 +146,12 @@ namespace DSSExcel
             }
 
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            for (int i = 0; i < values.RowCount; i++)
+            if (!ExcelTools.IsValueRange(values))
             {
-                if (values[i, 0].NumberFormatType != NumberFormatType.Number && 
-                    values[i, 0].NumberFormatType != NumberFormatType.General)
-                {
-                    MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-
-                    return false;
-                }
+                MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+                return false;
             }
 
             if (values.RowCount != DatePage.Dates.RowCount)
@@ -200,20 +189,14 @@ namespace DSSExcel
         private bool CheckPairedDataValues(IRange values)
         {
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            for (int i = 0; i < values.RowCount; i++)
-            {
-                for (int j = 0; j < values.ColumnCount; j++)
-                {
-                    if (values[i, j].NumberFormatType != NumberFormatType.Number && 
-                        values[i, j].NumberFormatType != NumberFormatType.General)
-                    {
-                        MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
-                        PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
 
-                        return false;
-                    }
-                }
+            if (!ExcelTools.IsValuesRange(values))
+            {
+                MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+
+                return false;
             }
 
             if (values.RowCount != OrdinatePage.Ordinates.RowCount)
