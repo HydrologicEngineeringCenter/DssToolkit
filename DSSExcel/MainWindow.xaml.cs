@@ -147,21 +147,21 @@ namespace DSSExcel
                 List<string> sheets = GetExcelSheets();
                 List<string> paths = GetDssPaths();
 
-                string path = ExcelFilePath.Text;
-                if (!File.Exists(path))
+                string filename = ExcelFilePath.Text;
+                if (!File.Exists(filename))
                 {
                     System.Windows.Forms.FolderBrowserDialog browser = new System.Windows.Forms.FolderBrowserDialog();
                     browser.ShowNewFolderButton = true;
                     browser.Description = "Select directory for new excel file.";
                     if (browser.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                         return;
-                    path = browser.SelectedPath + "\\" + "dss_excel" + ExcelTools.RandomString(10) + ".xlsx";
+                    filename = browser.SelectedPath + "\\" + "dss_excel" + ExcelTools.RandomString(10) + ".xlsx";
                 }
 
                 using (DssReader r = new DssReader(DssFilePath.Text))
                 {
                     object record;
-                    ExcelWriter ew = new ExcelWriter(path);
+                    ExcelWriter ew = new ExcelWriter(filename);
                     if (sheets.Count == 0)
                     {
                         for (int i = 0; i < paths.Count; i++)
@@ -183,7 +183,7 @@ namespace DSSExcel
                     }
                     else
                     {
-                        for (int i = 0; i < SheetList.SelectedItems.Count; i++)
+                        for (int i = 0; i < sheets.Count; i++)
                         {
                             DssPath p = new DssPath(paths[i]);
                             var type = r.GetRecordType(p);
@@ -199,11 +199,11 @@ namespace DSSExcel
                             }
                         }
                     }
-                    var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show excel file in File Explorer?", r.Filename, path), 
+                    var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show excel file in File Explorer?", r.Filename, filename), 
                         "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (result == MessageBoxResult.OK)
                     {
-                        Process.Start("explorer.exe", Path.GetDirectoryName(path));
+                        Process.Start("explorer.exe", Path.GetDirectoryName(filename));
                     }
                 }
             }
