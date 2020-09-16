@@ -454,11 +454,16 @@ namespace Hec.Dss.Excel
         {
             for (int i = 0; i < range.RowCount; i++)
             {
-                if (range[i, 0].NumberFormatType != NumberFormatType.Number &&
-                    range[i, 0].NumberFormatType != NumberFormatType.General)
-                return false;
+                if (!IsDate(range[i, 0]))
+                    return false;
             }
             return true;
+        }
+
+        public static bool IsDate(IRange date)
+        {
+            return date.NumberFormatType == NumberFormatType.DateTime ||
+                    date.NumberFormatType == NumberFormatType.Date;
         }
 
         public static bool IsOrdinateRange(IRange range)
@@ -471,7 +476,7 @@ namespace Hec.Dss.Excel
             for (int i = 0; i < range.RowCount; i++)
             {
                 if (!IsValue(range[i,0]))
-                return false;
+                    return false;
             }
             return true;
         }
@@ -491,8 +496,7 @@ namespace Hec.Dss.Excel
 
         public static bool IsValue(IRange value)
         {
-            return value.NumberFormatType != NumberFormatType.Number &&
-                     value.NumberFormatType != NumberFormatType.General;
+            return value.NumberFormatType == NumberFormatType.Number;
         }
     }
 }
