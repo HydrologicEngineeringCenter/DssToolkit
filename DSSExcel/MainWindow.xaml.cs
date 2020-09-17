@@ -21,6 +21,7 @@ namespace DSSExcel
     {
         public bool HasExcelFile { get; set; }
         public bool HasDssFile { get; set; }
+        public bool OverwriteSheets { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -38,9 +39,7 @@ namespace DSSExcel
                     c = r.GetCatalog();
                     DssPathList.Items.Clear();
                     foreach (var path in c)
-                    {
                         DssPathList.Items.Add(path.FullPath);
-                    }
                     HasDssFile = true;
                 }
 
@@ -64,9 +63,7 @@ namespace DSSExcel
                 ExcelReader er = new ExcelReader(openFileDialog.FileName);
                 SheetList.Items.Clear();
                 for (int i = 0; i < er.workbook.Worksheets.Count; i++)
-                {
                     SheetList.Items.Add(er.workbook.Worksheets[i].Name);
-                }
                 HasExcelFile = true;
                 ExcelFilePath.Text = openFileDialog.FileName;
                 ImportButton.IsEnabled = CanImport();
@@ -90,7 +87,7 @@ namespace DSSExcel
         {
             if (CheckSelections())
             {
-                List<string> sheets = GetExcelSheets();
+                List<string> sheets = GetImportExcelSheets();
                 ExcelReader er = new ExcelReader(ExcelFilePath.Text);
                 
                 string path = DssFilePath.Text;
@@ -115,7 +112,6 @@ namespace DSSExcel
                                 w.Write(er.Read(i) as TimeSeries);
                             else if (t is RecordType.PairedData)
                                 w.Write(er.Read(i) as PairedData);
-                            
                         }
                     }
                     else
@@ -129,6 +125,8 @@ namespace DSSExcel
                                 w.Write(er.Read(sheet) as PairedData);
                         }
                     }
+                    RefreshDssPathList();
+
                     var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}", er.workbook.FullName, w.Filename), 
                         "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (result == MessageBoxResult.OK)
@@ -137,15 +135,42 @@ namespace DSSExcel
                     }
                 }
             }
-            
+        }
+
+        private void RefreshDssPathList()
+        {
+            DssPathCollection c;
+            using (DssReader r = new DssReader(DssFilePath.Text))
+            {
+                c = r.GetCatalog();
+                DssPathList.Items.Clear();
+                foreach (var path in c)
+                    DssPathList.Items.Add(path.FullPath);
+            }
+        }
+
+        private List<string> GetImportExcelSheets()
+        {
+            var sheets = new List<string>();
+            if (SheetList.SelectedItems.Count != 0)
+            {
+                for (int i = 0; i < SheetList.SelectedItems.Count; i++)
+                    sheets.Add(SheetList.SelectedItems[i].ToString());
+            }
+            else
+            {
+                for (int i = 0; i < SheetList.Items.Count; i++)
+                    sheets.Add(SheetList.Items[i].ToString());
+            }
+            return sheets;
         }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
             if (CheckSelections())
             {
-                List<string> sheets = GetExcelSheets();
-                List<string> paths = GetDssPaths();
+                List<string> sheets = GetExportExcelSheets();
+                List<DssPath> paths = GetDssPaths();
 
                 string filename = ExcelFilePath.Text;
                 if (!File.Exists(filename))
@@ -166,7 +191,7 @@ namespace DSSExcel
                     {
                         for (int i = 0; i < paths.Count; i++)
                         {
-                            DssPath p = new DssPath(paths[i]);
+                            DssPath p = new DssPath(paths[i].PathWithoutDate);
                             p.Dpart = "";
                             var type = r.GetRecordType(p);
                             if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
@@ -185,7 +210,7 @@ namespace DSSExcel
                     {
                         for (int i = 0; i < sheets.Count; i++)
                         {
-                            DssPath p = new DssPath(paths[i]);
+                            DssPath p = new DssPath(paths[i].PathWithoutDate);
                             var type = r.GetRecordType(p);
                             if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                             {
@@ -199,6 +224,8 @@ namespace DSSExcel
                             }
                         }
                     }
+                    RefreshSheetList();
+
                     var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show excel file in File Explorer?", r.Filename, filename), 
                         "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (result == MessageBoxResult.OK)
@@ -209,44 +236,78 @@ namespace DSSExcel
             }
         }
 
-        private List<string> GetDssPaths()
+        private void RefreshSheetList()
         {
-            List<string> paths = new List<string>();
+            ExcelReader er = new ExcelReader(ExcelFilePath.Text);
+            SheetList.Items.Clear();
+            for (int i = 0; i < er.workbook.Worksheets.Count; i++)
+                SheetList.Items.Add(er.workbook.Worksheets[i].Name);
+        }
+
+        private List<DssPath> GetDssPaths()
+        {
+            List<DssPath> paths = new List<DssPath>();
             if (DssPathList.SelectedItems.Count != 0)
             {
                 for (int i = 0; i < DssPathList.SelectedItems.Count; i++)
                 {
-                    paths.Add(DssPathList.SelectedItems[i].ToString());
+                    paths.Add(new DssPath(DssPathList.SelectedItems[i].ToString()));
                 }
             }
             else
             {
                 for (int i = 0; i < DssPathList.Items.Count; i++)
                 {
-                    paths.Add(DssPathList.Items[i].ToString());
+                    paths.Add(new DssPath(DssPathList.Items[i].ToString()));
                 }
             }
             return paths;
         }
 
-        private List<string> GetExcelSheets()
+        private List<string> GetExportExcelSheets()
         {
-            List<string> sheets = new List<string>();
             if (SheetList.SelectedItems.Count != 0)
+                return GetSelectedSheets();
+            else
+                return GenerateExportSheets();
+        }
+
+        private List<string> GenerateExportSheets()
+        {
+            var sheets = new List<string>();
+            if (OverwriteSheets)
             {
-                for (int i = 0; i < SheetList.SelectedItems.Count; i++)
+                int c = DssPathList.Items.Count > SheetList.Items.Count ? SheetList.Items.Count : DssPathList.Items.Count;
+                for (int i = 0; i < c; i++)
                 {
-                    sheets.Add(SheetList.SelectedItems[i].ToString());
+                    sheets.Add(SheetList.Items[i].ToString());
+                }
+
+                if (DssPathList.Items.Count > SheetList.Items.Count)
+                {
+                    for (int i = 0; i < Math.Abs(SheetList.Items.Count - DssPathList.Items.Count); i++)
+                    {
+                        sheets.Add("SheetImport" + ExcelTools.RandomString(3));
+                    }
                 }
             }
             else
             {
-                for (int i = 0; i < SheetList.Items.Count; i++)
+                for (int i = 0; i < DssPathList.Items.Count; i++)
                 {
-                    sheets.Add(SheetList.Items[i].ToString());
+                    sheets.Add("SheetImport" + ExcelTools.RandomString(3));
                 }
             }
-            
+            return sheets;
+        }
+
+        private List<string> GetSelectedSheets()
+        {
+            var sheets = new List<string>();
+            for (int i = 0; i < SheetList.SelectedItems.Count; i++)
+            {
+                sheets.Add(SheetList.SelectedItems[i].ToString());
+            }
             return sheets;
         }
 

@@ -96,6 +96,7 @@ namespace Hec.Dss.Excel
         {
             if (!SheetExists(sheet))
                 AddSheet(sheet);
+            ClearSheet(sheet);
             SetPathInExcelFile(workbook, sheet, record.Path);
             SetDateColumnInExcelFile(workbook, sheet, record, 6, 0);
             SetTimeSeriesValueColumnInExcelFile(workbook, sheet, record, 6, 1);
@@ -124,6 +125,7 @@ namespace Hec.Dss.Excel
         {
             if (!SheetExists(sheet))
                 AddSheet(sheet);
+            ClearSheet(sheet);
             SetPathInExcelFile(workbook, sheet, record.Path);
             SetOrdinateColumnInExcelFile(workbook, sheet, record, 6, 0);
             SetPairedDataValueColumnsInExcelFile(workbook, sheet, record, 6, 1);
@@ -137,7 +139,11 @@ namespace Hec.Dss.Excel
                     Path.GetFileNameWithoutExtension(workbook.FullName) + ".xlsx";
                 workbook.SaveAs(name, FileFormat.OpenXMLWorkbook);
             }
-            workbook.Close();
+        }
+
+        public void ClearSheet(string sheet)
+        {
+            workbook.Worksheets[sheet].Cells.Clear();
         }
 
         private void SetPairedDataValueColumnsInExcelFile(IWorkbook workbook, string sheet, PairedData pd, int rowOffset, int colOffset)
@@ -181,8 +187,6 @@ namespace Hec.Dss.Excel
 
         public void Write(TimeSeries record, int sheetIndex)
         {
-            if (!SheetExists(sheetIndex))
-                AddSheet(sheetIndex);
             Write(record, workbook.Worksheets[sheetIndex].Name);
         }
 
