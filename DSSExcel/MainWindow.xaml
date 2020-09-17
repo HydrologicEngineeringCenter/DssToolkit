@@ -28,8 +28,12 @@
         <TextBlock HorizontalAlignment="Left" Margin="19,22,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Select DSS Paths:" VerticalAlignment="Top" Height="22" Width="120" FontSize="14"/>
         <TextBlock HorizontalAlignment="Left" Margin="19,16,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Select Excel Sheets:" VerticalAlignment="Top" Height="23" Width="120" FontSize="14"/>
         <Menu Height="22" VerticalAlignment="Top" Grid.ColumnSpan="2">
-            <MenuItem Header="Options" Height="22" Width="61">
+            <MenuItem Header="Options" Height="22">
                 <MenuItem x:Name="ManualImportButton" Header="Manual Import..." Click="ManualImportButton_Click"/>
+            </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem x:Name="ViewDssFileButton" Header="View DSS File..." IsEnabled="False" Click="ViewDssFileButton_Click"/>
+                <MenuItem x:Name="ViewExcelFileButton" Header="View Excel File..." IsEnabled="False" Click="ViewExcelFileButton_Click"/>
             </MenuItem>
         </Menu>
         <CheckBox x:Name="OverwriteSheetsCheckBox" Content="Overwrite Sheets" HorizontalAlignment="Left" Margin="19,144,0,30" Grid.Row="1" Width="120" VerticalAlignment="Bottom" IsChecked="{Binding Path=OverwriteSheets, Mode=OneWayToSource}"/>

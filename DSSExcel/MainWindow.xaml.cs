@@ -349,5 +349,15 @@ namespace DSSExcel
             DSSExcelManualImport s = new DSSExcelManualImport(r.workbook.FullName);
             s.ShowDialog();
         }
+
+        private void ViewDssFileButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ViewExcelFileButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
