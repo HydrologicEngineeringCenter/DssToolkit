@@ -1,4 +1,5 @@
 ﻿using Hec.Dss;
+using SpreadsheetGear;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,18 +138,69 @@ namespace DSSExcel
             pdPathGenerated = true;
         }
 
-        public void ShowPath(object record)
+        public void ShowPath(RecordType recordType, IRange range1, IRange range2)
         {
-            if (record is RecordType.IrregularTimeSeries || record is RecordType.RegularTimeSeries)
+            if (recordType is RecordType.IrregularTimeSeries || recordType is RecordType.RegularTimeSeries)
             {
                 currentRecordType = RecordType.RegularTimeSeries;
                 ShowTimeSeriesPath();
             }
-            else if (record is RecordType.PairedData)
+            else if (recordType is RecordType.PairedData)
             {
                 currentRecordType = RecordType.PairedData;
                 ShowPairedDataPath();
             }
+            ShowRecordPreview(recordType, range1, range2);
+        }
+
+        private void ShowRecordPreview(RecordType recordType, IRange range1, IRange range2)
+        {
+            if (recordType is RecordType.RegularTimeSeries || recordType is RecordType.IrregularTimeSeries)
+                ShowTimeSeriesPreview(range1, range2);
+            else if (recordType is RecordType.PairedData)
+                ShowPairedDataPreview(range1, range2);
+        }
+
+        private void ShowTimeSeriesPreview(IRange dateTimes, IRange values)
+        {
+            ExcelView.ActiveWorkbookSet.GetLock();
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells.Clear();
+
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 0].Value = "Date/Time";
+            for (int i = 1; i < dateTimes.RowCount + 1; i++)
+            {
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 0].Value = dateTimes.Cells[i - 1, 0].Value;
+            }
+
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 1].Value = "Values";
+            for (int i = 1; i < values.RowCount + 1; i++)
+            {
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 1].Value = values.Cells[i - 1, 0].Value;
+            }
+            ExcelView.ActiveWorkbookSet.ReleaseLock();
+        }
+
+        private void ShowPairedDataPreview(IRange ordinates, IRange values)
+        {
+            ExcelView.ActiveWorkbookSet.GetLock();
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells.Clear();
+
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 0].Value = "Ordinates";
+            for (int i = 1; i < ordinates.RowCount + 1; i++)
+            {
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 0].Value = ordinates.Cells[i - 1, 0].Value;
+            }
+
+            for (int i = 1; i < values.ColumnCount + 1; i++)
+            {
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, i].Value = "Values" + i.ToString();
+                for (int j = 1; j < values.RowCount + 1; j++)
+                {
+                    ExcelView.ActiveWorkbook.Worksheets[0].Cells[j, i].Value = values.Cells[j - 1, i - 1].Value;
+                }
+            }
+            ExcelView.ActiveWorkbookSet.ReleaseLock();
+
         }
 
         public void ResetPath()

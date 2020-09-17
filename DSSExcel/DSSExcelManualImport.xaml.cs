@@ -131,7 +131,11 @@ namespace DSSExcel
                 return;
             TimeSeriesValuePage.Visibility = Visibility.Collapsed;
             PathPage.PreviousPage = TimeSeriesValuePage;
-            PathPage.ShowPath(RecordType.RegularTimeSeries);
+            DatePage.ExcelView.ActiveWorkbookSet.GetLock();
+            TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
+            PathPage.ShowPath(RecordType.RegularTimeSeries, DatePage.Dates, TimeSeriesValuePage.Values);
+            DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             PathPage.Visibility = Visibility.Visible;
             Title = "Create Time Series Path";
         }
@@ -181,7 +185,11 @@ namespace DSSExcel
             
             PairedDataValuePage.Visibility = Visibility.Collapsed;
             PathPage.PreviousPage = PairedDataValuePage;
-            PathPage.ShowPath(RecordType.PairedData);
+            OrdinatePage.ExcelView.ActiveWorkbookSet.GetLock();
+            PairedDataValuePage.ExcelView.ActiveWorkbookSet.GetLock();
+            PathPage.ShowPath(RecordType.PairedData, OrdinatePage.Ordinates, PairedDataValuePage.Values);
+            OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             PathPage.Visibility = Visibility.Visible;
             Title = "Create Paired Data Path";
         }
@@ -257,7 +265,7 @@ namespace DSSExcel
 
         private void WriteRecord(object record)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            SaveFileDialog openFileDialog = new SaveFileDialog();
             openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
             if (openFileDialog.ShowDialog() == true)
             {

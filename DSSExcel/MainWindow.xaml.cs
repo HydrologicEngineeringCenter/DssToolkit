@@ -315,7 +315,7 @@ namespace DSSExcel
         {
             if (HasDssFile && HasExcelFile && DssPathList.SelectedItems.Count != SheetList.SelectedItems.Count)
             {
-                MessageBox.Show("The amound of selected excel sheets and DSS paths do not match.", "Error", MessageBoxButton.OK);
+                MessageBox.Show("The amound of selected excel sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -324,18 +324,12 @@ namespace DSSExcel
 
         private bool CanExport()
         {
-            if (HasDssFile)
-                return true;
-            else
-                return false;
+            return HasDssFile;
         }
 
         private bool CanImport()
         {
-            if (HasExcelFile)
-                return true;
-            else
-                return false;
+            return HasExcelFile;
         }
 
         private void ManualImportButton_Click(object sender, RoutedEventArgs e)

@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DSSExcel"
-             xmlns:Dss="clr-namespace:Hec.Dss;assembly=Hec.Dss" x:Class="DSSExcel.DSSPathPage"
-             mc:Ignorable="d" Background="White" Height="331.404" Width="761.207">
+             xmlns:Dss="clr-namespace:Hec.Dss;assembly=Hec.Dss" xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Class="DSSExcel.DSSPathPage"
+             mc:Ignorable="d" Background="White" Height="584.013" Width="819.983">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -19,11 +19,12 @@
         <TextBlock HorizontalAlignment="Left" Margin="10,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="75" FontSize="18" Foreground="#FF919191"><Run Text="D part:"/><LineBreak/><Run/></TextBlock>
         <TextBlock HorizontalAlignment="Left" Margin="10,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="75" FontSize="18" Foreground="#FF919191"><Run Text="E part:"/><LineBreak/><Run/></TextBlock>
         <TextBlock HorizontalAlignment="Left" Margin="10,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="75" FontSize="18"><Run Text="F part:"/><LineBreak/><Run/></TextBlock>
-        <TextBox x:Name="ApartTextBox" Height="25" Margin="85,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Path=Apart, Mode=TwoWay}"/>
-        <TextBox x:Name="BpartTextBox" Height="25" Margin="85,40,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Path=Bpart, Mode=TwoWay}"/>
-        <TextBox x:Name="CpartTextBox" Height="25" Margin="85,70,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Path=Cpart, Mode=TwoWay}"/>
-        <TextBox x:Name="DpartTextBox" Height="25" Margin="85,100,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Path=Dpart, Mode=TwoWay}" ToolTip="The D part will be automatically generated when importing." IsReadOnlyCaretVisible="True" IsEnabled="False"/>
-        <TextBox x:Name="EpartTextBox" Height="25" Margin="85,130,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Path=Epart, Mode=TwoWay}" ToolTip="The E part will be automatically generated when importing." IsEnabled="False"/>
-        <TextBox x:Name="FpartTextBox" Height="25" Margin="85,160,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Path=Fpart, Mode=TwoWay}"/>
+        <TextBox x:Name="ApartTextBox" Height="25" Margin="85,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Apart, Mode=TwoWay}"/>
+        <TextBox x:Name="BpartTextBox" Height="25" Margin="85,40,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Bpart, Mode=TwoWay}"/>
+        <TextBox x:Name="CpartTextBox" Height="25" Margin="85,70,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Cpart, Mode=TwoWay}"/>
+        <TextBox x:Name="DpartTextBox" Height="25" Margin="85,100,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Dpart, Mode=TwoWay}" ToolTip="The D part will be automatically generated when importing." IsReadOnlyCaretVisible="True" IsEnabled="False"/>
+        <TextBox x:Name="EpartTextBox" Height="25" Margin="85,130,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Epart, Mode=TwoWay}" ToolTip="The E part will be automatically generated when importing." IsEnabled="False"/>
+        <TextBox x:Name="FpartTextBox" Height="25" Margin="85,160,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Fpart, Mode=TwoWay}"/>
+        <Controls:WorkbookView x:Name="ExcelView" Margin="0,228,0,10"/>
     </Grid>
 </UserControl>
