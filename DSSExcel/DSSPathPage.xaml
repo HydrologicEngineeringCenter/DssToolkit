@@ -25,6 +25,7 @@
         <TextBox x:Name="DpartTextBox" Height="25" Margin="85,100,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Dpart, Mode=TwoWay}" ToolTip="The D part will be automatically generated when importing." IsReadOnlyCaretVisible="True" IsEnabled="False"/>
         <TextBox x:Name="EpartTextBox" Height="25" Margin="85,130,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Epart, Mode=TwoWay}" ToolTip="The E part will be automatically generated when importing." IsEnabled="False"/>
         <TextBox x:Name="FpartTextBox" Height="25" Margin="85,160,10,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Fpart, Mode=TwoWay}"/>
-        <Controls:WorkbookView x:Name="ExcelView" Margin="0,228,0,10"/>
+        <Controls:WorkbookView x:Name="ExcelView" Margin="0,254,0,10" ShowError="ExcelView_ShowError"/>
+        <TextBlock Margin="10,211,280,0" TextWrapping="Wrap" Text="Record Preview:" Height="43" VerticalAlignment="Top" FontSize="20"/>
     </Grid>
 </UserControl>

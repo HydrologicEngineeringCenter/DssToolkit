@@ -140,6 +140,7 @@ namespace DSSExcel
 
         public void ShowPath(RecordType recordType, IRange range1, IRange range2)
         {
+            IsReadOnly(false);
             if (recordType is RecordType.IrregularTimeSeries || recordType is RecordType.RegularTimeSeries)
             {
                 currentRecordType = RecordType.RegularTimeSeries;
@@ -151,6 +152,27 @@ namespace DSSExcel
                 ShowPairedDataPath();
             }
             ShowRecordPreview(recordType, range1, range2);
+            ExcelView.ActiveWorkbookSet.GetLock();
+            ExcelView.ActiveWorksheet.Cells.Columns.AutoFit();
+            ExcelView.ActiveWorkbookSet.ReleaseLock();
+            IsReadOnly(true);
+        }
+
+        private void IsReadOnly(bool option)
+        {
+            if (option)
+            {
+                ExcelView.ActiveWorkbookSet.GetLock();
+                ExcelView.ActiveWorksheet.ProtectContents = true;
+                ExcelView.ActiveWorkbookSet.ReleaseLock();
+            }
+            else
+            {
+                ExcelView.ActiveWorkbookSet.GetLock();
+                ExcelView.ActiveWorksheet.ProtectContents = false;
+                ExcelView.ActiveWorkbookSet.ReleaseLock();
+            }
+            
         }
 
         private void ShowRecordPreview(RecordType recordType, IRange range1, IRange range2)
@@ -164,12 +186,12 @@ namespace DSSExcel
         private void ShowTimeSeriesPreview(IRange dateTimes, IRange values)
         {
             ExcelView.ActiveWorkbookSet.GetLock();
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells.Clear();
+            ExcelView.ActiveWorksheet.Cells.Clear();
 
             ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 0].Value = "Date/Time";
             for (int i = 1; i < dateTimes.RowCount + 1; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 0].Value = dateTimes.Cells[i - 1, 0].Value;
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 0].Value = DateTime.FromOADate(double.Parse(dateTimes.Cells[i - 1, 0].Value.ToString()));
             }
 
             ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 1].Value = "Values";
@@ -183,7 +205,7 @@ namespace DSSExcel
         private void ShowPairedDataPreview(IRange ordinates, IRange values)
         {
             ExcelView.ActiveWorkbookSet.GetLock();
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells.Clear();
+            ExcelView.ActiveWorksheet.Cells.Clear();
 
             ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 0].Value = "Ordinates";
             for (int i = 1; i < ordinates.RowCount + 1; i++)
@@ -210,6 +232,11 @@ namespace DSSExcel
             tsPath = new DssPath();
             pdPath = new DssPath();
             PreviousPage = null;
+        }
+
+        private void ExcelView_ShowError(object sender, SpreadsheetGear.Windows.Controls.ShowErrorEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }
