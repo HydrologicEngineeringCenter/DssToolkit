@@ -42,10 +42,7 @@ namespace DSSExcel
                         DssPathList.Items.Add(path.FullPath);
                     HasDssFile = true;
                 }
-
                 DssFilePath.Text = openFileDialog.FileName;
-                ImportButton.IsEnabled = CanImport();
-                ExportButton.IsEnabled = CanExport();
             }
         }
 
@@ -66,8 +63,6 @@ namespace DSSExcel
                     SheetList.Items.Add(er.workbook.Worksheets[i].Name);
                 HasExcelFile = true;
                 ExcelFilePath.Text = openFileDialog.FileName;
-                ImportButton.IsEnabled = CanImport();
-                ExportButton.IsEnabled = CanExport();
                 return true;
             }
             return false;
@@ -90,18 +85,19 @@ namespace DSSExcel
                 List<string> sheets = GetImportExcelSheets();
                 ExcelReader er = new ExcelReader(ExcelFilePath.Text);
                 
-                string path = DssFilePath.Text;
-                if (!File.Exists(path))
+                if (!File.Exists(DssFilePath.Text))
                 {
-                    System.Windows.Forms.FolderBrowserDialog browser = new System.Windows.Forms.FolderBrowserDialog();
-                    browser.ShowNewFolderButton = true;
-                    browser.Description = "Select directory for new dss file.";
-                    if (browser.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                    SaveFileDialog browser = new SaveFileDialog();
+                    browser.Title = "Select or Create DSS File";
+                    browser.Filter = "DSS Files (*.dss)|*.dss";
+                    if (browser.ShowDialog() != true)
                         return;
-                    path = browser.SelectedPath + "\\" + "dss_excel" + ExcelTools.RandomString(10) + ".dss";
-                
+                    HasDssFile = true;
+                    DssFilePath.Text = browser.FileName;
                 }
-                using (DssWriter w = new DssWriter(path))
+                string filename = DssFilePath.Text;
+
+                using (DssWriter w = new DssWriter(filename))
                 {
                     if (sheets.Count == 0)
                     {
@@ -131,7 +127,7 @@ namespace DSSExcel
                         "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (result == MessageBoxResult.OK)
                     {
-                        Process.Start("explorer.exe", Path.GetDirectoryName(path));
+                        Process.Start("explorer.exe", Path.GetDirectoryName(filename));
                     }
                 }
             }
@@ -172,18 +168,19 @@ namespace DSSExcel
                 List<string> sheets = GetExportExcelSheets();
                 List<DssPath> paths = GetDssPaths();
 
-                string filename = ExcelFilePath.Text;
-                if (!File.Exists(filename))
+                if (!File.Exists(ExcelFilePath.Text))
                 {
-                    System.Windows.Forms.FolderBrowserDialog browser = new System.Windows.Forms.FolderBrowserDialog();
-                    browser.ShowNewFolderButton = true;
-                    browser.Description = "Select directory for new excel file.";
-                    if (browser.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                    SaveFileDialog browser = new SaveFileDialog();
+                    browser.Title = "Select or Create Excel File";
+                    browser.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx";
+                    if (browser.ShowDialog() != true)
                         return;
-                    filename = browser.SelectedPath + "\\" + "dss_excel" + ExcelTools.RandomString(10) + ".xlsx";
+                    HasExcelFile = true;
+                    ExcelFilePath.Text = browser.FileName;
                 }
+                string filename = ExcelFilePath.Text;
 
-                using (DssReader r = new DssReader(DssFilePath.Text))
+                using (DssReader r = new DssReader(filename))
                 {
                     object record;
                     ExcelWriter ew = new ExcelWriter(filename);
@@ -352,6 +349,18 @@ namespace DSSExcel
         private void ViewExcelFileButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void DssFilePath_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ImportButton.IsEnabled = CanImport();
+            ExportButton.IsEnabled = CanExport();
+        }
+
+        private void ExcelFilePath_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ImportButton.IsEnabled = CanImport();
+            ExportButton.IsEnabled = CanExport();
         }
     }
 }
