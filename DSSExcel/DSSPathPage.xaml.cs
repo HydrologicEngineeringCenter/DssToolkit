@@ -1,5 +1,6 @@
 ﻿using Hec.Dss;
 using SpreadsheetGear;
+using Hec.Dss.Excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -191,7 +192,7 @@ namespace DSSExcel
             ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 0].Value = "Date/Time";
             for (int i = 1; i < dateTimes.RowCount + 1; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 0].Value = DateTime.FromOADate(double.Parse(dateTimes.Cells[i - 1, 0].Value.ToString()));
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 0].Value = ExcelTools.GetDateFromCell(dateTimes.Cells[i - 1, 0].Value.ToString());
             }
 
             ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 1].Value = "Values";

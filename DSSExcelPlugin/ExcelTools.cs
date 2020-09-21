@@ -269,11 +269,20 @@ namespace Hec.Dss.Excel
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        protected DateTime GetDateFromCell(double value)
+        public static DateTime GetDateFromCell(double value)
+        {
+            IWorkbookSet wbs = SpreadsheetGear.Factory.GetWorkbookSet();
+            IWorkbook wb = wbs.Workbooks.Add();
+            DateTime dt;
+            var b = DateTime.TryParse(wb.NumberToDateTime(value).ToString(), out dt);
+            return b ? dt : new DateTime();
+        }
+
+        public static DateTime GetDateFromCell(string s)
         {
             DateTime dt;
-            var b = DateTime.TryParse(workbook.NumberToDateTime(value).ToString(), out dt);
-            return b ? dt : new DateTime();
+            CorrectDateFormat(s, out dt);
+            return dt;
         }
 
         public static DateTime[] GetTimeSeriesTimes(IRange range)
@@ -395,7 +404,7 @@ namespace Hec.Dss.Excel
             for (int i = 0; i < dateTimes.RowCount; i++)
             {
                 DateTime tmp;
-                var b = DateTime.TryParse(wb.NumberToDateTime(double.Parse(dateTimes.Cells[i, 0].Value.ToString())).ToString(), out tmp);
+                var b = DateTime.TryParse(GetDateFromCell(dateTimes.Cells[i, 0].Value.ToString()).ToString(), out tmp);
                 r.Add(b ? tmp : new DateTime());
             }
             return r.ToArray();
@@ -462,8 +471,27 @@ namespace Hec.Dss.Excel
 
         public static bool IsDate(IRange date)
         {
-            return date.NumberFormatType == NumberFormatType.DateTime ||
-                    date.NumberFormatType == NumberFormatType.Date;
+            DateTime d;
+            CorrectDateFormat(date.Cells[0, 0].Value.ToString(), out d);
+            return DateTime.TryParse(d.ToString(), out _);
+        }
+
+        public static void CorrectDateFormat(string s, out DateTime d)
+        {
+            
+            string tmp;
+            tmp = s.Replace("2400", "0000");
+            tmp = tmp.Replace("24:00", "00:00");
+            tmp = tmp.Replace("24:00:00", "00:00:00");
+
+            if (tmp != s)
+            {
+                DateTime.TryParse(tmp, out d);
+                d = d.AddDays(1);
+            }
+            else
+                DateTime.TryParse(tmp, out d);
+            
         }
 
         public static bool IsOrdinateRange(IRange range)
@@ -496,7 +524,7 @@ namespace Hec.Dss.Excel
 
         public static bool IsValue(IRange value)
         {
-            return value.NumberFormatType == NumberFormatType.Number;
+            return double.TryParse(value.Cells[0, 0].Value.ToString(), out _);
         }
     }
 }

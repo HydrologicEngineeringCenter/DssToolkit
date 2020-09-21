@@ -99,27 +99,14 @@ namespace DSSExcel
 
                 using (DssWriter w = new DssWriter(filename))
                 {
-                    if (sheets.Count == 0)
+                    
+                    foreach (var sheet in sheets)
                     {
-                        for (int i = 0; i < er.Count; i++)
-                        {
-                            var t = er.CheckType(i);
-                            if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
-                                w.Write(er.Read(i) as TimeSeries);
-                            else if (t is RecordType.PairedData)
-                                w.Write(er.Read(i) as PairedData);
-                        }
-                    }
-                    else
-                    {
-                        foreach (var sheet in sheets)
-                        {
-                            var t = er.CheckType(sheet);
-                            if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
-                                w.Write(er.Read(sheet) as TimeSeries);
-                            else if (t is RecordType.PairedData)
-                                w.Write(er.Read(sheet) as PairedData);
-                        }
+                        var t = er.CheckType(sheet);
+                        if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                            w.Write(er.Read(sheet) as TimeSeries);
+                        else if (t is RecordType.PairedData)
+                            w.Write(er.Read(sheet) as PairedData);
                     }
                     RefreshDssPathList();
 
@@ -184,41 +171,19 @@ namespace DSSExcel
                 {
                     object record;
                     ExcelWriter ew = new ExcelWriter(filename);
-                    if (sheets.Count == 0)
+                    for (int i = 0; i < sheets.Count; i++)
                     {
-                        for (int i = 0; i < paths.Count; i++)
+                        DssPath p = new DssPath(paths[i].PathWithoutDate);
+                        var type = r.GetRecordType(p);
+                        if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                         {
-                            DssPath p = new DssPath(paths[i].PathWithoutDate);
-                            p.Dpart = "";
-                            var type = r.GetRecordType(p);
-                            if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
-                            {
-                                record = r.GetTimeSeries(p);
-                                ew.Write(record as TimeSeries, i);
-                            }
-                            else if (type is RecordType.PairedData)
-                            {
-                                record = r.GetPairedData(p.FullPath);
-                                ew.Write(record as PairedData, i);
-                            }
+                            record = r.GetTimeSeries(p);
+                            ew.Write(record as TimeSeries, sheets[i]);
                         }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < sheets.Count; i++)
+                        else if (type is RecordType.PairedData)
                         {
-                            DssPath p = new DssPath(paths[i].PathWithoutDate);
-                            var type = r.GetRecordType(p);
-                            if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
-                            {
-                                record = r.GetTimeSeries(p);
-                                ew.Write(record as TimeSeries, sheets[i]);
-                            }
-                            else if (type is RecordType.PairedData)
-                            {
-                                record = r.GetPairedData(p.FullPath);
-                                ew.Write(record as PairedData, sheets[i]);
-                            }
+                            record = r.GetPairedData(p.FullPath);
+                            ew.Write(record as PairedData, sheets[i]);
                         }
                     }
                     RefreshSheetList();
