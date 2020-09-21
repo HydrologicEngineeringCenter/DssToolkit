@@ -29,12 +29,14 @@ namespace DSSExcel
 
         private void DssFileButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
-            if (openFileDialog.ShowDialog() == true)
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Title = "Select or Create DSS File";
+            dialog.Filter = "DSS Files (*.dss)|*.dss";
+            dialog.OverwritePrompt = false;
+            if (dialog.ShowDialog() == true)
             {
                 DssPathCollection c;
-                using (DssReader r = new DssReader(openFileDialog.FileName))
+                using (DssReader r = new DssReader(dialog.FileName))
                 {
                     c = r.GetCatalog();
                     DssPathList.Items.Clear();
@@ -42,7 +44,7 @@ namespace DSSExcel
                         DssPathList.Items.Add(path.FullPath);
                     HasDssFile = true;
                 }
-                DssFilePath.Text = openFileDialog.FileName;
+                DssFilePath.Text = dialog.FileName;
             }
         }
 
@@ -53,16 +55,18 @@ namespace DSSExcel
 
         private bool GetExcelFile()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx";
-            if (openFileDialog.ShowDialog() == true)
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Title = "Select or Create Excel File";
+            dialog.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx";
+            dialog.OverwritePrompt = false;
+            if (dialog.ShowDialog() == true)
             {
-                ExcelReader er = new ExcelReader(openFileDialog.FileName);
+                ExcelReader er = new ExcelReader(dialog.FileName);
                 SheetList.Items.Clear();
                 for (int i = 0; i < er.workbook.Worksheets.Count; i++)
                     SheetList.Items.Add(er.workbook.Worksheets[i].Name);
                 HasExcelFile = true;
-                ExcelFilePath.Text = openFileDialog.FileName;
+                ExcelFilePath.Text = dialog.FileName;
                 return true;
             }
             return false;
@@ -87,13 +91,14 @@ namespace DSSExcel
                 
                 if (!File.Exists(DssFilePath.Text))
                 {
-                    SaveFileDialog browser = new SaveFileDialog();
-                    browser.Title = "Select or Create DSS File";
-                    browser.Filter = "DSS Files (*.dss)|*.dss";
-                    if (browser.ShowDialog() != true)
+                    SaveFileDialog dialog = new SaveFileDialog();
+                    dialog.Title = "Select or Create DSS File";
+                    dialog.Filter = "DSS Files (*.dss)|*.dss";
+                    dialog.OverwritePrompt = false;
+                    if (dialog.ShowDialog() != true)
                         return;
                     HasDssFile = true;
-                    DssFilePath.Text = browser.FileName;
+                    DssFilePath.Text = dialog.FileName;
                 }
                 string filename = DssFilePath.Text;
 
@@ -157,13 +162,14 @@ namespace DSSExcel
 
                 if (!File.Exists(ExcelFilePath.Text))
                 {
-                    SaveFileDialog browser = new SaveFileDialog();
-                    browser.Title = "Select or Create Excel File";
-                    browser.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx";
-                    if (browser.ShowDialog() != true)
+                    SaveFileDialog dialog = new SaveFileDialog();
+                    dialog.Title = "Select or Create Excel File";
+                    dialog.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx";
+                    dialog.OverwritePrompt = false;
+                    if (dialog.ShowDialog() != true)
                         return;
                     HasExcelFile = true;
-                    ExcelFilePath.Text = browser.FileName;
+                    ExcelFilePath.Text = dialog.FileName;
                 }
                 string filename = ExcelFilePath.Text;
 
