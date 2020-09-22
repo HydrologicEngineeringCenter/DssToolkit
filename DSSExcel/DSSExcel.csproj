@@ -245,6 +245,7 @@
     <Compile Include="PairedDataValueSelectPage.xaml.cs">
       <DependentUpon>PairedDataValueSelectPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="QuickImportVM.cs" />
     <Compile Include="SelectDataTypePage.xaml.cs">
       <DependentUpon>SelectDataTypePage.xaml</DependentUpon>
     </Compile>
