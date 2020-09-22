@@ -171,7 +171,7 @@ namespace DSSExcel
                 }
                 string filename = ExcelFilePath.Text;
 
-                using (DssReader r = new DssReader(filename))
+                using (DssReader r = new DssReader(DssFilePath.Text))
                 {
                     object record;
                     ExcelWriter ew = new ExcelWriter(filename);
