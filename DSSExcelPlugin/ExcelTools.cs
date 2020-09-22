@@ -123,7 +123,6 @@ namespace Hec.Dss.Excel
                 {
                     for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
                     {
-
                         DateTime dt = GetDateFromCell(vals[i, 0].Number);
                         d.Add(dt);
                     }
@@ -280,8 +279,7 @@ namespace Hec.Dss.Excel
 
         public static DateTime GetDateFromCell(string s)
         {
-            DateTime dt;
-            CorrectDateFormat(s, out dt);
+            CorrectDateFormat(s, out DateTime dt);
             return dt;
         }
 
@@ -471,8 +469,20 @@ namespace Hec.Dss.Excel
 
         public static bool IsDate(IRange date)
         {
-            CorrectDateFormat(date.Cells[0, 0].Value.ToString(), out DateTime d);
-            return d == new DateTime(0001, 1, 1, 0, 0, 0) ? false : DateTime.TryParse(d.ToString(), out _);
+            if (!IsValidCell(date))
+                return false;
+
+            CorrectDateFormat(date[0, 0].Text, out DateTime d);
+            return d == new DateTime() ? false : DateTime.TryParse(d.ToString(), out _);
+        }
+
+        private static bool IsValidCell(IRange date)
+        {
+            if (date[0, 0].Value == null || date[0, 0].Text.Trim() == "")
+                return false;
+
+
+            return true;
         }
 
         public static void CorrectDateFormat(string s, out DateTime d)
@@ -483,13 +493,34 @@ namespace Hec.Dss.Excel
                 tmp = s.Replace("2400", "0000");
                 tmp = tmp.Replace("24:00", "00:00");
                 tmp = tmp.Replace("24:00:00", "00:00:00");
-                DateTime.TryParse(tmp, out d);
+                if (!DateTime.TryParse(tmp, out d))
+                    IsDifferentDateFromat(tmp, out d);
                 d = d.AddDays(1);
             }
             else
-                DateTime.TryParse(s, out d);
+            {
+                if (!DateTime.TryParse(s, out d))
+                    IsDifferentDateFromat(s, out d);
+            }
+        }
 
+        public static bool IsDifferentDateFromat(string s, out DateTime d)
+        {
+            string[] formats =
+            {
+                "ddMMMyyyy HHmm",
+                "ddMMMyyyy HH:mm",
+                "ddMMMyyyy HH:mm:ss",
+                "ddMMMyyyy  HHmm",
+                "ddMMMyyyy  HH:mm",
+                "ddMMMyyyy  HH:mm:ss"
 
+            };
+
+            if (DateTime.TryParseExact(s, formats, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out d))
+                return true;
+            
+            return false;
         }
 
         public static bool IsOrdinateRange(IRange range)
@@ -522,7 +553,15 @@ namespace Hec.Dss.Excel
 
         public static bool IsValue(IRange value)
         {
-            return double.TryParse(value.Cells[0, 0].Value.ToString(), out _);
+            if (!IsValidCell(value))
+                return false;
+
+            return double.TryParse(value.Cells[0, 0].Text, out _);
+        }
+
+        public static string CellToString(IRange value)
+        {
+            return value[0, 0].Text;
         }
     }
 }
