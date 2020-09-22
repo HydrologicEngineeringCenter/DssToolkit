@@ -115,12 +115,10 @@ namespace DSSExcel
                     }
                     RefreshDssPathList();
 
-                    var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}", er.workbook.FullName, w.Filename), 
+                    var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}. Show DSS file in File Explorer?", er.workbook.FullName, w.Filename), 
                         "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (result == MessageBoxResult.OK)
-                    {
                         Process.Start("explorer.exe", Path.GetDirectoryName(filename));
-                    }
                 }
             }
         }
@@ -197,9 +195,7 @@ namespace DSSExcel
                     var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show excel file in File Explorer?", r.Filename, filename), 
                         "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (result == MessageBoxResult.OK)
-                    {
                         Process.Start("explorer.exe", Path.GetDirectoryName(filename));
-                    }
                 }
             }
         }

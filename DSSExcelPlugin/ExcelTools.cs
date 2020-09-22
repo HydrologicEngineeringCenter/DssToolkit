@@ -471,27 +471,25 @@ namespace Hec.Dss.Excel
 
         public static bool IsDate(IRange date)
         {
-            DateTime d;
-            CorrectDateFormat(date.Cells[0, 0].Value.ToString(), out d);
-            return DateTime.TryParse(d.ToString(), out _);
+            CorrectDateFormat(date.Cells[0, 0].Value.ToString(), out DateTime d);
+            return d == new DateTime(0001, 1, 1, 0, 0, 0) ? false : DateTime.TryParse(d.ToString(), out _);
         }
 
         public static void CorrectDateFormat(string s, out DateTime d)
         {
-            
-            string tmp;
-            tmp = s.Replace("2400", "0000");
-            tmp = tmp.Replace("24:00", "00:00");
-            tmp = tmp.Replace("24:00:00", "00:00:00");
-
-            if (tmp != s)
+            if (s.Contains("2400") || s.Contains("24:00") || s.Contains("24:00:00"))
             {
+                string tmp;
+                tmp = s.Replace("2400", "0000");
+                tmp = tmp.Replace("24:00", "00:00");
+                tmp = tmp.Replace("24:00:00", "00:00:00");
                 DateTime.TryParse(tmp, out d);
                 d = d.AddDays(1);
             }
             else
-                DateTime.TryParse(tmp, out d);
-            
+                DateTime.TryParse(s, out d);
+
+
         }
 
         public static bool IsOrdinateRange(IRange range)

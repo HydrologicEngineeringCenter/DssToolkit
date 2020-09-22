@@ -329,4 +329,8 @@ namespace DSSExcel
             PairedDataValuePage.ExcelView.ActiveSheet = activeSheet;
         }
     }
+
+    //TODO do more testing manual imports
+    //TODO impliment multi value column selection with manual time series import
+    //TODO make manual and quick import work with csv
 }
