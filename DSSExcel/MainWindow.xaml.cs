@@ -19,9 +19,10 @@ namespace DSSExcel
     /// </summary>
     public partial class MainWindow : Window
     {
-        public bool HasExcelFile { get; set; }
-        public bool HasDssFile { get; set; }
-        public bool OverwriteSheets { get; set; }
+        public QuickImportVM GetDataContext
+        {
+            get { return (QuickImportVM)DataContext; }
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -29,28 +30,28 @@ namespace DSSExcel
 
         private void DssFileButton_Click(object sender, RoutedEventArgs e)
         {
+            GetDssFile();
+        }
+
+        private void ExcelFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            GetExcelFile();
+        }
+
+        private bool GetDssFile()
+        {
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Title = "Select or Create DSS File";
             dialog.Filter = "DSS Files (*.dss)|*.dss";
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() == true)
             {
-                DssPathCollection c;
-                using (DssReader r = new DssReader(dialog.FileName))
-                {
-                    c = r.GetCatalog();
-                    DssPathList.Items.Clear();
-                    foreach (var path in c)
-                        DssPathList.Items.Add(path.FullPath);
-                    HasDssFile = true;
-                }
-                DssFilePath.Text = dialog.FileName;
+                GetDataContext.HasDssFile = true;
+                GetDataContext.DssFilePath = dialog.FileName;
+                GetDataContext.GetAllPaths();
+                return true;
             }
-        }
-
-        private void ExcelFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            GetExcelFile();
+            return false;
         }
 
         private bool GetExcelFile()
@@ -61,81 +62,35 @@ namespace DSSExcel
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() == true)
             {
-                ExcelReader er = new ExcelReader(dialog.FileName);
-                SheetList.Items.Clear();
-                for (int i = 0; i < er.workbook.Worksheets.Count; i++)
-                    SheetList.Items.Add(er.workbook.Worksheets[i].Name);
-                HasExcelFile = true;
-                ExcelFilePath.Text = dialog.FileName;
+                GetDataContext.HasExcelFile = true;
+                GetDataContext.ExcelFilePath = dialog.FileName;
+                GetDataContext.GetAllSheets();
                 return true;
             }
             return false;
         }
 
-        private void SheetList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ImportButton.IsEnabled = CanImport();
-        }
-
-        private void DssPathList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ExportButton.IsEnabled = CanExport();
-        }
-
         private void ImportButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CheckSelections())
+            if (CheckImportSelections())
             {
-                List<string> sheets = GetImportExcelSheets();
-                ExcelReader er = new ExcelReader(ExcelFilePath.Text);
-                
-                if (!File.Exists(DssFilePath.Text))
-                {
-                    SaveFileDialog dialog = new SaveFileDialog();
-                    dialog.Title = "Select or Create DSS File";
-                    dialog.Filter = "DSS Files (*.dss)|*.dss";
-                    dialog.OverwritePrompt = false;
-                    if (dialog.ShowDialog() != true)
-                        return;
-                    HasDssFile = true;
-                    DssFilePath.Text = dialog.FileName;
-                }
-                string filename = DssFilePath.Text;
+                GetDataContext.SelectedSheets = GetSelectedImportSheets();
 
-                using (DssWriter w = new DssWriter(filename))
-                {
-                    
-                    foreach (var sheet in sheets)
-                    {
-                        var t = er.CheckType(sheet);
-                        if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
-                            w.Write(er.Read(sheet) as TimeSeries);
-                        else if (t is RecordType.PairedData)
-                            w.Write(er.Read(sheet) as PairedData);
-                    }
-                    RefreshDssPathList();
+                if (!File.Exists(GetDataContext.DssFilePath))
+                    if (!GetDssFile()) { return; }
 
-                    var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}. Show DSS file in File Explorer?", er.workbook.FullName, w.Filename), 
-                        "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                    if (result == MessageBoxResult.OK)
-                        Process.Start("explorer.exe", Path.GetDirectoryName(filename));
-                }
+                GetDataContext.QuickImport();
+                SheetList.SelectedItems.Clear();
+                DssPathList.SelectedItems.Clear();
+                var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}. Show DSS file in File Explorer?",
+                    GetDataContext.ExcelFilePath, GetDataContext.DssFilePath),
+                    "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                if (result == MessageBoxResult.OK)
+                    Process.Start("explorer.exe", Path.GetDirectoryName(GetDataContext.DssFilePath));
             }
         }
 
-        private void RefreshDssPathList()
-        {
-            DssPathCollection c;
-            using (DssReader r = new DssReader(DssFilePath.Text))
-            {
-                c = r.GetCatalog();
-                DssPathList.Items.Clear();
-                foreach (var path in c)
-                    DssPathList.Items.Add(path.FullPath);
-            }
-        }
-
-        private List<string> GetImportExcelSheets()
+        private List<string> GetSelectedImportSheets()
         {
             var sheets = new List<string>();
             if (SheetList.SelectedItems.Count != 0)
@@ -153,76 +108,40 @@ namespace DSSExcel
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CheckSelections())
+            if (CheckExportSelections())
             {
-                List<string> sheets = GetExportExcelSheets();
-                List<DssPath> paths = GetDssPaths();
+                GetDataContext.SelectedSheets = GetExportExcelSheets();
+                GetDataContext.SelectedPaths = GetSelectedDssPaths();
 
-                if (!File.Exists(ExcelFilePath.Text))
-                {
-                    SaveFileDialog dialog = new SaveFileDialog();
-                    dialog.Title = "Select or Create Excel File";
-                    dialog.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx";
-                    dialog.OverwritePrompt = false;
-                    if (dialog.ShowDialog() != true)
-                        return;
-                    HasExcelFile = true;
-                    ExcelFilePath.Text = dialog.FileName;
-                }
-                string filename = ExcelFilePath.Text;
+                if (!File.Exists(GetDataContext.ExcelFilePath))
+                    if (!GetExcelFile()) { return; }
 
-                using (DssReader r = new DssReader(DssFilePath.Text))
-                {
-                    object record;
-                    ExcelWriter ew = new ExcelWriter(filename);
-                    for (int i = 0; i < sheets.Count; i++)
-                    {
-                        DssPath p = new DssPath(paths[i].PathWithoutDate);
-                        var type = r.GetRecordType(p);
-                        if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
-                        {
-                            record = r.GetTimeSeries(p);
-                            ew.Write(record as TimeSeries, sheets[i]);
-                        }
-                        else if (type is RecordType.PairedData)
-                        {
-                            record = r.GetPairedData(p.FullPath);
-                            ew.Write(record as PairedData, sheets[i]);
-                        }
-                    }
-                    RefreshSheetList();
-
-                    var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show excel file in File Explorer?", r.Filename, filename), 
-                        "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                    if (result == MessageBoxResult.OK)
-                        Process.Start("explorer.exe", Path.GetDirectoryName(filename));
-                }
+                GetDataContext.QuickExport();
+                SheetList.SelectedItems.Clear();
+                DssPathList.SelectedItems.Clear();
+                var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show excel file in File Explorer?",
+                    GetDataContext.DssFilePath, GetDataContext.ExcelFilePath),
+                    "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                if (result == MessageBoxResult.OK)
+                    Process.Start("explorer.exe", Path.GetDirectoryName(GetDataContext.ExcelFilePath));
             }
         }
 
-        private void RefreshSheetList()
+        private List<string> GetSelectedDssPaths()
         {
-            ExcelReader er = new ExcelReader(ExcelFilePath.Text);
-            SheetList.Items.Clear();
-            for (int i = 0; i < er.workbook.Worksheets.Count; i++)
-                SheetList.Items.Add(er.workbook.Worksheets[i].Name);
-        }
-
-        private List<DssPath> GetDssPaths()
-        {
-            List<DssPath> paths = new List<DssPath>();
+            List<string> paths = new List<string>();
             if (DssPathList.SelectedItems.Count != 0)
             {
                 for (int i = 0; i < DssPathList.SelectedItems.Count; i++)
                 {
-                    paths.Add(new DssPath(DssPathList.SelectedItems[i].ToString()));
+                    paths.Add(new DssPath(DssPathList.SelectedItems[i].ToString()).PathWithoutDate);
                 }
             }
             else
             {
                 for (int i = 0; i < DssPathList.Items.Count; i++)
                 {
-                    paths.Add(new DssPath(DssPathList.Items[i].ToString()));
+                    paths.Add(new DssPath(DssPathList.Items[i].ToString()).PathWithoutDate);
                 }
             }
             return paths;
@@ -239,7 +158,7 @@ namespace DSSExcel
         private List<string> GenerateExportSheets()
         {
             var sheets = new List<string>();
-            if (OverwriteSheets)
+            if (GetDataContext.OverwriteSheets)
             {
                 int c = DssPathList.Items.Count > SheetList.Items.Count ? SheetList.Items.Count : DssPathList.Items.Count;
                 for (int i = 0; i < c; i++)
@@ -275,9 +194,10 @@ namespace DSSExcel
             return sheets;
         }
 
-        private bool CheckSelections()
+        private bool CheckExportSelections()
         {
-            if (HasDssFile && HasExcelFile && DssPathList.SelectedItems.Count != SheetList.SelectedItems.Count)
+            if (SheetList.SelectedItems.Count != 0 && DssPathList.SelectedItems.Count != 0 &&
+                SheetList.SelectedItems.Count != DssPathList.SelectedItems.Count)
             {
                 MessageBox.Show("The amound of selected excel sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
@@ -286,25 +206,27 @@ namespace DSSExcel
             return true;
         }
 
-        private bool CanExport()
+        private bool CheckImportSelections()
         {
-            return HasDssFile;
-        }
+            if (DssPathList.SelectedItems.Count != 0 && SheetList.SelectedItems.Count != 0 && 
+                DssPathList.SelectedItems.Count != SheetList.SelectedItems.Count)
+            {
+                MessageBox.Show("The amound of selected excel sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
 
-        private bool CanImport()
-        {
-            return HasExcelFile;
+            return true;
         }
 
         private void ManualImportButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ExcelFilePath.Text == "")
+            if (!GetDataContext.HasExcelFile)
             {
                 if (!GetExcelFile())
                     return;
             }
-            ExcelReader r = new ExcelReader(ExcelFilePath.Text);
-            DSSExcelManualImport s = new DSSExcelManualImport(r.workbook.FullName);
+            ExcelReader er = new ExcelReader(GetDataContext.ExcelFilePath);
+            DSSExcelManualImport s = new DSSExcelManualImport(er.workbook.FullName);
             s.ShowDialog();
         }
 
@@ -316,18 +238,6 @@ namespace DSSExcel
         private void ViewExcelFileButton_Click(object sender, RoutedEventArgs e)
         {
 
-        }
-
-        private void DssFilePath_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ImportButton.IsEnabled = CanImport();
-            ExportButton.IsEnabled = CanExport();
-        }
-
-        private void ExcelFilePath_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ImportButton.IsEnabled = CanImport();
-            ExportButton.IsEnabled = CanExport();
         }
     }
 }
