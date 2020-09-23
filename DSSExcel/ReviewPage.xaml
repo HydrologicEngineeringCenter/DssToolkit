@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DSSExcel"
-             xmlns:Dss="clr-namespace:Hec.Dss;assembly=Hec.Dss" xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Class="DSSExcel.DSSPathPage"
+             xmlns:Dss="clr-namespace:Hec.Dss;assembly=Hec.Dss" xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Class="DSSExcel.ReviewPage"
              mc:Ignorable="d" Background="White" Height="584.013" Width="819.983">
     <Grid>
         <Grid.RowDefinitions>

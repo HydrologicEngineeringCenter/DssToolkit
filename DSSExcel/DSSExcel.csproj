@@ -236,8 +236,8 @@
     <Compile Include="DSSExcelManualImport.xaml.cs">
       <DependentUpon>DSSExcelManualImport.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DSSPathPage.xaml.cs">
-      <DependentUpon>DSSPathPage.xaml</DependentUpon>
+    <Compile Include="ReviewPage.xaml.cs">
+      <DependentUpon>ReviewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="OrdinateSelectPage.xaml.cs">
       <DependentUpon>OrdinateSelectPage.xaml</DependentUpon>
@@ -246,9 +246,11 @@
       <DependentUpon>PairedDataValueSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="QuickImportVM.cs" />
+    <Compile Include="ReviewPageVM.cs" />
     <Compile Include="SelectDataTypePage.xaml.cs">
       <DependentUpon>SelectDataTypePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectionVM.cs" />
     <Compile Include="TimeSeriesValueSelectPage.xaml.cs">
       <DependentUpon>TimeSeriesValueSelectPage.xaml</DependentUpon>
     </Compile>
@@ -260,7 +262,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DSSPathPage.xaml">
+    <Page Include="ReviewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

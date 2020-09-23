@@ -21,7 +21,7 @@ namespace DSSExcel
     /// <summary>
     /// Interaction logic for DSSPathPage.xaml
     /// </summary>
-    public partial class DSSPathPage : UserControl
+    public partial class ReviewPage : UserControl
     {
         public UserControl PreviousPage;
         public RecordType currentRecordType;
@@ -86,7 +86,7 @@ namespace DSSExcel
                     "/" + Fpart + "/";
             }
         }
-        public DSSPathPage()
+        public ReviewPage()
         {
             InitializeComponent();
         }

@@ -137,7 +137,7 @@ namespace DSSExcel
             DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             PathPage.Visibility = Visibility.Visible;
-            Title = "Create Time Series Path";
+            Title = "Review Time Series";
         }
 
         private bool CheckTimeSeriesValues(IRange values)
@@ -191,7 +191,7 @@ namespace DSSExcel
             OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             PathPage.Visibility = Visibility.Visible;
-            Title = "Create Paired Data Path";
+            Title = "Review Paired Data";
         }
 
         private bool CheckPairedDataValues(IRange values)

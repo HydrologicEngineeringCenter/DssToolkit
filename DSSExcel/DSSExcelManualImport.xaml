@@ -14,6 +14,6 @@
         <uc:OrdinateSelectPage x:Name="OrdinatePage" NextClick="OrdinatePage_NextClick" BackClick="OrdinatePage_BackClick" Visibility="Collapsed" TabSelectionChanged="OrdinatePage_TabSelectionChanged" Height="Auto" Width="Auto"/>
         <uc:TimeSeriesValueSelectPage x:Name="TimeSeriesValuePage" NextClick="TimeSeriesValuePage_NextClick" BackClick="TimeSeriesValuePage_BackClick" TabSelectionChanged="TimeSeriesValuePage_TabSelectionChanged" Visibility="Collapsed" Height="Auto" Width="Auto"/>
         <uc:PairedDataValueSelectPage x:Name="PairedDataValuePage" NextClick="PairedDataValuePage_NextClick" BackClick="PairedDataValuePage_BackClick" TabSelectionChanged="PairedDataValuePage_TabSelectionChanged" Visibility="Collapsed"/>
-        <uc:DSSPathPage x:Name="PathPage" ImportClick="PathPage_ImportClick" BackClick="PathPage_BackClick" Visibility="Collapsed" Width="Auto" Height="Auto"/>
+        <uc:ReviewPage x:Name="PathPage" ImportClick="PathPage_ImportClick" BackClick="PathPage_BackClick" Visibility="Collapsed" Width="Auto" Height="Auto"/>
     </Grid>
 </Window>
