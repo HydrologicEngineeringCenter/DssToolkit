@@ -122,7 +122,7 @@ namespace DSSExcel
             {
                 object record;
                 ExcelWriter ew = new ExcelWriter(ExcelFilePath);
-                for (int i = 0; i < SelectedSheets.Count; i++)
+                for (int i = 0; i < SelectedPaths.Count; i++)
                 {
                     DssPath p = new DssPath(SelectedPaths[i]);
                     var type = r.GetRecordType(p);
