@@ -13,38 +13,22 @@ namespace DSSExcel
 
     public class QuickImportVM : INotifyPropertyChanged
     {
-        private bool hasExcelFile = false;
-        private bool hasDssFile = false;
-        private string excelFilePath = "";
+        private string dataFilePath = "";
         private string dssFilePath = "";
         private bool overwriteSheets = false;
         private List<string> paths = new List<string>();
         private List<string> sheets = new List<string>();
-        public bool HasExcelFile
+        public bool HasDataFile { get; private set; }
+        public bool HasDssFile { get; private set; }
+        public string DataFilePath
         {
-            get { return hasExcelFile; }
+            get { return dataFilePath; }
             set
             {
-                hasExcelFile = value;
-                NotifyPropertyChanged(nameof(HasExcelFile));
-            }
-        }
-        public bool HasDssFile
-        {
-            get { return hasDssFile; }
-            set
-            {
-                hasDssFile = value;
-                NotifyPropertyChanged(nameof(HasDssFile));
-            }
-        }
-        public string ExcelFilePath
-        {
-            get { return excelFilePath; }
-            set
-            {
-                excelFilePath = value;
-                NotifyPropertyChanged(nameof(ExcelFilePath));
+                dataFilePath = value;
+                HasDataFile = true;
+                NotifyPropertyChanged(nameof(DataFilePath));
+                NotifyPropertyChanged(nameof(HasDataFile));
             }
         }
         public string DssFilePath
@@ -53,7 +37,9 @@ namespace DSSExcel
             set
             {
                 dssFilePath = value;
+                HasDssFile = true;
                 NotifyPropertyChanged(nameof(DssFilePath));
+                NotifyPropertyChanged(nameof(HasDssFile));
             }
         }
         public bool OverwriteSheets 
@@ -100,7 +86,7 @@ namespace DSSExcel
 
         public void QuickImport()
         {
-            ExcelReader er = new ExcelReader(ExcelFilePath);
+            ExcelReader er = new ExcelReader(DataFilePath);
             using (DssWriter w = new DssWriter(DssFilePath))
             {
 
@@ -121,7 +107,7 @@ namespace DSSExcel
             using (DssReader r = new DssReader(DssFilePath))
             {
                 object record;
-                ExcelWriter ew = new ExcelWriter(ExcelFilePath);
+                ExcelWriter ew = new ExcelWriter(DataFilePath);
                 for (int i = 0; i < SelectedPaths.Count; i++)
                 {
                     DssPath p = new DssPath(SelectedPaths[i]);
@@ -144,7 +130,7 @@ namespace DSSExcel
         public void GetAllSheets()
         {
             var s = new List<string>();
-            ExcelReader er = new ExcelReader(ExcelFilePath);
+            ExcelReader er = new ExcelReader(DataFilePath);
             for (int i = 0; i < er.workbook.Worksheets.Count; i++)
                 s.Add(er.workbook.Worksheets[i].Name);
             Sheets = s;
