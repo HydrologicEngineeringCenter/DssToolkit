@@ -56,7 +56,7 @@ namespace Hec.Dss.Excel
         private double[] GetTimeSeriesValues(string worksheet)
         {
             var vals = (IValues)workbook.Worksheets[worksheet];
-            var r = RowCount(worksheet);
+            var r = SmallestColumnRowCount(worksheet);
             var v = new List<double>();
             if (HasIndex(worksheet))
             {
@@ -78,7 +78,7 @@ namespace Hec.Dss.Excel
         private DateTime[] GetTimeSeriesTimes(string worksheet)
         {
             var vals = (IValues)workbook.Worksheets[worksheet];
-            var r = RowCount(worksheet);
+            var r = SmallestColumnRowCount(worksheet);
             var d = new List<DateTime>();
             if (HasIndex(worksheet))
             {
@@ -126,7 +126,7 @@ namespace Hec.Dss.Excel
         private double[] GetPairedDataOrdinates(string worksheet)
         {
             var vals = (IValues)workbook.Worksheets[worksheet];
-            var r = RowCount(worksheet);
+            var r = SmallestColumnRowCount(worksheet);
             var o = new List<double>();
             if (HasIndex(worksheet))
             {
@@ -148,7 +148,7 @@ namespace Hec.Dss.Excel
         private List<double[]> GetPairedDataValues(string worksheet)
         {
             var vals = (IValues)workbook.Worksheets[worksheet];
-            var r = RowCount(worksheet);
+            var r = SmallestColumnRowCount(worksheet);
             var c = ColumnCount(worksheet);
             var t = new List<double>();
             var v = new List<double[]>();

@@ -145,7 +145,7 @@ namespace Hec.Dss.Excel
         protected bool isPairedData(string worksheet)
         {
             var vals = (IValues)workbook.Worksheets[worksheet];
-            var r = RowCount(worksheet);
+            var r = SmallestColumnRowCount(worksheet);
             var c = ColumnCount(worksheet);
 
             if (HasIndex(worksheet))
@@ -202,7 +202,7 @@ namespace Hec.Dss.Excel
                 (vals[start, 0].Number != 0 && vals[start, 0].Number != 1))
                 return false;
 
-            for (int i = start; i < RowCount(worksheet); i++)
+            for (int i = start; i < SmallestColumnRowCount(worksheet); i++)
             {
                 l.Add((int)(vals[i, 0].Number));
             }
@@ -217,48 +217,14 @@ namespace Hec.Dss.Excel
             var cells = (workbook.Worksheets[worksheet]).Cells;
             if (HasIndex(worksheet))
             {
-                return cells[RowCount(worksheet) - 1, 1].NumberFormatType == NumberFormatType.DateTime ||
-                    cells[RowCount(worksheet) - 1, 1].NumberFormatType == NumberFormatType.Date;
+                return cells[SmallestColumnRowCount(worksheet) - 1, 1].NumberFormatType == NumberFormatType.DateTime ||
+                    cells[SmallestColumnRowCount(worksheet) - 1, 1].NumberFormatType == NumberFormatType.Date;
             }
             else
             {
-                return cells[RowCount(worksheet) - 1, 0].NumberFormatType == NumberFormatType.DateTime ||
-                    cells[RowCount(worksheet) - 1, 0].NumberFormatType == NumberFormatType.Date;
+                return cells[SmallestColumnRowCount(worksheet) - 1, 0].NumberFormatType == NumberFormatType.DateTime ||
+                    cells[SmallestColumnRowCount(worksheet) - 1, 0].NumberFormatType == NumberFormatType.Date;
             }
-        }
-
-        public DataTable ExcelToDataTable(string worksheet)
-        {
-            var r = RowCount(worksheet);
-            var c = ColumnCount(worksheet);
-
-            var vals = (IValues)(workbook.Worksheets[worksheet]);
-            DataTable data = new DataTable();
-            for (int i = 0; i < c; i++) { data.Columns.Add(); }
-            var Row = new List<object>();
-
-            for (int i = 0; i < r; i++)
-            {
-                for (int j = 0; j < c; j++)
-                {
-                    if (vals[i, j].Type == SpreadsheetGear.Advanced.Cells.ValueType.Number)
-                    {
-                        Row.Add(vals[i, j].Number);
-                    }
-                    else if (vals[i, j].Type == SpreadsheetGear.Advanced.Cells.ValueType.Text)
-                    {
-                        Row.Add(vals[i, j].Text);
-                    }
-                }
-                data.Rows.Add(Row.ToArray());
-                Row.Clear();
-            }
-            return data;
-        }
-
-        public DataTable ExcelToDataTable(int worksheetIndex)
-        {
-            return ExcelToDataTable(workbook.Worksheets[worksheetIndex].Name);
         }
 
         /// <summary>
