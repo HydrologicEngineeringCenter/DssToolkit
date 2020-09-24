@@ -35,7 +35,7 @@ namespace DSSExcel
 
         private void ExcelFileButton_Click(object sender, RoutedEventArgs e)
         {
-            GetExcelFile();
+            GetDataFile();
         }
 
         private bool GetDssFile()
@@ -54,11 +54,11 @@ namespace DSSExcel
             return false;
         }
 
-        private bool GetExcelFile()
+        private bool GetDataFile()
         {
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Title = "Select or Create Excel File";
-            dialog.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx";
+            dialog.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx|CSV Files (*.csv)|*.csv";
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() == true)
             {
@@ -114,7 +114,7 @@ namespace DSSExcel
                 GetDataContext.SelectedPaths = GetSelectedDssPaths();
 
                 if (!File.Exists(GetDataContext.ExcelFilePath))
-                    if (!GetExcelFile()) { return; }
+                    if (!GetDataFile()) { return; }
 
                 GetDataContext.QuickExport();
                 SheetList.SelectedItems.Clear();
@@ -222,7 +222,7 @@ namespace DSSExcel
         {
             if (!GetDataContext.HasExcelFile)
             {
-                if (!GetExcelFile())
+                if (!GetDataFile())
                     return;
             }
             ExcelReader er = new ExcelReader(GetDataContext.ExcelFilePath);
