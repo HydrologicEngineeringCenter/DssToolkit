@@ -32,10 +32,6 @@
             <MenuItem Header="Options" Height="22">
                 <MenuItem x:Name="ManualImportButton" Header="Manual Import..." Click="ManualImportButton_Click"/>
             </MenuItem>
-            <MenuItem Header="View">
-                <MenuItem x:Name="ViewDssFileButton" Header="View DSS File..." IsEnabled="False" Click="ViewDssFileButton_Click"/>
-                <MenuItem x:Name="ViewDataFileButton" Header="View Data File..." IsEnabled="False" Click="ViewDataFileButton_Click"/>
-            </MenuItem>
         </Menu>
         <CheckBox x:Name="OverwriteSheetsCheckBox" Content="Overwrite Sheets" HorizontalAlignment="Left" Margin="19,0,0,31" Width="120" VerticalAlignment="Bottom" IsChecked="{Binding OverwriteSheets, Mode=OneWayToSource}"/>
     </Grid>
