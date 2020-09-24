@@ -302,7 +302,6 @@ namespace Hec.Dss.Excel
         public static bool IsRegular(List<DateTime> times)
         {
             var temp = times;
-            temp.Sort((a, b) => a.CompareTo(b));
             var td = temp[1] - temp[0];
             for (int i = 0; i < temp.Count; i++)
             {
@@ -397,13 +396,11 @@ namespace Hec.Dss.Excel
         public static DateTime[] RangeToDateTimes(IRange dateTimes)
         {
             var r = new List<DateTime>();
-            IWorkbookSet wbs = Factory.GetWorkbookSet();
-            IWorkbook wb = wbs.Workbooks.Add();
             for (int i = 0; i < dateTimes.RowCount; i++)
             {
                 DateTime tmp;
-                var b = DateTime.TryParse(GetDateFromCell(dateTimes.Cells[i, 0].Value.ToString()).ToString(), out tmp);
-                r.Add(b ? tmp : new DateTime());
+                CorrectDateFormat(CellToString(dateTimes[i, 0]), out tmp);
+                r.Add(tmp);
             }
             return r.ToArray();
         }
