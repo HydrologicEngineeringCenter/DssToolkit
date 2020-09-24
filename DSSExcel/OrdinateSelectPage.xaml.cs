@@ -22,7 +22,13 @@ namespace DSSExcel
     /// </summary>
     public partial class OrdinateSelectPage : UserControl
     {
-        public IRange Ordinates;
+        public IRange Ordinates
+        {
+            get
+            {
+                return ExcelView.RangeSelection;
+            }
+        }
         public OrdinateSelectPage()
         {
             InitializeComponent();
@@ -40,11 +46,6 @@ namespace DSSExcel
         private void OrdinateSelectBackButton_Click(object sender, RoutedEventArgs e)
         {
             this.BackClick?.Invoke(this, e);
-        }
-
-        private void ExcelView_RangeSelectionChanged(object sender, SpreadsheetGear.Windows.Controls.RangeSelectionChangedEventArgs e)
-        {
-            Ordinates = ExcelView.RangeSelection;
         }
 
         private void ExcelView_ActiveTabChanged(object sender, ActiveTabChangedEventArgs e)

@@ -22,7 +22,13 @@ namespace DSSExcel
     /// </summary>
     public partial class TimeSeriesValueSelectPage : UserControl
     {
-        public IRange Values;
+        public IRange Values
+        {
+            get
+            {
+                return ExcelView.RangeSelection;
+            }
+        }
 
         public TimeSeriesValueSelectPage()
         {
@@ -41,11 +47,6 @@ namespace DSSExcel
         private void ValueSelectBackButton_Click(object sender, RoutedEventArgs e)
         {
             this.BackClick?.Invoke(this, e);
-        }
-
-        private void ExcelView_RangeSelectionChanged(object sender, SpreadsheetGear.Windows.Controls.RangeSelectionChangedEventArgs e)
-        {
-            Values = ExcelView.RangeSelection;
         }
 
         private void ExcelView_ActiveTabChanged(object sender, SpreadsheetGear.Windows.Controls.ActiveTabChangedEventArgs e)

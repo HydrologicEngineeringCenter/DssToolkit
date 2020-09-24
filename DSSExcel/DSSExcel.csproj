@@ -246,11 +246,9 @@
       <DependentUpon>PairedDataValueSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="QuickImportVM.cs" />
-    <Compile Include="ReviewPageVM.cs" />
     <Compile Include="SelectDataTypePage.xaml.cs">
       <DependentUpon>SelectDataTypePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SelectionVM.cs" />
     <Compile Include="TimeSeriesValueSelectPage.xaml.cs">
       <DependentUpon>TimeSeriesValueSelectPage.xaml</DependentUpon>
     </Compile>
