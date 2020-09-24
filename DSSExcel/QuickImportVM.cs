@@ -148,5 +148,16 @@ namespace DSSExcel
             }
             Paths = p;
         }
+
+        public bool AreSelectedSheetsRowCountsUniform()
+        {
+            foreach (var sheet in SelectedSheets)
+            {
+                ExcelReader r = new ExcelReader(DataFilePath);
+                if (r.SmallestColumnRowCount(sheet) != r.RowCount(sheet))
+                    return false;
+            }
+            return true;
+        }
     }
 }

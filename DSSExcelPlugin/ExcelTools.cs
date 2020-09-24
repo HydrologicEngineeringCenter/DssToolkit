@@ -22,6 +22,14 @@ namespace Hec.Dss.Excel
             }
         }
 
+        public IRange Cells
+        {
+            get
+            {
+                return workbook.ActiveWorksheet.Cells;
+            }
+        }
+
         /// <summary>
         /// Returns the row index where the headers end and the data begins.
         /// </summary>
@@ -253,12 +261,17 @@ namespace Hec.Dss.Excel
             return ExcelToDataTable(workbook.Worksheets[worksheetIndex].Name);
         }
 
-        protected int RowCount(string worksheet)
+        /// <summary>
+        /// Returns default row count of a given worksheet.
+        /// </summary>
+        /// <param name="worksheet"></param>
+        /// <returns></returns>
+        public int RowCount(string worksheet)
         {
             return workbook.Worksheets[worksheet].Cells.CurrentRegion.RowCount;
         }
 
-        protected int ColumnCount(string worksheet)
+        public int ColumnCount(string worksheet)
         {
             return workbook.Worksheets[worksheet].Cells.CurrentRegion.ColumnCount;
         }
@@ -473,11 +486,10 @@ namespace Hec.Dss.Excel
             return d == new DateTime() ? false : DateTime.TryParse(d.ToString(), out _);
         }
 
-        private static bool IsValidCell(IRange date)
+        public static bool IsValidCell(IRange date)
         {
             if (date[0, 0].Value == null || date[0, 0].Text.Trim() == "")
                 return false;
-
 
             return true;
         }
@@ -559,6 +571,43 @@ namespace Hec.Dss.Excel
         public static string CellToString(IRange value)
         {
             return value[0, 0].Text;
+        }
+
+        public static bool IsAllColumnRowCountsEqual(IRange range)
+        {
+
+            for (int i = 0; i < range.ColumnCount; i++)
+            {
+                for (int j = 0; j < range.RowCount; j++)
+                {
+                    if (!IsDate(range[j, i]) && !IsValue(range[j, i]) && j != range.RowCount)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns the smallest row count of all columns in a given worksheet.
+        /// </summary>
+        /// <param name="worksheet"></param>
+        /// <returns></returns>
+        public int SmallestColumnRowCount(string worksheet)
+        {
+            int s = -1;
+            for (int i = 0; i < ColumnCount(worksheet); i++)
+            {
+                for (int j = 0; j < RowCount(worksheet); j++)
+                {
+                    if (!IsDate(Cells[j, i]) && !IsValue(Cells[j, i]) && j != Cells.RowCount)
+                    {
+                        if (s == -1 || s > j)
+                            s = j;
+
+                    }
+                }
+            }
+            return s;
         }
     }
 }

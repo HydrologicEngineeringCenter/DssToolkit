@@ -77,6 +77,9 @@ namespace DSSExcel
                 if (!File.Exists(GetDataContext.DssFilePath))
                     if (!GetDssFile()) { return; }
 
+                if (!GetDataContext.AreSelectedSheetsRowCountsUniform() && !CanRecordDataBeCut())
+                    return;
+
                 GetDataContext.QuickImport();
                 SheetList.SelectedItems.Clear();
                 DssPathList.SelectedItems.Clear();
@@ -86,6 +89,13 @@ namespace DSSExcel
                 if (result == MessageBoxResult.OK)
                     Process.Start("explorer.exe", Path.GetDirectoryName(GetDataContext.DssFilePath));
             }
+        }
+
+        private bool CanRecordDataBeCut()
+        {
+            var result = MessageBox.Show("Not all sheets have uniform row counts and data will need to be cut. Is that ok?",
+                   "Import Successful", MessageBoxButton.YesNo, MessageBoxImage.Information);
+            return result == MessageBoxResult.Yes ? true : false;
         }
 
         private List<string> GetSelectedImportSheets()
