@@ -64,7 +64,7 @@ namespace DSSExcelCLI
                 {
                     if (opts.Sheets.ToList<string>().Count == 0)
                     {
-                        for (int i = 0; i < er.Count; i++)
+                        for (int i = 0; i < er.WorksheetCount; i++)
                         {
                             var t = er.CheckType(i);
                             if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)

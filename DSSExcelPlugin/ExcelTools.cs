@@ -14,19 +14,11 @@ namespace Hec.Dss.Excel
         public SpreadsheetGear.IWorkbookSet workbookSet = Factory.GetWorkbookSet();
         public SpreadsheetGear.IWorkbook workbook;
 
-        public int Count 
+        public int WorksheetCount 
         { 
             get
             {
                 return workbook.Worksheets.Count;
-            }
-        }
-
-        public IRange Cells
-        {
-            get
-            {
-                return workbook.ActiveWorksheet.Cells;
             }
         }
 
@@ -84,7 +76,7 @@ namespace Hec.Dss.Excel
             {
                 if (HasIndex(worksheet))
                 {
-                    for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
+                    for (int i = DataStartIndex(worksheet); i < SmallestColumnRowCount(worksheet); i++)
                     {
 
                         DateTime dt = GetDateFromCell(vals[i, 1].Number);
@@ -96,7 +88,7 @@ namespace Hec.Dss.Excel
                 }
                 else
                 {
-                    for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
+                    for (int i = DataStartIndex(worksheet); i < SmallestColumnRowCount(worksheet); i++)
                     {
 
                         DateTime dt = GetDateFromCell(vals[i, 0].Number);
@@ -118,7 +110,7 @@ namespace Hec.Dss.Excel
             {
                 if (HasIndex(worksheet))
                 {
-                    for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
+                    for (int i = DataStartIndex(worksheet); i < SmallestColumnRowCount(worksheet); i++)
                     {
                         DateTime dt = GetDateFromCell(vals[i, 1].Number);
                         d.Add(dt);
@@ -129,7 +121,7 @@ namespace Hec.Dss.Excel
                 }
                 else
                 {
-                    for (int i = DataStartIndex(worksheet); i < RowCount(worksheet); i++)
+                    for (int i = DataStartIndex(worksheet); i < SmallestColumnRowCount(worksheet); i++)
                     {
                         DateTime dt = GetDateFromCell(vals[i, 0].Number);
                         d.Add(dt);
@@ -197,12 +189,13 @@ namespace Hec.Dss.Excel
             var vals = (IValues)workbook.Worksheets[worksheet];
             var l = new List<int>();
             var start = DataStartIndex(worksheet);
+            var end = SmallestColumnRowCount(worksheet);
 
             if (vals[start, 0].Type != SpreadsheetGear.Advanced.Cells.ValueType.Number &&
                 (vals[start, 0].Number != 0 && vals[start, 0].Number != 1))
                 return false;
 
-            for (int i = start; i < SmallestColumnRowCount(worksheet); i++)
+            for (int i = start; i < end; i++)
             {
                 l.Add((int)(vals[i, 0].Number));
             }
@@ -332,12 +325,12 @@ namespace Hec.Dss.Excel
 
         protected bool SheetExists(int sheetIndex)
         {
-            return sheetIndex >= 0 && sheetIndex < Count;
+            return sheetIndex >= 0 && sheetIndex < WorksheetCount;
         }
 
         protected int IndexOfSheet(string sheet)
         {
-            for (int i = 0; i < Count; i++)
+            for (int i = 0; i < WorksheetCount; i++)
             {
                 if (workbook.Worksheets[i].Name == sheet)
                     return i;
@@ -452,9 +445,9 @@ namespace Hec.Dss.Excel
             return d == new DateTime() ? false : DateTime.TryParse(d.ToString(), out _);
         }
 
-        public static bool IsValidCell(IRange date)
+        public static bool IsValidCell(IRange cell)
         {
-            if (date[0, 0].Value == null || date[0, 0].Text.Trim() == "")
+            if (cell[0, 0].Value == null || cell[0, 0].Text.Trim() == "")
                 return false;
 
             return true;
@@ -560,20 +553,23 @@ namespace Hec.Dss.Excel
         /// <returns></returns>
         public int SmallestColumnRowCount(string worksheet)
         {
-            int s = -1;
-            for (int i = 0; i < ColumnCount(worksheet); i++)
+            int r = RowCount(worksheet);
+            int s = RowCount(worksheet) - 1;
+            int c = ColumnCount(worksheet);
+            IRange cells = workbook.Worksheets[worksheet].Cells;
+            for (int i = 0; i < c; i++)
             {
-                for (int j = 0; j < RowCount(worksheet); j++)
+                for (int j = r - 1; j > DataStartIndex(worksheet); j--)
                 {
-                    if (!IsDate(Cells[j, i]) && !IsValue(Cells[j, i]) && j != Cells.RowCount)
+                    if (IsValidCell(cells[j, i]) && (IsDate(cells[j, i]) || IsValue(cells[j, i])))
                     {
-                        if (s == -1 || s > j)
+                        if (s > j)
                             s = j;
-
+                        break;
                     }
                 }
             }
-            return s;
+            return s + 1;
         }
     }
 }
