@@ -230,37 +230,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DateSelectPage.xaml.cs">
+    <Compile Include="ManualImportPages\DateSelectPage.xaml.cs">
       <DependentUpon>DateSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DSSExcelManualImport.xaml.cs">
       <DependentUpon>DSSExcelManualImport.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ReviewPage.xaml.cs">
+    <Compile Include="ManualImportPages\ReviewPage.xaml.cs">
       <DependentUpon>ReviewPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OrdinateSelectPage.xaml.cs">
+    <Compile Include="ManualImportPages\OrdinateSelectPage.xaml.cs">
       <DependentUpon>OrdinateSelectPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PairedDataValueSelectPage.xaml.cs">
+    <Compile Include="ManualImportPages\PairedDataValueSelectPage.xaml.cs">
       <DependentUpon>PairedDataValueSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="QuickImportVM.cs" />
-    <Compile Include="SelectDataTypePage.xaml.cs">
+    <Compile Include="ManualImportPages\SelectDataTypePage.xaml.cs">
       <DependentUpon>SelectDataTypePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TimeSeriesValueSelectPage.xaml.cs">
+    <Compile Include="ManualImportPages\TimeSeriesValueSelectPage.xaml.cs">
       <DependentUpon>TimeSeriesValueSelectPage.xaml</DependentUpon>
     </Compile>
-    <Page Include="DateSelectPage.xaml">
+    <Page Include="ManualImportPages\DateSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DSSExcelVisualSelector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ReviewPage.xaml">
+    <Page Include="ManualImportPages\ReviewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -272,9 +268,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DSSExcelVisualSelector.xaml.cs">
-      <DependentUpon>DSSExcelVisualSelector.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -283,19 +276,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="OrdinateSelectPage.xaml">
+    <Page Include="ManualImportPages\OrdinateSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PairedDataValueSelectPage.xaml">
+    <Page Include="ManualImportPages\PairedDataValueSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SelectDataTypePage.xaml">
+    <Page Include="ManualImportPages\SelectDataTypePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TimeSeriesValueSelectPage.xaml">
+    <Page Include="ManualImportPages\TimeSeriesValueSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
