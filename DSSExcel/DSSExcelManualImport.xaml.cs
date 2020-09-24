@@ -330,6 +330,5 @@ namespace DSSExcel
         }
     }
 
-    //TODO impliment warning for varying row counts for different columns
     //TODO impliment multi value column selection with manual time series import
 }
