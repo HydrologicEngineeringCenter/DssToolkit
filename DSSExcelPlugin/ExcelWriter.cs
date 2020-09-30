@@ -112,6 +112,67 @@ namespace Hec.Dss.Excel
             }
         }
 
+        public void Write(IEnumerable<TimeSeries> records, string sheet)
+        {
+            if (!SheetExists(sheet))
+                AddSheet(sheet);
+            ClearSheet(sheet);
+            SetDateColumnInExcelFile(workbook, sheet, records, 6, 0);
+            for (int i = 0; i < records.Count(); i++)
+            {
+                SetPathInExcelFile(workbook, sheet, records, i);
+                SetTimeSeriesValueColumnInExcelFile(workbook, sheet, records, 6, 1);
+            }
+            if (workbook.FullName.EndsWith(".xls"))
+                workbook.SaveAs(workbook.FullName, FileFormat.Excel8);
+            else if (workbook.FullName.EndsWith(".xlsx"))
+                workbook.SaveAs(workbook.FullName, FileFormat.OpenXMLWorkbook);
+            else
+            {
+                var name = Path.GetDirectoryName(workbook.FullName) + "\\" +
+                    Path.GetFileNameWithoutExtension(workbook.FullName) + ".xlsx";
+                workbook.SaveAs(name, FileFormat.OpenXMLWorkbook);
+            }
+        }
+
+        private void SetPathInExcelFile(IWorkbook workbook, string sheet, IEnumerable<TimeSeries> records, int columnOffset)
+        {
+            workbook.Worksheets[sheet].Cells[0, 0].Value = "A";
+            workbook.Worksheets[sheet].Cells[1, 0].Value = "B";
+            workbook.Worksheets[sheet].Cells[2, 0].Value = "C";
+            workbook.Worksheets[sheet].Cells[3, 0].Value = "D";
+            workbook.Worksheets[sheet].Cells[4, 0].Value = "E";
+            workbook.Worksheets[sheet].Cells[5, 0].Value = "F";
+
+            for (int i = 0; i < records.Count(); i++)
+            {
+                workbook.Worksheets[sheet].Cells[0, i + 1].Value = records.ElementAt(i).Path.Apart;
+
+                workbook.Worksheets[sheet].Cells[1, i + 1].Value = records.ElementAt(i).Path.Bpart;
+
+                workbook.Worksheets[sheet].Cells[2, i + 1].Value = records.ElementAt(i).Path.Cpart;
+
+                workbook.Worksheets[sheet].Cells[3, i + 1].Value = records.ElementAt(i).Path.Dpart;
+
+                workbook.Worksheets[sheet].Cells[4, i + 1].Value = records.ElementAt(i).Path.Epart;
+
+                workbook.Worksheets[sheet].Cells[5, i + 1].Value = records.ElementAt(i).Path.Fpart;
+            }
+        }
+
+        private void SetTimeSeriesValueColumnInExcelFile(IWorkbook workbook, string sheet, IEnumerable<TimeSeries> records, int rowOffset, int colOffset)
+        {
+            
+            for (int j = 0; j < records.Count(); j++)
+            {
+                workbook.Worksheets[sheet].Cells[rowOffset, colOffset + j].Value = "Values " + (j + 1).ToString();
+                for (int i = 0 + rowOffset + 1; i < records.ElementAt(j).Count + rowOffset + 1; i++)
+                {
+                    workbook.Worksheets[sheet].Cells[i, colOffset + j].Value = records.ElementAt(j).Values[i - rowOffset - 1];
+                }
+            }
+        }
+
         private void SetTimeSeriesValueColumnInExcelFile(IWorkbook workbook, string sheet, TimeSeries ts, int rowOffset, int colOffset)
         {
             workbook.Worksheets[sheet].Cells[rowOffset, colOffset].Value = "Values";
