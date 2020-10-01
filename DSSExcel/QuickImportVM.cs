@@ -94,12 +94,24 @@ namespace DSSExcel
                 {
                     var t = er.CheckType(sheet);
                     if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
-                        w.Write(er.Read(sheet) as TimeSeries);
+                        WriteTimeSeries(er, w, sheet);
                     else if (t is RecordType.PairedData)
-                        w.Write(er.Read(sheet) as PairedData);
+                        WritePairedData(er, w, sheet);
                 }
             }
             GetAllPaths();
+        }
+
+        private void WritePairedData(ExcelReader er, DssWriter w, string sheet)
+        {
+            w.Write(er.Read(sheet) as PairedData);
+        }
+
+        private void WriteTimeSeries(ExcelReader er, DssWriter w, string sheet)
+        {
+            List<TimeSeries> l = er.ReadAll(sheet) as List<TimeSeries>;
+            foreach (var record in l)
+                w.Write(record);
         }
 
         public void QuickExport()

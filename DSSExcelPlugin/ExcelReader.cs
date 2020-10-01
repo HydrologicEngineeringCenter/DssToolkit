@@ -33,7 +33,7 @@ namespace Hec.Dss.Excel
             return ts;
         }
 
-        public IEnumerable<TimeSeries> GetTimeseries(string worksheet)
+        public IEnumerable<TimeSeries> GetMultipleTimeSeries(string worksheet)
         {
             if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
                 return new List<TimeSeries>();
@@ -188,6 +188,20 @@ namespace Hec.Dss.Excel
                 return GetTimeSeries(sheet);
             else if (t == RecordType.PairedData)
                 return GetPairedData(sheet);
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Read all records that exist in a given sheet.
+        /// </summary>
+        /// <param name="sheet"></param>
+        /// <returns></returns>
+        public IEnumerable<object> ReadAll(string sheet)
+        {
+            var t = CheckType(sheet);
+            if (t == RecordType.RegularTimeSeries || t == RecordType.IrregularTimeSeries)
+                return GetMultipleTimeSeries(sheet);
             else
                 return null;
         }
