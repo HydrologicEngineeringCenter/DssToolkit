@@ -60,7 +60,7 @@ namespace Hec.Dss.Excel
         /// <returns></returns>
         private double[] GetTimeSeriesValues(string worksheet, int column)
         {
-            var vals = GetValues(worksheet);
+            var vals = Values(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var v = new List<double>();
             var start = DataStartIndex(worksheet);
@@ -104,7 +104,7 @@ namespace Hec.Dss.Excel
         /// <returns></returns>
         private double[] GetTimeSeriesValues(string worksheet)
         {
-            var vals = GetValues(worksheet);
+            var vals = Values(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var v = new List<double>();
             var start = DataStartIndex(worksheet);
@@ -158,7 +158,7 @@ namespace Hec.Dss.Excel
 
         private List<double[]> GetPairedDataValues(string worksheet)
         {
-            var vals = GetValues(worksheet);
+            var vals = Values(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var c = ColumnCount(worksheet);
             var t = new List<double>();

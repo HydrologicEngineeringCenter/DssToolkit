@@ -80,7 +80,15 @@ namespace Hec.Dss.Excel
             return false;
         }
 
-        public IValues GetValues(string worksheet) { return (IValues)workbook.Worksheets[worksheet]; }
+        public IValues Values(string worksheet) 
+        { 
+            return (IValues)workbook.Worksheets[worksheet]; 
+        }
+
+        public IRange Cells(string worksheet)
+        {
+            return workbook.Worksheets[worksheet].Cells;
+        }
 
         protected bool isIrregularTimeSeries(string worksheet)
         {
@@ -132,7 +140,7 @@ namespace Hec.Dss.Excel
 
         protected bool HasIndex(string worksheet)
         {
-            var vals = GetValues(worksheet);
+            var vals = Values(worksheet);
             var l = new List<int>();
             var start = DataStartIndex(worksheet);
             var end = SmallestColumnRowCount(worksheet);
@@ -465,7 +473,7 @@ namespace Hec.Dss.Excel
             if (!IsValidCell(value))
                 return false;
 
-            return double.TryParse(value.Cells[0, 0].Text, out _);
+            return double.TryParse(value[0, 0].Text, out _);
         }
 
         public static string CellToString(IRange value)
