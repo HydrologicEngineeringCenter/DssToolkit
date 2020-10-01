@@ -116,13 +116,12 @@ namespace Hec.Dss.Excel
 
         private DateTime[] GetTimeSeriesTimes(string worksheet)
         {
-            var vals = GetValues(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var d = new List<DateTime>();
             var start = DataStartIndex(worksheet);
             var offset = HasIndex(worksheet) ? 1 : 0;
             for (int i = start; i < r; i++)
-                d.Add(GetDateFromCell(vals[i, offset].Text));
+                d.Add(GetDateFromCell(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
             return d.ToArray();
         }
 

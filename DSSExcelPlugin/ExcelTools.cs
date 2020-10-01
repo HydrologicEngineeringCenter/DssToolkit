@@ -69,13 +69,12 @@ namespace Hec.Dss.Excel
 
         protected bool isRegularTimeSeries(string worksheet)
         {
-            var vals = GetValues(worksheet);
             var d = new List<DateTime>();
             var start = DataStartIndex(worksheet);
             var end = SmallestColumnRowCount(worksheet);
-            var offset = HasDate(worksheet) ? 1 : 0;
+            var offset = HasIndex(worksheet) ? 1 : 0;
             for (int i = start; i < end; i++)
-                d.Add(GetDateFromCell(vals[i, offset].Text));
+                d.Add(GetDateFromCell(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
             if (IsRegular(d))
                 return true;
             return false;
@@ -264,13 +263,14 @@ namespace Hec.Dss.Excel
                 ts.Values = RangeToTimeSeriesValues(Values, i);
                 if (CheckTimeSeriesType(ts.Times) == RecordType.RegularTimeSeries)
                 {
-                    ts.Path = new DssPath(Apart, Bpart, Cpart, "", "", 
-                        Fpart + "r" + (i+1).ToString(), RecordType.RegularTimeSeries, "type", "units") ;
+                    ts.Path = new DssPath(Apart, Bpart, Cpart, "", "",
+                        "r" + (i+1).ToString() + Fpart, RecordType.RegularTimeSeries, "type", "units") ;
                     ts.Path.Epart = TimeWindow.GetInterval(ts);
                 }
                 else
                     ts.Path = new DssPath(Apart, Bpart, Cpart, "", "IR-Year", 
-                        Fpart + "r" + (i+1).ToString(), RecordType.IrregularTimeSeries, "type", "units");
+                        "r" + (i+1).ToString() + Fpart, RecordType.IrregularTimeSeries, "type", "units");
+                l.Add(ts);
             }
             
             return l;
