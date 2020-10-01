@@ -253,19 +253,45 @@ namespace Hec.Dss.Excel
             return -1;
         }
 
-        public static TimeSeries GetTimeSeries(IRange DateTimes, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
+        public static IEnumerable<TimeSeries> GetTimeSeries(IRange DateTimes, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
         {
-            var ts = new TimeSeries();
-            ts.Times = RangeToDateTimes(DateTimes);
-            ts.Values = RangeToTimeSeriesValues(Values);
-            if (CheckTimeSeriesType(ts.Times) == RecordType.RegularTimeSeries)
+            var l = new List<TimeSeries>();
+            var c = Values.ColumnCount;
+            for (int i = 0; i < c; i++)
             {
-                ts.Path = new DssPath(Apart, Bpart, Cpart, "", "", Fpart, RecordType.RegularTimeSeries, "type", "units");
-                ts.Path.Epart = TimeWindow.GetInterval(ts);
+                var ts = new TimeSeries();
+                ts.Times = RangeToDateTimes(DateTimes);
+                ts.Values = RangeToTimeSeriesValues(Values, i);
+                if (CheckTimeSeriesType(ts.Times) == RecordType.RegularTimeSeries)
+                {
+                    ts.Path = new DssPath(Apart, Bpart, Cpart, "", "", 
+                        Fpart + "r" + (i+1).ToString(), RecordType.RegularTimeSeries, "type", "units") ;
+                    ts.Path.Epart = TimeWindow.GetInterval(ts);
+                }
+                else
+                    ts.Path = new DssPath(Apart, Bpart, Cpart, "", "IR-Year", 
+                        Fpart + "r" + (i+1).ToString(), RecordType.IrregularTimeSeries, "type", "units");
             }
-            else
-                ts.Path = new DssPath(Apart, Bpart, Cpart, "", "IR-Year", Fpart, RecordType.IrregularTimeSeries, "type", "units");
-            return ts;
+            
+            return l;
+        }
+
+        /// <summary>
+        /// Convert a specified column in a range of values to a double array.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="columnIndex"></param>
+        /// <returns></returns>
+        private static double[] RangeToTimeSeriesValues(IRange values, int columnIndex)
+        {
+            var d = new List<double>();
+
+            for (int i = 0; i < values.RowCount; i++)
+            {
+                d.Add(double.Parse(values[i, columnIndex].Value.ToString()));
+            }
+
+            return d.ToArray();
         }
 
         private static double[] RangeToTimeSeriesValues(IRange values)
@@ -420,6 +446,9 @@ namespace Hec.Dss.Excel
 
         public static bool IsValuesRange(IRange range)
         {
+            if (!IsAllColumnRowCountsEqual(range))
+                return false;
+
             for (int i = 0; i < range.RowCount; i++)
             {
                 for (int j = 0; j < range.ColumnCount; j++)

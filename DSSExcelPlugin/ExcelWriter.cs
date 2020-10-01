@@ -166,20 +166,16 @@ namespace Hec.Dss.Excel
             for (int j = 0; j < records.Count(); j++)
             {
                 workbook.Worksheets[sheet].Cells[rowOffset, colOffset + j].Value = "Values " + (j + 1).ToString();
-                for (int i = 0 + rowOffset + 1; i < records.ElementAt(j).Count + rowOffset + 1; i++)
-                {
+                for (int i = rowOffset + 1; i < records.ElementAt(j).Count + rowOffset + 1; i++)
                     workbook.Worksheets[sheet].Cells[i, colOffset + j].Value = records.ElementAt(j).Values[i - rowOffset - 1];
-                }
             }
         }
 
         private void SetTimeSeriesValueColumnInExcelFile(IWorkbook workbook, string sheet, TimeSeries ts, int rowOffset, int colOffset)
         {
             workbook.Worksheets[sheet].Cells[rowOffset, colOffset].Value = "Values";
-            for (int i = 0 + rowOffset + 1; i < ts.Count + rowOffset + 1; i++)
-            {
+            for (int i = rowOffset + 1; i < ts.Count + rowOffset + 1; i++)
                 workbook.Worksheets[sheet].Cells[i, colOffset].Value = ts.Values[i - rowOffset - 1];
-            }
         }
 
         public void Write(PairedData record, string sheet)
