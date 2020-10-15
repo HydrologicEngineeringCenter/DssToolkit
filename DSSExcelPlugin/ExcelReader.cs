@@ -33,18 +33,62 @@ namespace Hec.Dss.Excel
             return ts;
         }
 
+        public IEnumerable<TimeSeries> GetMultipleTimeSeries(string worksheet)
+        {
+            if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
+                return new List<TimeSeries>();
+            var l = new List<TimeSeries>();
+            var c = TimeSeriesValueColumnCount(worksheet);
+            for (int i = 0; i < c; i++)
+            {
+                TimeSeries ts = new TimeSeries();
+                ts.Times = GetTimeSeriesTimes(worksheet);
+                ts.Values = GetTimeSeriesValues(worksheet, i);
+                ts.Path = GetRandomTimeSeriesPath(ts, worksheet);
+                ts.DataType = "type1";
+                ts.Units = "unit1";
+                l.Add(ts);
+            }
+            return l;
+        }
+
+        /// <summary>
+        /// Get all values from a specified value column number in a worksheet (non-zero-based indexing).
+        /// </summary>
+        /// <param name="worksheet"></param>
+        /// <param name="column"></param>
+        /// <returns></returns>
+        private double[] GetTimeSeriesValues(string worksheet, int column)
+        {
+            var vals = Values(worksheet);
+            var r = SmallestColumnRowCount(worksheet);
+            var v = new List<double>();
+            var start = DataStartIndex(worksheet);
+            int offset = HasIndex(worksheet) ? column + 1 : column;
+            for (int i = start; i < r; i++)
+                v.Add(vals[i, offset].Number);
+            return v.ToArray();
+        }
+
+        private int TimeSeriesValueColumnCount(string worksheet)
+        {
+            return HasIndex(worksheet) ? ColumnCount(worksheet) - 2 : ColumnCount(worksheet) - 1;
+        }
+
         private DssPath GetRandomTimeSeriesPath(TimeSeries ts, string worksheet)
         {
             if (IsRegular(ts.Times.ToList()))
             {
                 var temp = ts;
-                temp.Path = new DssPath("import", Path.GetFileNameWithoutExtension(workbook.FullName), worksheet, "", "", "regularTimeSeries" + RandomString(3));
+                temp.Path = new DssPath("import", Path.GetFileNameWithoutExtension(workbook.FullName), worksheet, 
+                    "", "", "regularTimeSeries" + RandomString(3));
                 temp.Path.Epart = TimeWindow.GetInterval(temp);
                 return temp.Path;
             }
             else
             {
-                return new DssPath("import", Path.GetFileNameWithoutExtension(workbook.FullName), worksheet, "", "IR-Year", "irregularTimeSeries" + RandomString(3));
+                return new DssPath("import", Path.GetFileNameWithoutExtension(workbook.FullName), worksheet, 
+                    "", "IR-Year", "irregularTimeSeries" + RandomString(3));
             }
         }
 
@@ -53,47 +97,31 @@ namespace Hec.Dss.Excel
             return GetTimeSeries(workbook.Worksheets[worksheetIndex].Name);
         }
 
+        /// <summary>
+        /// Get all values from the first value column in a worksheet.
+        /// </summary>
+        /// <param name="worksheet"></param>
+        /// <returns></returns>
         private double[] GetTimeSeriesValues(string worksheet)
         {
-            var vals = (IValues)workbook.Worksheets[worksheet];
+            var vals = Values(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var v = new List<double>();
-            if (HasIndex(worksheet))
-            {
-                for (int i = DataStartIndex(worksheet); i < r; i++)
-                {
-                    v.Add(vals[i, 2].Number);
-                }
-            }
-            else
-            {
-                for (int i = DataStartIndex(worksheet); i < r; i++)
-                {
-                    v.Add(vals[i, 1].Number);
-                }
-            }
+            var start = DataStartIndex(worksheet);
+            int offset = HasIndex(worksheet) ? 2 : 1;
+            for (int i = start; i < r; i++)
+                v.Add(vals[i, offset].Number);
             return v.ToArray();
         }
 
         private DateTime[] GetTimeSeriesTimes(string worksheet)
         {
-            var vals = (IValues)workbook.Worksheets[worksheet];
             var r = SmallestColumnRowCount(worksheet);
             var d = new List<DateTime>();
-            if (HasIndex(worksheet))
-            {
-                for (int i = DataStartIndex(worksheet); i < r; i++)
-                {
-                    d.Add(GetDateFromCell(vals[i, 1].Number));
-                }
-            }
-            else
-            {
-                for (int i = DataStartIndex(worksheet); i < r; i++)
-                {
-                    d.Add(GetDateFromCell(vals[i, 0].Number));
-                }
-            }
+            var start = DataStartIndex(worksheet);
+            var offset = HasIndex(worksheet) ? 1 : 0;
+            for (int i = start; i < r; i++)
+                d.Add(GetDateFromCell(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
             return d.ToArray();
         }
 
@@ -125,57 +153,24 @@ namespace Hec.Dss.Excel
 
         private double[] GetPairedDataOrdinates(string worksheet)
         {
-            var vals = (IValues)workbook.Worksheets[worksheet];
-            var r = SmallestColumnRowCount(worksheet);
-            var o = new List<double>();
-            if (HasIndex(worksheet))
-            {
-                for (int i = DataStartIndex(worksheet); i < r; i++)
-                {
-                    o.Add(vals[i, 1].Number);
-                }
-            }
-            else
-            {
-                for (int i = DataStartIndex(worksheet); i < r; i++)
-                {
-                    o.Add(vals[i, 0].Number);
-                }
-            }
-            return o.ToArray();
+            return GetTimeSeriesValues(worksheet);
         }
 
         private List<double[]> GetPairedDataValues(string worksheet)
         {
-            var vals = (IValues)workbook.Worksheets[worksheet];
+            var vals = Values(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var c = ColumnCount(worksheet);
             var t = new List<double>();
             var v = new List<double[]>();
-
-            if (HasIndex(worksheet))
+            var start = DataStartIndex(worksheet);
+            var offset = HasIndex(worksheet) ? 2 : 1;
+            for (int i = offset; i < c; i++)
             {
-                for (int i = 2; i < c; i++)
-                {
-                    for (int j = DataStartIndex(worksheet); j < r; j++)
-                    {
-                        t.Add(vals[j, i].Number);
-                    }
-                    v.Add(t.ToArray());
-                    t.Clear();
-                }
-            }
-            else
-            {
-                for (int i = 1; i < c; i++)
-                {
-                    for (int j = DataStartIndex(worksheet); j < r; j++)
-                    {
-                        t.Add(vals[j, i].Number);
-                    }
-                    v.Add(t.ToArray());
-                    t.Clear();
-                }
+                for (int j = start; j < r; j++)
+                    t.Add(vals[j, i].Number);
+                v.Add(t.ToArray());
+                t.Clear();
             }
             return v;
         }
@@ -192,6 +187,20 @@ namespace Hec.Dss.Excel
                 return GetTimeSeries(sheet);
             else if (t == RecordType.PairedData)
                 return GetPairedData(sheet);
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Read all records that exist in a given sheet.
+        /// </summary>
+        /// <param name="sheet"></param>
+        /// <returns></returns>
+        public IEnumerable<object> ReadAll(string sheet)
+        {
+            var t = CheckType(sheet);
+            if (t == RecordType.RegularTimeSeries || t == RecordType.IrregularTimeSeries)
+                return GetMultipleTimeSeries(sheet);
             else
                 return null;
         }

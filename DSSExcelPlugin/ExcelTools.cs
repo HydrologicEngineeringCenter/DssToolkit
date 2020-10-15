@@ -11,11 +11,11 @@ namespace Hec.Dss.Excel
 {
     public abstract class ExcelTools
     {
-        public SpreadsheetGear.IWorkbookSet workbookSet = Factory.GetWorkbookSet();
-        public SpreadsheetGear.IWorkbook workbook;
+        public IWorkbookSet workbookSet = Factory.GetWorkbookSet();
+        public IWorkbook workbook;
 
-        public int WorksheetCount 
-        { 
+        public int WorksheetCount
+        {
             get
             {
                 return workbook.Worksheets.Count;
@@ -29,14 +29,13 @@ namespace Hec.Dss.Excel
         /// <returns></returns>
         protected int DataStartIndex(string worksheet)
         {
-            IValues vals = (IValues)workbook.Worksheets[worksheet];
             var r = RowCount(worksheet);
             var c = ColumnCount(worksheet);
             for (int j = 0; j < c; j++)
             {
                 for (int i = 0; i < r; i++)
                 {
-                    if (vals[i, j].Type == SpreadsheetGear.Advanced.Cells.ValueType.Number)
+                    if (IsValue(workbook.Worksheets[worksheet].Cells[i, j]))
                         return i;
                 }
             }
@@ -70,92 +69,47 @@ namespace Hec.Dss.Excel
 
         protected bool isRegularTimeSeries(string worksheet)
         {
-            var vals = (IValues)workbook.Worksheets[worksheet];
             var d = new List<DateTime>();
-            if (HasDate(worksheet))
-            {
-                if (HasIndex(worksheet))
-                {
-                    for (int i = DataStartIndex(worksheet); i < SmallestColumnRowCount(worksheet); i++)
-                    {
-
-                        DateTime dt = GetDateFromCell(vals[i, 1].Number);
-                        d.Add(dt);
-                    }
-                    if (IsRegular(d))
-                        return true;
-                    return false;
-                }
-                else
-                {
-                    for (int i = DataStartIndex(worksheet); i < SmallestColumnRowCount(worksheet); i++)
-                    {
-
-                        DateTime dt = GetDateFromCell(vals[i, 0].Number);
-                        d.Add(dt);
-                    }
-                    if (IsRegular(d))
-                        return true;
-                    return false;
-                }
-            }
+            var start = DataStartIndex(worksheet);
+            var end = SmallestColumnRowCount(worksheet);
+            var offset = HasIndex(worksheet) ? 1 : 0;
+            for (int i = start; i < end; i++)
+                d.Add(GetDateFromCell(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
+            if (IsRegular(d))
+                return true;
             return false;
+        }
+
+        public IValues Values(string worksheet) 
+        { 
+            return (IValues)workbook.Worksheets[worksheet]; 
+        }
+
+        public IRange Cells(string worksheet)
+        {
+            return workbook.Worksheets[worksheet].Cells;
         }
 
         protected bool isIrregularTimeSeries(string worksheet)
         {
-            var vals = (IValues)workbook.Worksheets[worksheet];
-            var d = new List<DateTime>();
-            if (HasDate(worksheet))
-            {
-                if (HasIndex(worksheet))
-                {
-                    for (int i = DataStartIndex(worksheet); i < SmallestColumnRowCount(worksheet); i++)
-                    {
-                        DateTime dt = GetDateFromCell(vals[i, 1].Number);
-                        d.Add(dt);
-                    }
-                    if (IsRegular(d))
-                        return false;
-                    return true;
-                }
-                else
-                {
-                    for (int i = DataStartIndex(worksheet); i < SmallestColumnRowCount(worksheet); i++)
-                    {
-                        DateTime dt = GetDateFromCell(vals[i, 0].Number);
-                        d.Add(dt);
-                    }
-                    if (IsRegular(d))
-                        return false;
-                    return true;
-                }
-            }
-            return false;
+            return !isRegularTimeSeries(worksheet);
         }
 
         protected bool isPairedData(string worksheet)
         {
-            var vals = (IValues)workbook.Worksheets[worksheet];
+            //var vals = GetValues(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var c = ColumnCount(worksheet);
-
-            if (HasIndex(worksheet))
-            {
-                if (ColumnCount(worksheet) < 3)
+            var start = DataStartIndex(worksheet);
+            var offset = HasIndex(worksheet) ? 3 : 2;
+                if (ColumnCount(worksheet) < offset)
                     return false;
-            }
-            else
-            {
-                if (ColumnCount(worksheet) < 2)
-                    return false;
-            }
 
-            for (int i = DataStartIndex(worksheet); i < r; i++)
+            for (int i = start; i < r; i++)
             {
                 for (int j = 0; i < c; i++)
                 {
-                    if (vals[i, j].Type != SpreadsheetGear.Advanced.Cells.ValueType.Number)
+                    if (IsValue(workbook.Worksheets[worksheet].Cells[i, j]))
                         return false;
                 }
             }
@@ -166,39 +120,37 @@ namespace Hec.Dss.Excel
 
         protected bool isGrid(string worksheet)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         protected bool isTin(string worksheet)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         protected bool isLocationInfo(string worksheet)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         protected bool isText(string worksheet)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         protected bool HasIndex(string worksheet)
         {
-            var vals = (IValues)workbook.Worksheets[worksheet];
+            var vals = Values(worksheet);
             var l = new List<int>();
             var start = DataStartIndex(worksheet);
             var end = SmallestColumnRowCount(worksheet);
 
-            if (vals[start, 0].Type != SpreadsheetGear.Advanced.Cells.ValueType.Number &&
-                (vals[start, 0].Number != 0 && vals[start, 0].Number != 1))
+            if (!IsValue(workbook.Worksheets[worksheet].Cells[start, 0]) &&
+                vals[start, 0].Number != 0 && vals[start, 0].Number != 1)
                 return false;
 
             for (int i = start; i < end; i++)
-            {
                 l.Add((int)(vals[i, 0].Number));
-            }
 
             return l.ToArray().SequenceEqual(Enumerable.Range(1, l.Count)) ||
                 l.ToArray().SequenceEqual(Enumerable.Range(0, l.Count - 1)) ? true : false;
@@ -208,16 +160,7 @@ namespace Hec.Dss.Excel
         protected bool HasDate(string worksheet)
         {
             var cells = (workbook.Worksheets[worksheet]).Cells;
-            if (HasIndex(worksheet))
-            {
-                return cells[SmallestColumnRowCount(worksheet) - 1, 1].NumberFormatType == NumberFormatType.DateTime ||
-                    cells[SmallestColumnRowCount(worksheet) - 1, 1].NumberFormatType == NumberFormatType.Date;
-            }
-            else
-            {
-                return cells[SmallestColumnRowCount(worksheet) - 1, 0].NumberFormatType == NumberFormatType.DateTime ||
-                    cells[SmallestColumnRowCount(worksheet) - 1, 0].NumberFormatType == NumberFormatType.Date;
-            }
+            return HasIndex(worksheet) ? IsDate(cells[SmallestColumnRowCount(worksheet) - 1, 1]) : IsDate(cells[SmallestColumnRowCount(worksheet) - 1, 0]);
         }
 
         /// <summary>
@@ -235,20 +178,6 @@ namespace Hec.Dss.Excel
             return workbook.Worksheets[worksheet].Cells.CurrentRegion.ColumnCount;
         }
 
-        /// <summary>
-        /// Gets DateTime object from the double value of a date from an excel sheet.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static DateTime GetDateFromCell(double value)
-        {
-            IWorkbookSet wbs = SpreadsheetGear.Factory.GetWorkbookSet();
-            IWorkbook wb = wbs.Workbooks.Add();
-            DateTime dt;
-            var b = DateTime.TryParse(wb.NumberToDateTime(value).ToString(), out dt);
-            return b ? dt : new DateTime();
-        }
-
         public static DateTime GetDateFromCell(string s)
         {
             CorrectDateFormat(s, out DateTime dt);
@@ -261,14 +190,7 @@ namespace Hec.Dss.Excel
             IWorkbook wb = wbs.Workbooks.Add();
             var vals = (IValues)range;
             var r = range.RowCount;
-            var d = new List<DateTime>();
-            for (int i = 0; i < r; i++)
-            {
-                DateTime dt;
-                var b = DateTime.TryParse(wb.NumberToDateTime(vals[i, 0].Number).ToString(), out dt);
-                d.Add(b ? dt : new DateTime());
-            }
-            return d.ToArray();
+            return RangeToDateTimes(range);
         }
 
         public static bool IsRegular(List<DateTime> times)
@@ -338,19 +260,46 @@ namespace Hec.Dss.Excel
             return -1;
         }
 
-        public static TimeSeries GetTimeSeries(IRange DateTimes, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
+        public static IEnumerable<TimeSeries> GetTimeSeries(IRange DateTimes, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
         {
-            var ts = new TimeSeries();
-            ts.Times = RangeToDateTimes(DateTimes);
-            ts.Values = RangeToTimeSeriesValues(Values);
-            if (CheckTimeSeriesType(ts.Times) == RecordType.RegularTimeSeries)
+            var l = new List<TimeSeries>();
+            var c = Values.ColumnCount;
+            for (int i = 0; i < c; i++)
             {
-                ts.Path = new DssPath(Apart, Bpart, Cpart, "", "", Fpart, RecordType.RegularTimeSeries, "type", "units");
-                ts.Path.Epart = TimeWindow.GetInterval(ts);
+                var ts = new TimeSeries();
+                ts.Times = RangeToDateTimes(DateTimes);
+                ts.Values = RangeToTimeSeriesValues(Values, i);
+                if (CheckTimeSeriesType(ts.Times) == RecordType.RegularTimeSeries)
+                {
+                    ts.Path = new DssPath(Apart, Bpart, Cpart, "", "",
+                        "r" + (i+1).ToString() + Fpart, RecordType.RegularTimeSeries, "type", "units") ;
+                    ts.Path.Epart = TimeWindow.GetInterval(ts);
+                }
+                else
+                    ts.Path = new DssPath(Apart, Bpart, Cpart, "", "IR-Year", 
+                        "r" + (i+1).ToString() + Fpart, RecordType.IrregularTimeSeries, "type", "units");
+                l.Add(ts);
             }
-            else
-                ts.Path = new DssPath(Apart, Bpart, Cpart, "", "IR-Year", Fpart, RecordType.IrregularTimeSeries, "type", "units");
-            return ts;
+            
+            return l;
+        }
+
+        /// <summary>
+        /// Convert a specified column in a range of values to a double array.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="columnIndex"></param>
+        /// <returns></returns>
+        private static double[] RangeToTimeSeriesValues(IRange values, int columnIndex)
+        {
+            var d = new List<double>();
+
+            for (int i = 0; i < values.RowCount; i++)
+            {
+                d.Add(double.Parse(values[i, columnIndex].Value.ToString()));
+            }
+
+            return d.ToArray();
         }
 
         private static double[] RangeToTimeSeriesValues(IRange values)
@@ -370,8 +319,7 @@ namespace Hec.Dss.Excel
             var r = new List<DateTime>();
             for (int i = 0; i < dateTimes.RowCount; i++)
             {
-                DateTime tmp;
-                CorrectDateFormat(CellToString(dateTimes[i, 0]), out tmp);
+                CorrectDateFormat(CellToString(dateTimes[i, 0]), out DateTime tmp);
                 r.Add(tmp);
             }
             return r.ToArray();
@@ -395,9 +343,7 @@ namespace Hec.Dss.Excel
             {
                 d.Add(new List<double>());
                 for (int j = 0; j < values.RowCount; j++)
-                {
                     d[i].Add(double.Parse(values[j, i].Value.ToString()));
-                }
             }
 
             var r = new List<double[]>();
@@ -508,6 +454,9 @@ namespace Hec.Dss.Excel
 
         public static bool IsValuesRange(IRange range)
         {
+            if (!IsAllColumnRowCountsEqual(range))
+                return false;
+
             for (int i = 0; i < range.RowCount; i++)
             {
                 for (int j = 0; j < range.ColumnCount; j++)
@@ -524,7 +473,7 @@ namespace Hec.Dss.Excel
             if (!IsValidCell(value))
                 return false;
 
-            return double.TryParse(value.Cells[0, 0].Text, out _);
+            return double.TryParse(value[0, 0].Text, out _);
         }
 
         public static string CellToString(IRange value)

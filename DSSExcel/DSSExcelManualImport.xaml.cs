@@ -142,15 +142,8 @@ namespace DSSExcel
 
         private bool CheckTimeSeriesValues(IRange values)
         {
-            if (values.ColumnCount != 1)
-            {
-                MessageBox.Show("The selection for values should only have one column of data.", "Value Selection Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            if (!ExcelTools.IsValueRange(values))
+            if (!ExcelTools.IsValuesRange(values))
             {
                 MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
@@ -247,7 +240,6 @@ namespace DSSExcel
             pd.UnitsDependent = "unit2";
             OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-
             WriteRecord(pd);
         }
 
@@ -255,12 +247,26 @@ namespace DSSExcel
         {
             DatePage.ExcelView.ActiveWorkbookSet.GetLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            TimeSeries ts = ExcelTools.GetTimeSeries(DatePage.Dates, TimeSeriesValuePage.Values, PathPage.Apart, PathPage.Bpart,
-                PathPage.Cpart, PathPage.Dpart, PathPage.Epart, PathPage.Fpart);
+            List<TimeSeries> ts = ExcelTools.GetTimeSeries(DatePage.Dates, TimeSeriesValuePage.Values, PathPage.Apart, PathPage.Bpart,
+                PathPage.Cpart, PathPage.Dpart, PathPage.Epart, PathPage.Fpart) as List<TimeSeries>;
             DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            WriteRecords(ts);
+        }
 
-            WriteRecord(ts);
+        private void WriteRecords(IEnumerable<TimeSeries> records)
+        {
+            SaveFileDialog openFileDialog = new SaveFileDialog();
+            openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                using (DssWriter w = new DssWriter(openFileDialog.FileName))
+                {
+                    foreach (var record in records)
+                        w.Write(record);
+                }
+                DisplayImportStatus(openFileDialog.FileName);
+            }
         }
 
         private void WriteRecord(object record)

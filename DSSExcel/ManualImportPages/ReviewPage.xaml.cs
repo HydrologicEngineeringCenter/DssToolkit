@@ -195,10 +195,13 @@ namespace DSSExcel
                 ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 0].Value = ExcelTools.CellToString(dateTimes.Cells[i - 1, 0]);
             }
 
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 1].Value = "Values";
-            for (int i = 1; i < values.RowCount + 1; i++)
+            for (int i = 1; i < values.ColumnCount + 1; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 1].Value = ExcelTools.CellToString(values.Cells[i - 1, 0]);
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, i].Value = "Values" + i.ToString();
+                for (int j = 1; j < values.RowCount + 1; j++)
+                {
+                    ExcelView.ActiveWorkbook.Worksheets[0].Cells[j, i].Value = ExcelTools.CellToString(values.Cells[j - 1, i - 1]);
+                }
             }
             ExcelView.ActiveWorkbookSet.ReleaseLock();
         }
