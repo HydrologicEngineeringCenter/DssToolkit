@@ -41,6 +41,7 @@ namespace DSSExcel
         private bool GetDssFile()
         {
             SaveFileDialog dialog = new SaveFileDialog();
+            dialog.CreatePrompt = true;
             dialog.Title = "Select or Create DSS File";
             dialog.Filter = "DSS Files (*.dss)|*.dss";
             dialog.OverwritePrompt = false;
@@ -56,11 +57,14 @@ namespace DSSExcel
         private bool GetDataFile()
         {
             SaveFileDialog dialog = new SaveFileDialog();
+            dialog.CreatePrompt = true;
             dialog.Title = "Select or Create Excel File";
             dialog.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx|CSV Files (*.csv)|*.csv";
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() == true)
             {
+                Stream fs = dialog.OpenFile();
+                fs.Close();
                 GetDataContext.DataFilePath = dialog.FileName;
                 GetDataContext.GetAllSheets();
                 return true;

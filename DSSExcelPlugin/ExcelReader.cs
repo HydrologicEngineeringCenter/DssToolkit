@@ -14,12 +14,6 @@ namespace Hec.Dss.Excel
 
         public ExcelReader(string filename)
         {
-            if (!File.Exists(filename))
-            {
-                var stream = File.Create(filename);
-                stream.Close();
-            }
-
             workbook = workbookSet.Workbooks.Open(filename);
         }
 
