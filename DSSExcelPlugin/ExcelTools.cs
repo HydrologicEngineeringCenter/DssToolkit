@@ -27,7 +27,7 @@ namespace Hec.Dss.Excel
         /// </summary>
         /// <param name="worksheet"></param>
         /// <returns></returns>
-        protected int DataStartRowIndex(string worksheet)
+        public int DataStartRowIndex(string worksheet)
         {
             var r = RowCount(worksheet);
             var c = ColumnCount(worksheet);
@@ -42,7 +42,7 @@ namespace Hec.Dss.Excel
             return -1;
         }
 
-        protected int DataStartRow(string worksheet)
+        public int DataStartRow(string worksheet)
         {
             return DataStartRowIndex(worksheet) + 1;
         }
@@ -143,7 +143,7 @@ namespace Hec.Dss.Excel
             return false;
         }
 
-        protected bool HasIndex(string worksheet)
+        public bool HasIndex(string worksheet)
         {
             var vals = Values(worksheet);
             var l = new List<int>();
@@ -162,7 +162,7 @@ namespace Hec.Dss.Excel
 
         }
 
-        protected bool HasDate(string worksheet)
+        public bool HasDate(string worksheet)
         {
             var cells = (workbook.Worksheets[worksheet]).Cells;
             return HasIndex(worksheet) ? IsDate(cells[SmallestColumnRowCount(worksheet) - 1, 1]) : IsDate(cells[SmallestColumnRowCount(worksheet) - 1, 0]);
@@ -253,16 +253,6 @@ namespace Hec.Dss.Excel
         protected bool SheetExists(int sheetIndex)
         {
             return sheetIndex >= 0 && sheetIndex < WorksheetCount;
-        }
-
-        protected int IndexOfSheet(string sheet)
-        {
-            for (int i = 0; i < WorksheetCount; i++)
-            {
-                if (workbook.Worksheets[i].Name == sheet)
-                    return i;
-            }
-            return -1;
         }
 
         public static IEnumerable<TimeSeries> GetTimeSeries(IRange DateTimes, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
@@ -526,7 +516,7 @@ namespace Hec.Dss.Excel
             return s + 1;
         }
 
-        protected enum PathLayout
+        public enum PathLayout
         {
             StandardPath = 8,
             PathWithoutDPart = 7,

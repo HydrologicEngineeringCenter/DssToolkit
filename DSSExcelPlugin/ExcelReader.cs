@@ -300,5 +300,10 @@ namespace Hec.Dss.Excel
 
             return blankEntries < (int)PathLayout.StandardPathWithoutDPartTypeAndUnits; // return true if blank entries is less than the amount of entries for a minimal path
         }
+
+        public PathLayout GetDSSPathLayout(string worksheet)
+        {
+            return (PathLayout)DSSPathEndRow(worksheet, 0);
+        }
     }
 }
