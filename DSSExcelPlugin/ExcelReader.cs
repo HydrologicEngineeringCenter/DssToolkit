@@ -15,7 +15,6 @@ namespace Hec.Dss.Excel
         public ExcelReader(string filename)
         {
             workbook = workbookSet.Workbooks.Open(filename);
-
         }
 
         public TimeSeries GetTimeSeries(string worksheet)
@@ -24,7 +23,7 @@ namespace Hec.Dss.Excel
                 return new TimeSeries();
 
             TimeSeries ts = new TimeSeries();
-            ts.Times = GetTimeSeriesTimes(worksheet);
+            GetTimeSeriesTimes(ts, worksheet);
             ts.Values = GetTimeSeriesValues(worksheet);
             ts.Path = GetRandomTimeSeriesPath(ts, worksheet);
             ts.DataType = "type1";
@@ -42,32 +41,92 @@ namespace Hec.Dss.Excel
             for (int i = 0; i < c; i++)
             {
                 TimeSeries ts = new TimeSeries();
-                ts.Times = GetTimeSeriesTimes(worksheet);
-                ts.Values = GetTimeSeriesValues(worksheet, i);
-                ts.Path = GetRandomTimeSeriesPath(ts, worksheet);
-                ts.DataType = "type1";
-                ts.Units = "unit1";
+                GetTimeSeriesTimes(ts, worksheet);
+                GetTimeSeriesValues(ts, worksheet, i);
+                GetTimeSeriesPath(ts, worksheet, i);
+                GetTimeSeriesUnits(ts, worksheet, i);
+                GetTimeSeriesDataType(ts, worksheet, i);
                 l.Add(ts);
             }
             return l;
+        }
+
+        private void GetTimeSeriesDataType(TimeSeries ts, string worksheet, int valueColumn)
+        {
+            var s = "DataType";
+            PathLayout layout = GetPathLayout(worksheet, valueColumn);
+            int dataTypeIndex = (int)layout - 1;
+            int offset = HasIndex(worksheet) ? valueColumn + 2 : valueColumn + 1;
+            if (layout != PathLayout.NoPath)
+                s = CellToString(workbook.Worksheets[worksheet].Cells[dataTypeIndex, offset]);
+            ts.DataType = s;
+        }
+
+        private void GetTimeSeriesUnits(TimeSeries ts, string worksheet, int valueColumn)
+        {
+            var s = "Units";
+            PathLayout layout = GetPathLayout(worksheet, valueColumn);
+            int unitIndex = (int)layout - 2;
+            int offset = HasIndex(worksheet) ? valueColumn + 2 : valueColumn + 1;
+            if (layout != PathLayout.NoPath)
+                s = CellToString(workbook.Worksheets[worksheet].Cells[unitIndex, offset]);
+            ts.Units = s;
+        }
+
+        private void GetTimeSeriesPath(TimeSeries ts, string worksheet, int valueColumn)
+        {
+            int offset = HasIndex(worksheet) ? valueColumn + 2 : valueColumn + 1;
+            if (!DSSPathExists(worksheet, offset))
+            {
+                GetRandomTimeSeriesPath(ts, worksheet);
+                return;
+            }
+
+            var lastPathEntry = DSSPathEndRow(worksheet, offset);
+            GetPath(ts, worksheet, offset, (PathLayout)lastPathEntry);
+        }
+
+        private void GetPath(TimeSeries ts, string worksheet, int column, PathLayout lastPathEntry)
+        {
+            ts.Path = new DssPath();
+
+            if (lastPathEntry == PathLayout.StandardPath || lastPathEntry == PathLayout.StandardPathWithoutTypeAndUnits)
+            {
+                ts.Path.Apart = CellToString(workbook.Worksheets[worksheet].Cells[0, column]);
+                ts.Path.Bpart = CellToString(workbook.Worksheets[worksheet].Cells[1, column]);
+                ts.Path.Cpart = CellToString(workbook.Worksheets[worksheet].Cells[2, column]);
+                ts.Path.Fpart = CellToString(workbook.Worksheets[worksheet].Cells[5, column]);
+            }
+            else if (lastPathEntry == PathLayout.PathWithoutDPart || lastPathEntry == PathLayout.StandardPathWithoutDPartTypeAndUnits)
+            {
+                ts.Path.Apart = CellToString(workbook.Worksheets[worksheet].Cells[0, column]);
+                ts.Path.Bpart = CellToString(workbook.Worksheets[worksheet].Cells[1, column]);
+                ts.Path.Cpart = CellToString(workbook.Worksheets[worksheet].Cells[2, column]);
+                ts.Path.Fpart = CellToString(workbook.Worksheets[worksheet].Cells[4, column]);
+            }
+
+            if (IsRegular(ts.Times.ToList()))
+                ts.Path.Epart = TimeWindow.GetInterval(ts);
+            else
+                ts.Path.Epart = "IR-Year";
         }
 
         /// <summary>
         /// Get all values from a specified value column number in a worksheet (non-zero-based indexing).
         /// </summary>
         /// <param name="worksheet"></param>
-        /// <param name="column"></param>
+        /// <param name="valueColumn"></param>
         /// <returns></returns>
-        private double[] GetTimeSeriesValues(string worksheet, int column)
+        private void GetTimeSeriesValues(TimeSeries ts, string worksheet, int valueColumn)
         {
             var vals = Values(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var v = new List<double>();
-            var start = DataStartIndex(worksheet);
-            int offset = HasIndex(worksheet) ? column + 1 : column;
+            var start = DataStartRowIndex(worksheet);
+            int offset = HasIndex(worksheet) ? valueColumn + 2 : valueColumn + 1;
             for (int i = start; i < r; i++)
                 v.Add(vals[i, offset].Number);
-            return v.ToArray();
+             ts.Values = v.ToArray();
         }
 
         private int TimeSeriesValueColumnCount(string worksheet)
@@ -107,22 +166,22 @@ namespace Hec.Dss.Excel
             var vals = Values(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var v = new List<double>();
-            var start = DataStartIndex(worksheet);
+            var start = DataStartRowIndex(worksheet);
             int offset = HasIndex(worksheet) ? 2 : 1;
             for (int i = start; i < r; i++)
                 v.Add(vals[i, offset].Number);
             return v.ToArray();
         }
 
-        private DateTime[] GetTimeSeriesTimes(string worksheet)
+        private void GetTimeSeriesTimes(TimeSeries ts, string worksheet)
         {
             var r = SmallestColumnRowCount(worksheet);
             var d = new List<DateTime>();
-            var start = DataStartIndex(worksheet);
+            var start = DataStartRowIndex(worksheet);
             var offset = HasIndex(worksheet) ? 1 : 0;
             for (int i = start; i < r; i++)
                 d.Add(GetDateFromCell(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
-            return d.ToArray();
+            ts.Times = d.ToArray();
         }
 
         public PairedData GetPairedData(string worksheet)
@@ -163,7 +222,7 @@ namespace Hec.Dss.Excel
             var c = ColumnCount(worksheet);
             var t = new List<double>();
             var v = new List<double[]>();
-            var start = DataStartIndex(worksheet);
+            var start = DataStartRowIndex(worksheet);
             var offset = HasIndex(worksheet) ? 2 : 1;
             for (int i = offset; i < c; i++)
             {
@@ -210,5 +269,36 @@ namespace Hec.Dss.Excel
             return Read(workbook.Worksheets[sheetIndex].Name);
         }
 
+        protected PathLayout GetPathLayout(string worksheet, int column)
+        {
+            return (PathLayout)DSSPathEndRow(worksheet, column);
+        }
+
+        public int DSSPathEndRowIndex(string worksheet, int column)
+        {
+            int headerRow = 1;
+            int dataStartRow = 1;
+            return DataStartRowIndex(worksheet) - headerRow - dataStartRow; // remove the header and data start rows from data start index to get path end index
+        }
+
+        public int DSSPathEndRow(string worksheet, int column)
+        {
+            return DSSPathEndRowIndex(worksheet, column) + 1; // remove the header and data start rows from data start row to get path end row
+        }
+
+        public bool DSSPathExists(string worksheet, int column)
+        {
+            var pathEndRow = DSSPathEndRow(worksheet, column); // get row where path entries end
+            if (pathEndRow < (int)PathLayout.StandardPathWithoutDPartTypeAndUnits || pathEndRow > (int)PathLayout.StandardPath)
+                return false;
+            int blankEntries = 0;
+            for (int i = 0; i < pathEndRow; i++) // check if all entries are blank
+            {
+                if (!IsValidCell(workbook.Worksheets[worksheet].Cells[i, column]))
+                    blankEntries++;
+            }
+
+            return blankEntries < (int)PathLayout.StandardPathWithoutDPartTypeAndUnits; // return true if blank entries is less than the amount of entries for a minimal path
+        }
     }
 }

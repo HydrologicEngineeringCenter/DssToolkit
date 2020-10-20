@@ -41,6 +41,7 @@ namespace DSSExcel
         private bool GetDssFile()
         {
             SaveFileDialog dialog = new SaveFileDialog();
+            dialog.CreatePrompt = true;
             dialog.Title = "Select or Create DSS File";
             dialog.Filter = "DSS Files (*.dss)|*.dss";
             dialog.OverwritePrompt = false;
@@ -56,11 +57,14 @@ namespace DSSExcel
         private bool GetDataFile()
         {
             SaveFileDialog dialog = new SaveFileDialog();
+            dialog.CreatePrompt = true;
             dialog.Title = "Select or Create Excel File";
             dialog.Filter = "Excel Files (*.xls;*.xlsx)|*.xls;*.xlsx|CSV Files (*.csv)|*.csv";
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() == true)
             {
+                Stream fs = dialog.OpenFile();
+                fs.Close();
                 GetDataContext.DataFilePath = dialog.FileName;
                 GetDataContext.GetAllSheets();
                 return true;
@@ -87,7 +91,7 @@ namespace DSSExcel
                     GetDataContext.DataFilePath, GetDataContext.DssFilePath),
                     "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
-                    Process.Start("explorer.exe", Path.GetDirectoryName(GetDataContext.DssFilePath));
+                    Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DssFilePath));
             }
         }
 
@@ -131,7 +135,7 @@ namespace DSSExcel
                     GetDataContext.DssFilePath, GetDataContext.DataFilePath),
                     "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
-                    Process.Start("explorer.exe", Path.GetDirectoryName(GetDataContext.DataFilePath));
+                    Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DataFilePath));
             }
         }
 
@@ -236,16 +240,6 @@ namespace DSSExcel
             ExcelReader er = new ExcelReader(GetDataContext.DataFilePath);
             DSSExcelManualImport s = new DSSExcelManualImport(er.workbook.FullName);
             s.ShowDialog();
-        }
-
-        private void ViewDssFileButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ViewDataFileButton_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
