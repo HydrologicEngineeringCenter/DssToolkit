@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hec.Dss.Excel
 {
-    public class ExcelSheetInfo
+    public class SheetInfo
     {
 
     }
