@@ -87,7 +87,7 @@ namespace DSSExcel
                     GetDataContext.DataFilePath, GetDataContext.DssFilePath),
                     "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
-                    Process.Start("explorer.exe", Path.GetDirectoryName(GetDataContext.DssFilePath));
+                    Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DssFilePath));
             }
         }
 
@@ -131,7 +131,7 @@ namespace DSSExcel
                     GetDataContext.DssFilePath, GetDataContext.DataFilePath),
                     "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                 if (result == MessageBoxResult.OK)
-                    Process.Start("explorer.exe", Path.GetDirectoryName(GetDataContext.DataFilePath));
+                    Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DataFilePath));
             }
         }
 
