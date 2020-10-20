@@ -23,11 +23,11 @@ namespace Hec.Dss.Excel
         }
 
         /// <summary>
-        /// Returns the row index where the headers end and the data begins.
+        /// Returns the 0-based row index where the headers end and the data begins.
         /// </summary>
         /// <param name="worksheet"></param>
         /// <returns></returns>
-        protected int DataStartIndex(string worksheet)
+        protected int DataStartRowIndex(string worksheet)
         {
             var r = RowCount(worksheet);
             var c = ColumnCount(worksheet);
@@ -40,6 +40,11 @@ namespace Hec.Dss.Excel
                 }
             }
             return -1;
+        }
+
+        protected int DataStartRow(string worksheet)
+        {
+            return DataStartRowIndex(worksheet) + 1;
         }
 
         public RecordType CheckType(string worksheet)
@@ -70,7 +75,7 @@ namespace Hec.Dss.Excel
         protected bool isRegularTimeSeries(string worksheet)
         {
             var d = new List<DateTime>();
-            var start = DataStartIndex(worksheet);
+            var start = DataStartRowIndex(worksheet);
             var end = SmallestColumnRowCount(worksheet);
             var offset = HasIndex(worksheet) ? 1 : 0;
             for (int i = start; i < end; i++)
@@ -100,7 +105,7 @@ namespace Hec.Dss.Excel
             //var vals = GetValues(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var c = ColumnCount(worksheet);
-            var start = DataStartIndex(worksheet);
+            var start = DataStartRowIndex(worksheet);
             var offset = HasIndex(worksheet) ? 3 : 2;
                 if (ColumnCount(worksheet) < offset)
                     return false;
@@ -142,7 +147,7 @@ namespace Hec.Dss.Excel
         {
             var vals = Values(worksheet);
             var l = new List<int>();
-            var start = DataStartIndex(worksheet);
+            var start = DataStartRowIndex(worksheet);
             var end = SmallestColumnRowCount(worksheet);
 
             if (!IsValue(workbook.Worksheets[worksheet].Cells[start, 0]) &&
@@ -508,7 +513,7 @@ namespace Hec.Dss.Excel
             IRange cells = workbook.Worksheets[worksheet].Cells;
             for (int i = 0; i < c; i++)
             {
-                for (int j = r - 1; j > DataStartIndex(worksheet); j--)
+                for (int j = r - 1; j > DataStartRowIndex(worksheet); j--)
                 {
                     if (IsValidCell(cells[j, i]) && (IsDate(cells[j, i]) || IsValue(cells[j, i])))
                     {
@@ -519,6 +524,15 @@ namespace Hec.Dss.Excel
                 }
             }
             return s + 1;
+        }
+
+        protected enum PathLayout
+        {
+            StandardPath = 8,
+            PathWithoutDPart = 7,
+            StandardPathWithoutTypeAndUnits = 6,
+            StandardPathWithoutDPartTypeAndUnits = 5,
+            NoPath = 0
         }
     }
 }
