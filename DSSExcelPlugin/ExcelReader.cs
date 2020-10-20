@@ -14,8 +14,13 @@ namespace Hec.Dss.Excel
 
         public ExcelReader(string filename)
         {
-            workbook = workbookSet.Workbooks.Open(filename);
+            if (!File.Exists(filename))
+            {
+                var stream = File.Create(filename);
+                stream.Close();
+            }
 
+            workbook = workbookSet.Workbooks.Open(filename);
         }
 
         public TimeSeries GetTimeSeries(string worksheet)
