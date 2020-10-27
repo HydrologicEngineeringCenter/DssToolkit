@@ -10,6 +10,7 @@ namespace Hec.Dss.Excel
 {
     public class SheetInfo
     {
+        public string Name { get; set; }
         public int DataStartRow { get; private set; }
         public int DataStartRowIndex { get; private set; }
         public PathLayout PathStructure { get; private set; }
@@ -25,6 +26,7 @@ namespace Hec.Dss.Excel
         public bool HasPath { get; private set; }
         public SheetInfo(ExcelReader r, string sheet)
         {
+            Name = sheet;
             DataStartRow = r.DataStartRow(sheet);
             DataStartRowIndex = DataStartRow - 1;
             PathStructure = r.GetDSSPathLayout(sheet);

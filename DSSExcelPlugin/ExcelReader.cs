@@ -11,6 +11,19 @@ namespace Hec.Dss.Excel
 {
     public class ExcelReader : ExcelTools
     {
+        private SheetInfo ActiveSheetInfo { get; set; }
+
+        /// <summary>
+        /// Get sheet info for a specific sheet.
+        /// </summary>
+        /// <param name="worksheet"></param>
+        /// <returns></returns>
+        private SheetInfo this[string worksheet] => GetWorksheetInfo(worksheet);
+
+        private SheetInfo GetWorksheetInfo(string worksheet)
+        {
+            return new SheetInfo(this, worksheet);
+        }
 
         public ExcelReader(string filename)
         {
@@ -19,6 +32,7 @@ namespace Hec.Dss.Excel
 
         public TimeSeries GetTimeSeries(string worksheet)
         {
+            ActiveSheetInfo = this[worksheet];
             if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
                 return new TimeSeries();
 
@@ -34,6 +48,7 @@ namespace Hec.Dss.Excel
 
         public IEnumerable<TimeSeries> GetMultipleTimeSeries(string worksheet)
         {
+            ActiveSheetInfo = this[worksheet];
             if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
                 return new List<TimeSeries>();
             var l = new List<TimeSeries>();
@@ -186,6 +201,7 @@ namespace Hec.Dss.Excel
 
         public PairedData GetPairedData(string worksheet)
         {
+            ActiveSheetInfo = this[worksheet];
             if (!isPairedData(worksheet))
                 return new PairedData();
 
