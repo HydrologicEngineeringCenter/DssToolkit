@@ -90,11 +90,6 @@ namespace Hec.Dss.Excel
             return (IValues)workbook.Worksheets[worksheet]; 
         }
 
-        public IRange Cells(string worksheet)
-        {
-            return workbook.Worksheets[worksheet].Cells;
-        }
-
         protected bool isIrregularTimeSeries(string worksheet)
         {
             return !isRegularTimeSeries(worksheet);
@@ -102,7 +97,6 @@ namespace Hec.Dss.Excel
 
         protected bool isPairedData(string worksheet)
         {
-            //var vals = GetValues(worksheet);
             var r = SmallestColumnRowCount(worksheet);
             var c = ColumnCount(worksheet);
             var start = DataStartRowIndex(worksheet);
@@ -187,15 +181,6 @@ namespace Hec.Dss.Excel
         {
             CorrectDateFormat(s, out DateTime dt);
             return dt;
-        }
-
-        public static DateTime[] GetTimeSeriesTimes(IRange range)
-        {
-            IWorkbookSet wbs = SpreadsheetGear.Factory.GetWorkbookSet();
-            IWorkbook wb = wbs.Workbooks.Add();
-            var vals = (IValues)range;
-            var r = range.RowCount;
-            return RangeToDateTimes(range);
         }
 
         public static bool IsRegular(List<DateTime> times)
@@ -292,18 +277,6 @@ namespace Hec.Dss.Excel
             for (int i = 0; i < values.RowCount; i++)
             {
                 d.Add(double.Parse(values[i, columnIndex].Value.ToString()));
-            }
-
-            return d.ToArray();
-        }
-
-        private static double[] RangeToTimeSeriesValues(IRange values)
-        {
-            var d = new List<double>();
-
-            for (int i = 0; i < values.RowCount; i++)
-            {
-                d.Add(double.Parse(values[i, 0].Value.ToString()));
             }
 
             return d.ToArray();
