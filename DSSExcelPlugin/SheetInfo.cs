@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Hec.Dss.Excel.ExcelTools;
+using Hec.Dss.Excel;
 
 namespace Hec.Dss.Excel
 {

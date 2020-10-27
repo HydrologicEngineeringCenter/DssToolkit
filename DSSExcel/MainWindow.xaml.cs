@@ -182,7 +182,7 @@ namespace DSSExcel
                 {
                     for (int i = 0; i < Math.Abs(SheetList.Items.Count - DssPathList.Items.Count); i++)
                     {
-                        sheets.Add("SheetImport" + ExcelTools.RandomString(3));
+                        sheets.Add("SheetImport" + Tools.RandomString(3));
                     }
                 }
             }
@@ -190,7 +190,7 @@ namespace DSSExcel
             {
                 for (int i = 0; i < DssPathList.Items.Count; i++)
                 {
-                    sheets.Add("SheetImport" + ExcelTools.RandomString(3));
+                    sheets.Add("SheetImport" + Tools.RandomString(3));
                 }
             }
             return sheets;
