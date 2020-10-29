@@ -9,12 +9,18 @@ using SpreadsheetGear.Advanced.Cells;
 
 namespace Hec.Dss.Excel
 {
-    public class ExcelReader : IExcelTools
+    public class ExcelReader : IExcelReadTools
     {
         public IWorkbookSet workbookSet = Factory.GetWorkbookSet();
         public IWorkbook workbook;
         private SheetInfo ActiveSheetInfo { get; set; }
-        public int WorksheetCount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int WorksheetCount
+        {
+            get
+            {
+                return workbook.Worksheets.Count;
+            }
+        }
 
         /// <summary>
         /// Get sheet info for a specific sheet.
@@ -330,6 +336,7 @@ namespace Hec.Dss.Excel
 
         public RecordType CheckType(string worksheet)
         {
+            ActiveSheetInfo = this[worksheet];
             if (isRegularTimeSeries(worksheet))
                 return RecordType.RegularTimeSeries;
             else if (isIrregularTimeSeries(worksheet))

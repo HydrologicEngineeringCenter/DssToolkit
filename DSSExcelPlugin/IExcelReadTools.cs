@@ -18,20 +18,9 @@ namespace Hec.Dss.Excel
         NoPath = 0
     }
 
-    public class Tools
+    public interface IExcelReadTools
     {
-        public static string RandomString(int length)
-        {
-            Random random = new Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-    }
-
-    public interface IExcelTools
-    {
-        int WorksheetCount { get; set; }
+        int WorksheetCount { get; }
 
         /// <summary>
         /// Returns the 0-based row index where the headers end and the data begins.
