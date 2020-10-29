@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SpreadsheetGear;
 using SpreadsheetGear.Advanced.Cells;
+using static Hec.Dss.Excel.ExcelTools;
 
 namespace Hec.Dss.Excel
 {
@@ -31,7 +32,7 @@ namespace Hec.Dss.Excel
 
         private SheetInfo GetWorksheetInfo(string worksheet)
         {
-            return new SheetInfo(this, worksheet);
+            return ActiveSheetInfo != null && ActiveSheetInfo.Name == worksheet ? ActiveSheetInfo : new SheetInfo(this, worksheet);
         }
 
         public ExcelReader(string filename)
@@ -159,14 +160,14 @@ namespace Hec.Dss.Excel
             {
                 var temp = ts;
                 temp.Path = new DssPath("import", Path.GetFileNameWithoutExtension(workbook.FullName), worksheet, 
-                    "", "", "regularTimeSeries" + Tools.RandomString(3));
+                    "", "", "regularTimeSeries" + ExcelTools.RandomString(3));
                 temp.Path.Epart = TimeWindow.GetInterval(temp);
                 return temp.Path;
             }
             else
             {
                 return new DssPath("import", Path.GetFileNameWithoutExtension(workbook.FullName), worksheet, 
-                    "", "IR-Year", "irregularTimeSeries" + Tools.RandomString(3));
+                    "", "IR-Year", "irregularTimeSeries" + ExcelTools.RandomString(3));
             }
         }
 
@@ -218,7 +219,7 @@ namespace Hec.Dss.Excel
 
         private DssPath GetRandomPairedDataPath(string worksheet)
         {
-            return new DssPath("import", Path.GetFileNameWithoutExtension(workbook.FullName), worksheet, "", "excel", "pairedData" + Tools.RandomString(3));
+            return new DssPath("import", Path.GetFileNameWithoutExtension(workbook.FullName), worksheet, "", "excel", "pairedData" + ExcelTools.RandomString(3));
         }
 
         public PairedData GetPairedData(int worksheetIndex)
@@ -296,11 +297,12 @@ namespace Hec.Dss.Excel
 
         public bool DSSPathExists(string worksheet, int column)
         {
-            if (ActiveSheetInfo.PathEndRow < (int)PathLayout.StandardPathWithoutDPartTypeAndUnits || 
-                ActiveSheetInfo.PathEndRow > (int)PathLayout.StandardPath)
+            int pathEndRow = DSSPathEndRow(worksheet, column);
+            if (pathEndRow < (int)PathLayout.StandardPathWithoutDPartTypeAndUnits ||
+                pathEndRow > (int)PathLayout.StandardPath)
                 return false;
             int blankEntries = 0;
-            for (int i = 0; i < ActiveSheetInfo.PathEndRow; i++) // check if all entries are blank
+            for (int i = 0; i < pathEndRow; i++) // check if all entries are blank
             {
                 if (!IsValidCell(workbook.Worksheets[worksheet].Cells[i, column]))
                     blankEntries++;
@@ -459,7 +461,7 @@ namespace Hec.Dss.Excel
             return dt;
         }
 
-        public bool IsRegular(List<DateTime> times)
+        public static bool IsRegular(List<DateTime> times)
         {
             var temp = times;
             var td = temp[1] - temp[0];
@@ -508,7 +510,7 @@ namespace Hec.Dss.Excel
             return sheetIndex >= 0 && sheetIndex < WorksheetCount;
         }
 
-        public IEnumerable<TimeSeries> GetTimeSeries(IRange DateTimes, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
+        public static IEnumerable<TimeSeries> GetTimeSeries(IRange DateTimes, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
         {
             var l = new List<TimeSeries>();
             var c = Values.ColumnCount;
@@ -532,7 +534,7 @@ namespace Hec.Dss.Excel
             return l;
         }
 
-        public double[] RangeToTimeSeriesValues(IRange values, int columnIndex)
+        public static double[] RangeToTimeSeriesValues(IRange values, int columnIndex)
         {
             var d = new List<double>();
 
@@ -544,7 +546,7 @@ namespace Hec.Dss.Excel
             return d.ToArray();
         }
 
-        public DateTime[] RangeToDateTimes(IRange dateTimes)
+        public static DateTime[] RangeToDateTimes(IRange dateTimes)
         {
             var r = new List<DateTime>();
             for (int i = 0; i < dateTimes.RowCount; i++)
@@ -555,7 +557,7 @@ namespace Hec.Dss.Excel
             return r.ToArray();
         }
 
-        public PairedData GetPairedData(IRange Ordinates, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
+        public static PairedData GetPairedData(IRange Ordinates, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart)
         {
             var pd = new PairedData();
             pd.Ordinates = RangeToOrdinates(Ordinates);
@@ -565,7 +567,7 @@ namespace Hec.Dss.Excel
             return pd;
         }
 
-        public List<double[]> RangeToPairedDataValues(IRange values)
+        public static List<double[]> RangeToPairedDataValues(IRange values)
         {
             var d = new List<List<double>>();
 
@@ -585,7 +587,7 @@ namespace Hec.Dss.Excel
             return r;
         }
 
-        public double[] RangeToOrdinates(IRange ordinates)
+        public static double[] RangeToOrdinates(IRange ordinates)
         {
             var d = new List<double>();
 
@@ -597,12 +599,12 @@ namespace Hec.Dss.Excel
             return d.ToArray();
         }
 
-        public RecordType CheckTimeSeriesType(DateTime[] times)
+        public static RecordType CheckTimeSeriesType(DateTime[] times)
         {
             return IsRegular(times.ToList()) ? RecordType.RegularTimeSeries : RecordType.IrregularTimeSeries;
         }
 
-        public bool IsDateRange(IRange range)
+        public static bool IsDateRange(IRange range)
         {
             for (int i = 0; i < range.RowCount; i++)
             {
@@ -612,7 +614,7 @@ namespace Hec.Dss.Excel
             return true;
         }
 
-        public bool IsDate(IRange date)
+        public static bool IsDate(IRange date)
         {
             if (!IsValidCell(date))
                 return false;
@@ -621,7 +623,7 @@ namespace Hec.Dss.Excel
             return d == new DateTime() ? false : DateTime.TryParse(d.ToString(), out _);
         }
 
-        public bool IsValidCell(IRange cell)
+        public static bool IsValidCell(IRange cell)
         {
             if (cell[0, 0].Value == null || cell[0, 0].Text.Trim() == "")
                 return false;
@@ -629,7 +631,7 @@ namespace Hec.Dss.Excel
             return true;
         }
 
-        public void CorrectDateFormat(string s, out DateTime d)
+        public static void CorrectDateFormat(string s, out DateTime d)
         {
             if (s.Contains("2400") || s.Contains("24:00") || s.Contains("24:00:00"))
             {
@@ -648,7 +650,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public bool IsDifferentDateFromat(string s, out DateTime d)
+        public static bool IsDifferentDateFromat(string s, out DateTime d)
         {
             string[] formats =
             {
@@ -667,12 +669,12 @@ namespace Hec.Dss.Excel
             return false;
         }
 
-        public bool IsOrdinateRange(IRange range)
+        public static bool IsOrdinateRange(IRange range)
         {
             return IsValueRange(range);
         }
 
-        public bool IsValueRange(IRange range)
+        public static bool IsValueRange(IRange range)
         {
             for (int i = 0; i < range.RowCount; i++)
             {
@@ -682,7 +684,7 @@ namespace Hec.Dss.Excel
             return true;
         }
 
-        public bool IsValuesRange(IRange range)
+        public static bool IsValuesRange(IRange range)
         {
             if (!IsAllColumnRowCountsEqual(range))
                 return false;
@@ -698,7 +700,7 @@ namespace Hec.Dss.Excel
             return true;
         }
 
-        public bool IsValue(IRange value)
+        public static bool IsValue(IRange value)
         {
             if (!IsValidCell(value))
                 return false;
@@ -706,12 +708,7 @@ namespace Hec.Dss.Excel
             return double.TryParse(value[0, 0].Text, out _);
         }
 
-        public string CellToString(IRange value)
-        {
-            return value[0, 0].Text;
-        }
-
-        public bool IsAllColumnRowCountsEqual(IRange range)
+        public static bool IsAllColumnRowCountsEqual(IRange range)
         {
 
             for (int i = 0; i < range.ColumnCount; i++)

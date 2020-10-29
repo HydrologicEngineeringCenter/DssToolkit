@@ -66,8 +66,6 @@ namespace Hec.Dss.Excel
 
         DateTime GetDateFromCell(string s);
 
-        bool IsRegular(List<DateTime> times);
-
         void AddSheet(string sheet);
 
         void AddSheet(int sheetIndex);
@@ -75,48 +73,6 @@ namespace Hec.Dss.Excel
         bool SheetExists(string sheet);
 
         bool SheetExists(int sheetIndex);
-
-        IEnumerable<TimeSeries> GetTimeSeries(IRange DateTimes, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart);
-
-        /// <summary>
-        /// Convert a specified column in a range of values to a double array.
-        /// </summary>
-        /// <param name="values"></param>
-        /// <param name="columnIndex"></param>
-        /// <returns></returns>
-        double[] RangeToTimeSeriesValues(IRange values, int columnIndex);
-
-        DateTime[] RangeToDateTimes(IRange dateTimes);
-
-        PairedData GetPairedData(IRange Ordinates, IRange Values, string Apart, string Bpart, string Cpart, string Dpart, string Epart, string Fpart);
-
-        List<double[]> RangeToPairedDataValues(IRange values);
-
-        double[] RangeToOrdinates(IRange ordinates);
-
-        RecordType CheckTimeSeriesType(DateTime[] times);
-
-        bool IsDateRange(IRange range);
-
-        bool IsDate(IRange date);
-
-        bool IsValidCell(IRange cell);
-
-        void CorrectDateFormat(string s, out DateTime d);
-
-        bool IsDifferentDateFromat(string s, out DateTime d);
-
-        bool IsOrdinateRange(IRange range);
-
-        bool IsValueRange(IRange range);
-
-        bool IsValuesRange(IRange range);
-
-        bool IsValue(IRange value);
-
-        string CellToString(IRange value);
-
-        bool IsAllColumnRowCountsEqual(IRange range);
 
         /// <summary>
         /// Returns the smallest row count of all columns in a given worksheet.

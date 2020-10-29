@@ -39,7 +39,7 @@ namespace Hec.Dss.Excel
         {
             workbook = workbookSet.Workbooks.Add();
             if (filename == "" || filename == null)
-                workbook.FullName = "dss_excel" + Tools.RandomString(10) + ".xlsx";
+                workbook.FullName = "dss_excel" + ExcelTools.RandomString(10) + ".xlsx";
             else if (filename.EndsWith(".xls") || filename.EndsWith(".xlsx"))
                 workbook.FullName = filename;
             else

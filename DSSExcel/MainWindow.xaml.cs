@@ -63,8 +63,11 @@ namespace DSSExcel
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() == true)
             {
-                Stream fs = dialog.OpenFile();
-                fs.Close();
+                if (!File.Exists(dialog.FileName)) // create data file if it doesn't exist
+                {
+                    Stream fs = dialog.OpenFile();
+                    fs.Close();
+                }
                 GetDataContext.DataFilePath = dialog.FileName;
                 GetDataContext.GetAllSheets();
                 return true;
@@ -182,7 +185,7 @@ namespace DSSExcel
                 {
                     for (int i = 0; i < Math.Abs(SheetList.Items.Count - DssPathList.Items.Count); i++)
                     {
-                        sheets.Add("SheetImport" + Tools.RandomString(3));
+                        sheets.Add("SheetImport" + ExcelTools.RandomString(3));
                     }
                 }
             }
@@ -190,7 +193,7 @@ namespace DSSExcel
             {
                 for (int i = 0; i < DssPathList.Items.Count; i++)
                 {
-                    sheets.Add("SheetImport" + Tools.RandomString(3));
+                    sheets.Add("SheetImport" + ExcelTools.RandomString(3));
                 }
             }
             return sheets;
