@@ -49,7 +49,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public void SetIndexColumnInExcelFile(string sheet, object record)
+        private void SetIndexColumnInExcelFile(string sheet, object record)
         {
             workbook.Worksheets["Sheet1"].Cells[0, 0].Value = "Index";
             int rowOffset = 1;
@@ -73,7 +73,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public void SetDateColumnInExcelFile(string sheet, object record, int rowOffset, int colOffset)
+        private void SetDateColumnInExcelFile(string sheet, object record, int rowOffset, int colOffset)
         {
             if (record is TimeSeries)
             {
@@ -86,7 +86,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public void SetOrdinateColumnInExcelFile(string sheet, object record, int rowOffset, int colOffset)
+        private void SetOrdinateColumnInExcelFile(string sheet, object record, int rowOffset, int colOffset)
         {
 
             if (record is PairedData)
@@ -122,7 +122,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public void SetUnitsAndDataTypeInExcelFile(string sheet, string units, string dataType)
+        private void SetUnitsAndDataTypeInExcelFile(string sheet, string units, string dataType)
         {
             workbook.Worksheets[sheet].Cells[6, 0].Value = "Units";
             workbook.Worksheets[sheet].Cells[6, 1].Value = units;
@@ -151,7 +151,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public void SetPathUnitsAndDataTypeInExcelFile(string sheet, IEnumerable<TimeSeries> records, int columnOffset)
+        private void SetPathUnitsAndDataTypeInExcelFile(string sheet, IEnumerable<TimeSeries> records, int columnOffset)
         {
             workbook.Worksheets[sheet].Cells[0, 0].Value = "A";
             workbook.Worksheets[sheet].Cells[1, 0].Value = "B";
@@ -173,7 +173,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public void SetTimeSeriesValueColumnInExcelFile(string sheet, IEnumerable<TimeSeries> records, int rowOffset, int colOffset)
+        private void SetTimeSeriesValueColumnInExcelFile(string sheet, IEnumerable<TimeSeries> records, int rowOffset, int colOffset)
         {
             
             for (int j = 0; j < records.Count(); j++)
@@ -184,7 +184,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public void SetTimeSeriesValueColumnInExcelFile(string sheet, TimeSeries ts, int rowOffset, int colOffset)
+        private void SetTimeSeriesValueColumnInExcelFile(string sheet, TimeSeries ts, int rowOffset, int colOffset)
         {
             workbook.Worksheets[sheet].Cells[rowOffset, colOffset].Value = "Values";
             for (int i = rowOffset + 1; i < ts.Count + rowOffset + 1; i++)
@@ -216,7 +216,7 @@ namespace Hec.Dss.Excel
             workbook.Worksheets[sheet].Cells.Clear();
         }
 
-        public void SetPairedDataValueColumnsInExcelFile(string sheet, PairedData pd, int rowOffset, int colOffset)
+        private void SetPairedDataValueColumnsInExcelFile(string sheet, PairedData pd, int rowOffset, int colOffset)
         {
             for (int i = 0 + colOffset; i < pd.YCount + colOffset; i++)
             {
@@ -232,7 +232,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public void SetPathInExcelFile(string sheet, DssPath path)
+        private void SetPathInExcelFile(string sheet, DssPath path)
         {
             workbook.Worksheets[sheet].Cells[0, 0].Value = "A";
             workbook.Worksheets[sheet].Cells[0, 1].Value = path.Apart;
