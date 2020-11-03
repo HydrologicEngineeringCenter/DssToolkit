@@ -78,22 +78,32 @@ namespace Hec.Dss.Excel
 
         private void GetTimeSeriesDataType(TimeSeries ts, string worksheet, int valueColumn)
         {
-            var s = "DataType";
-            int dataTypeIndex = (int)ActiveSheetInfo.PathStructure - 1;
-            int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
-            if (ActiveSheetInfo.PathStructure != PathLayout.NoPath)
-                s = CellToString(workbook.Worksheets[worksheet].Cells[dataTypeIndex, offset]);
-            ts.DataType = s;
+            if (ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutTypeAndUnits &&
+                ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutDPartTypeAndUnits)
+            {
+                var s = "DataType";
+                int dataTypeIndex = (int)ActiveSheetInfo.PathStructure - 1;
+                int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
+                if (ActiveSheetInfo.PathStructure != PathLayout.NoPath)
+                    s = CellToString(workbook.Worksheets[worksheet].Cells[dataTypeIndex, offset]);
+                ts.DataType = s;
+            }
+                
         }
 
         private void GetTimeSeriesUnits(TimeSeries ts, string worksheet, int valueColumn)
         {
-            var s = "Units";
-            int unitIndex = (int)ActiveSheetInfo.PathStructure - 2;
-            int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
-            if (ActiveSheetInfo.PathStructure != PathLayout.NoPath)
-                s = CellToString(workbook.Worksheets[worksheet].Cells[unitIndex, offset]);
-            ts.Units = s;
+            if (ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutTypeAndUnits &&
+                ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutDPartTypeAndUnits)
+            {
+                var s = "Units";
+                int unitIndex = (int)ActiveSheetInfo.PathStructure - 2;
+                int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
+                if (ActiveSheetInfo.PathStructure != PathLayout.NoPath)
+                    s = CellToString(workbook.Worksheets[worksheet].Cells[unitIndex, offset]);
+                ts.Units = s;
+            }
+            
         }
 
         private void GetTimeSeriesPath(TimeSeries ts, string worksheet, int valueColumn)
