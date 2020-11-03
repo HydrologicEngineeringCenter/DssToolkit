@@ -63,8 +63,11 @@ namespace DSSExcel
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() == true)
             {
-                Stream fs = dialog.OpenFile();
-                fs.Close();
+                if (!File.Exists(dialog.FileName)) // create data file if it doesn't exist
+                {
+                    Stream fs = dialog.OpenFile();
+                    fs.Close();
+                }
                 GetDataContext.DataFilePath = dialog.FileName;
                 GetDataContext.GetAllSheets();
                 return true;

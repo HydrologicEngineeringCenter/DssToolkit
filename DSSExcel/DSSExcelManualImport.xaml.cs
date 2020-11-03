@@ -67,7 +67,7 @@ namespace DSSExcel
 
             DatePage.ExcelView.ActiveWorkbookSet.GetLock();
             
-            if (!ExcelTools.IsDateRange(dates))
+            if (!ExcelReader.IsDateRange(dates))
             {
                 MessageBox.Show("All values selected for Date/Time don't follow the date and time format.", "Date/Time Selection Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
@@ -105,7 +105,7 @@ namespace DSSExcel
             }
 
             OrdinatePage.ExcelView.ActiveWorkbookSet.GetLock();
-            if (!ExcelTools.IsOrdinateRange(ordinates))
+            if (!ExcelReader.IsOrdinateRange(ordinates))
             {
                 MessageBox.Show("All selected ordinates must be numbers.", "Ordinate Selection Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
@@ -143,7 +143,7 @@ namespace DSSExcel
         private bool CheckTimeSeriesValues(IRange values)
         {
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            if (!ExcelTools.IsValuesRange(values))
+            if (!ExcelReader.IsValuesRange(values))
             {
                 MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
@@ -191,7 +191,7 @@ namespace DSSExcel
         {
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.GetLock();
 
-            if (!ExcelTools.IsValuesRange(values))
+            if (!ExcelReader.IsValuesRange(values))
             {
                 MessageBox.Show("All selected values must be numbers.", "Value Selection Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
@@ -232,7 +232,7 @@ namespace DSSExcel
         {
             OrdinatePage.ExcelView.ActiveWorkbookSet.GetLock();
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            PairedData pd = ExcelTools.GetPairedData(OrdinatePage.Ordinates, PairedDataValuePage.Values, PathPage.Apart, PathPage.Bpart,
+            PairedData pd = ExcelReader.GetPairedData(OrdinatePage.Ordinates, PairedDataValuePage.Values, PathPage.Apart, PathPage.Bpart,
                 PathPage.Cpart, PathPage.Dpart, PathPage.Epart, PathPage.Fpart);
             pd.TypeIndependent = "type1";
             pd.TypeDependent = "type2";
@@ -247,7 +247,7 @@ namespace DSSExcel
         {
             DatePage.ExcelView.ActiveWorkbookSet.GetLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            List<TimeSeries> ts = ExcelTools.GetTimeSeries(DatePage.Dates, TimeSeriesValuePage.Values, PathPage.Apart, PathPage.Bpart,
+            List<TimeSeries> ts = ExcelReader.GetTimeSeries(DatePage.Dates, TimeSeriesValuePage.Values, PathPage.Apart, PathPage.Bpart,
                 PathPage.Cpart, PathPage.Dpart, PathPage.Epart, PathPage.Fpart) as List<TimeSeries>;
             DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();

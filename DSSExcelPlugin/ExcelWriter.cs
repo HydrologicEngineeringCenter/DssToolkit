@@ -11,8 +11,17 @@ using SpreadsheetGear.Shapes;
 
 namespace Hec.Dss.Excel
 {
-    public class ExcelWriter : ExcelTools
+    public class ExcelWriter : IExcelWriteTools
     {
+        public IWorkbookSet workbookSet = Factory.GetWorkbookSet();
+        public IWorkbook workbook;
+        public int WorksheetCount
+        {
+            get
+            {
+                return workbook.Worksheets.Count;
+            }
+        }
 
         public ExcelWriter(string filename)
         {
@@ -26,11 +35,11 @@ namespace Hec.Dss.Excel
                 CreateWorkbook(filename);
         }
 
-        private void CreateWorkbook(string filename)
+        public void CreateWorkbook(string filename)
         {
             workbook = workbookSet.Workbooks.Add();
             if (filename == "" || filename == null)
-                workbook.FullName = "dss_excel" + RandomString(10) + ".xlsx";
+                workbook.FullName = "dss_excel" + ExcelTools.RandomString(10) + ".xlsx";
             else if (filename.EndsWith(".xls") || filename.EndsWith(".xlsx"))
                 workbook.FullName = filename;
             else
@@ -40,16 +49,16 @@ namespace Hec.Dss.Excel
             }
         }
 
-        private static void SetIndexColumnInExcelFile(IWorkbook book, string sheet, object record)
+        private void SetIndexColumnInExcelFile(string sheet, object record)
         {
-            book.Worksheets["Sheet1"].Cells[0, 0].Value = "Index";
+            workbook.Worksheets["Sheet1"].Cells[0, 0].Value = "Index";
             int rowOffset = 1;
             if (record is TimeSeries)
             {
                 var ts = (TimeSeries)record;
                 for (int i = 0 + rowOffset; i < ts.Count + rowOffset; i++)
                 {
-                    book.Worksheets["Sheet1"].Cells[i, 0].Value = i - rowOffset + 1;
+                    workbook.Worksheets["Sheet1"].Cells[i, 0].Value = i - rowOffset + 1;
 
                 }
             }
@@ -58,35 +67,35 @@ namespace Hec.Dss.Excel
                 var pd = (PairedData)record;
                 for (int i = 0 + rowOffset; i < pd.XCount + rowOffset; i++)
                 {
-                    book.Worksheets["Sheet1"].Cells[i, 0].Value = i - rowOffset + 1;
+                    workbook.Worksheets["Sheet1"].Cells[i, 0].Value = i - rowOffset + 1;
 
                 }
             }
         }
 
-        private static void SetDateColumnInExcelFile(IWorkbook book, string sheet, object record, int rowOffset, int colOffset)
+        private void SetDateColumnInExcelFile(string sheet, object record, int rowOffset, int colOffset)
         {
             if (record is TimeSeries)
             {
-                book.Worksheets[sheet].Cells[rowOffset, colOffset].Value = "Date/Time";
+                workbook.Worksheets[sheet].Cells[rowOffset, colOffset].Value = "Date/Time";
                 var ts = (TimeSeries)record;
                 for (int i = 0 + rowOffset + 1; i < ts.Count + rowOffset + 1; i++)
                 {
-                    book.Worksheets[sheet].Cells[i, colOffset].Value = ts.Times[i - rowOffset - 1];
+                    workbook.Worksheets[sheet].Cells[i, colOffset].Value = ts.Times[i - rowOffset - 1];
                 }
             }
         }
 
-        private static void SetOrdinateColumnInExcelFile(IWorkbook book, string sheet, object record, int rowOffset, int colOffset)
+        private void SetOrdinateColumnInExcelFile(string sheet, object record, int rowOffset, int colOffset)
         {
 
             if (record is PairedData)
             {
-                book.Worksheets[sheet].Cells[rowOffset, colOffset].Value = "Ordinates";
+                workbook.Worksheets[sheet].Cells[rowOffset, colOffset].Value = "Ordinates";
                 var pd = (PairedData)record;
                 for (int i = 0 + rowOffset + 1; i < pd.XCount + rowOffset + 1; i++)
                 {
-                    book.Worksheets[sheet].Cells[i, colOffset].Value = pd.Ordinates[i - rowOffset - 1];
+                    workbook.Worksheets[sheet].Cells[i, colOffset].Value = pd.Ordinates[i - rowOffset - 1];
                 }
 
             }
@@ -99,8 +108,8 @@ namespace Hec.Dss.Excel
             ClearSheet(sheet);
             SetPathInExcelFile(sheet, record.Path);
             SetUnitsAndDataTypeInExcelFile(sheet, record.Units, record.DataType);
-            SetDateColumnInExcelFile(workbook, sheet, record, (int)PathLayout.StandardPath, 0);
-            SetTimeSeriesValueColumnInExcelFile(workbook, sheet, record, (int)PathLayout.StandardPath, 1);
+            SetDateColumnInExcelFile(sheet, record, (int)PathLayout.StandardPath, 0);
+            SetTimeSeriesValueColumnInExcelFile(sheet, record, (int)PathLayout.StandardPath, 1);
             if (workbook.FullName.EndsWith(".xls"))
                 workbook.SaveAs(workbook.FullName, FileFormat.Excel8);
             else if (workbook.FullName.EndsWith(".xlsx"))
@@ -127,9 +136,9 @@ namespace Hec.Dss.Excel
             if (!SheetExists(sheet))
                 AddSheet(sheet);
             ClearSheet(sheet);
-            SetDateColumnInExcelFile(workbook, sheet, records, (int)PathLayout.StandardPath, 0);
-            SetPathUnitsAndDataTypeInExcelFile(workbook, sheet, records, 1);
-            SetTimeSeriesValueColumnInExcelFile(workbook, sheet, records, (int)PathLayout.StandardPath, 1);
+            SetDateColumnInExcelFile(sheet, records, (int)PathLayout.StandardPath, 0);
+            SetPathUnitsAndDataTypeInExcelFile(sheet, records, 1);
+            SetTimeSeriesValueColumnInExcelFile(sheet, records, (int)PathLayout.StandardPath, 1);
             if (workbook.FullName.EndsWith(".xls"))
                 workbook.SaveAs(workbook.FullName, FileFormat.Excel8);
             else if (workbook.FullName.EndsWith(".xlsx"))
@@ -142,7 +151,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        private void SetPathUnitsAndDataTypeInExcelFile(IWorkbook workbook, string sheet, IEnumerable<TimeSeries> records, int columnOffset)
+        private void SetPathUnitsAndDataTypeInExcelFile(string sheet, IEnumerable<TimeSeries> records, int columnOffset)
         {
             workbook.Worksheets[sheet].Cells[0, 0].Value = "A";
             workbook.Worksheets[sheet].Cells[1, 0].Value = "B";
@@ -164,7 +173,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        private void SetTimeSeriesValueColumnInExcelFile(IWorkbook workbook, string sheet, IEnumerable<TimeSeries> records, int rowOffset, int colOffset)
+        private void SetTimeSeriesValueColumnInExcelFile(string sheet, IEnumerable<TimeSeries> records, int rowOffset, int colOffset)
         {
             
             for (int j = 0; j < records.Count(); j++)
@@ -175,7 +184,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        private void SetTimeSeriesValueColumnInExcelFile(IWorkbook workbook, string sheet, TimeSeries ts, int rowOffset, int colOffset)
+        private void SetTimeSeriesValueColumnInExcelFile(string sheet, TimeSeries ts, int rowOffset, int colOffset)
         {
             workbook.Worksheets[sheet].Cells[rowOffset, colOffset].Value = "Values";
             for (int i = rowOffset + 1; i < ts.Count + rowOffset + 1; i++)
@@ -188,8 +197,8 @@ namespace Hec.Dss.Excel
                 AddSheet(sheet);
             ClearSheet(sheet);
             SetPathInExcelFile(sheet, record.Path);
-            SetOrdinateColumnInExcelFile(workbook, sheet, record, 6, 0);
-            SetPairedDataValueColumnsInExcelFile(workbook, sheet, record, 6, 1);
+            SetOrdinateColumnInExcelFile(sheet, record, 6, 0);
+            SetPairedDataValueColumnsInExcelFile(sheet, record, 6, 1);
             if (workbook.FullName.EndsWith(".xls"))
                 workbook.SaveAs(workbook.FullName, FileFormat.Excel8);
             else if (workbook.FullName.EndsWith(".xlsx"))
@@ -207,7 +216,7 @@ namespace Hec.Dss.Excel
             workbook.Worksheets[sheet].Cells.Clear();
         }
 
-        private void SetPairedDataValueColumnsInExcelFile(IWorkbook workbook, string sheet, PairedData pd, int rowOffset, int colOffset)
+        private void SetPairedDataValueColumnsInExcelFile(string sheet, PairedData pd, int rowOffset, int colOffset)
         {
             for (int i = 0 + colOffset; i < pd.YCount + colOffset; i++)
             {
@@ -254,6 +263,32 @@ namespace Hec.Dss.Excel
             Write(record, workbook.Worksheets[sheetIndex].Name);
         }
 
-        
+        public void AddSheet(string sheet)
+        {
+            var s = workbook.Worksheets.Add();
+            s.Name = sheet;
+        }
+
+        public void AddSheet(int sheetIndex)
+        {
+            var s = workbook.Worksheets.Add();
+            if (!SheetExists(sheetIndex))
+                AddSheet(sheetIndex);
+        }
+
+        public bool SheetExists(string sheet)
+        {
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                if (workbook.Worksheets[i].Name.ToLower() == sheet.ToLower())
+                    return true;
+            }
+            return false;
+        }
+
+        public bool SheetExists(int sheetIndex)
+        {
+            return sheetIndex >= 0 && sheetIndex < WorksheetCount;
+        }
     }
 }
