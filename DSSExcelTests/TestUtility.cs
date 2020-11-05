@@ -12,6 +12,9 @@ namespace DSSExcelTests
     {
         public static string BasePath = @"..\..\test-files\";
         public static string OutputPath = @"..\..\test-files\output\";
+        public static string SimpleIrregularTSPath = BasePath + "simple-ir-ts.xlsx";
+        public static string SimpleRegularTSPath = BasePath + "simple-r-ts.xlsx";
+        public static string SimplePDPath = BasePath + "simple-pd.xlsx";
 
         public static TimeSeries CreateTimeSeries(int numberOfVals, bool regular = true)
         {
