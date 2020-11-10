@@ -372,8 +372,7 @@ namespace Hec.Dss.Excel
 
         public bool isRegularTimeSeries(string worksheet)
         {
-            ActiveSheetInfo = GetWorksheetInfo(worksheet);
-            if (!ActiveSheetInfo.HasDate)
+            if (!HasDate(worksheet))
                 return false;
 
             var d = new List<DateTime>();
@@ -392,7 +391,7 @@ namespace Hec.Dss.Excel
 
         public bool isIrregularTimeSeries(string worksheet)
         {
-            if (!ActiveSheetInfo.HasDate)
+            if (!HasDate(worksheet))
                 return false;
 
             return !isRegularTimeSeries(worksheet);
