@@ -74,7 +74,7 @@ namespace Hec.Dss.Excel
             return l;
         }
 
-        public void GetTimeSeriesDataType(TimeSeries ts, string worksheet, int valueColumn)
+        private void GetTimeSeriesDataType(TimeSeries ts, string worksheet, int valueColumn)
         {
             if (ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutTypeAndUnits &&
                 ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutDPartTypeAndUnits)
@@ -89,7 +89,7 @@ namespace Hec.Dss.Excel
                 
         }
 
-        public void GetTimeSeriesUnits(TimeSeries ts, string worksheet, int valueColumn)
+        private void GetTimeSeriesUnits(TimeSeries ts, string worksheet, int valueColumn)
         {
             if (ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutTypeAndUnits &&
                 ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutDPartTypeAndUnits)
@@ -104,7 +104,7 @@ namespace Hec.Dss.Excel
             
         }
 
-        public void GetTimeSeriesPath(TimeSeries ts, string worksheet, int valueColumn)
+        private void GetTimeSeriesPath(TimeSeries ts, string worksheet, int valueColumn)
         {
             int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
             if (!ActiveSheetInfo.HasPath)
@@ -147,7 +147,7 @@ namespace Hec.Dss.Excel
         /// <param name="worksheet"></param>
         /// <param name="valueColumn"></param>
         /// <returns></returns>
-        public void GetTimeSeriesValues(TimeSeries ts, string worksheet, int valueColumn)
+        private void GetTimeSeriesValues(TimeSeries ts, string worksheet, int valueColumn)
         {
             var vals = Values(worksheet);
             var v = new List<double>();
@@ -199,7 +199,7 @@ namespace Hec.Dss.Excel
             return v.ToArray();
         }
 
-        public void GetTimeSeriesTimes(TimeSeries ts, string worksheet)
+        private void GetTimeSeriesTimes(TimeSeries ts, string worksheet)
         {
             var d = new List<DateTime>();
             var offset = ActiveSheetInfo.HasIndex ? 1 : 0;
@@ -399,15 +399,15 @@ namespace Hec.Dss.Excel
 
         public bool isPairedData(string worksheet)
         {
-            var offset = ActiveSheetInfo.HasIndex ? 3 : 2;
+            var offset = ActiveSheetInfo.HasIndex ? 1 : 0;
             if (ColumnCount(worksheet) < offset)
                 return false;
 
             for (int i = ActiveSheetInfo.DataStartRowIndex; i < ActiveSheetInfo.SmallestColumnRowCount; i++)
             {
-                for (int j = 0; i < ActiveSheetInfo.ColumnCount; i++)
+                for (int j = offset; i < ActiveSheetInfo.ColumnCount; i++)
                 {
-                    if (IsValue(workbook.Worksheets[worksheet].Cells[i, j]))
+                    if (!IsValue(workbook.Worksheets[worksheet].Cells[i, j]))
                         return false;
                 }
             }
