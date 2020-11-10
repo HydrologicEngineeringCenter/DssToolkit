@@ -40,7 +40,7 @@ namespace Hec.Dss.Excel
 
         public TimeSeries GetTimeSeries(string worksheet)
         {
-            ActiveSheetInfo = GetWorksheetInfo("Sheet1");
+            ActiveSheetInfo = GetWorksheetInfo(worksheet);
             if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
                 return new TimeSeries();
 
@@ -56,7 +56,7 @@ namespace Hec.Dss.Excel
 
         public IEnumerable<TimeSeries> GetMultipleTimeSeries(string worksheet)
         {
-            ActiveSheetInfo = GetWorksheetInfo("Sheet1");
+            ActiveSheetInfo = GetWorksheetInfo(worksheet);
             if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
                 return new List<TimeSeries>();
             var l = new List<TimeSeries>();
@@ -210,7 +210,7 @@ namespace Hec.Dss.Excel
 
         public PairedData GetPairedData(string worksheet)
         {
-            ActiveSheetInfo = GetWorksheetInfo("Sheet1");
+            ActiveSheetInfo = GetWorksheetInfo(worksheet);
             if (!isPairedData(worksheet))
                 return new PairedData();
 
@@ -346,7 +346,7 @@ namespace Hec.Dss.Excel
 
         public RecordType CheckType(string worksheet)
         {
-            ActiveSheetInfo = GetWorksheetInfo("Sheet1");
+            ActiveSheetInfo = GetWorksheetInfo(worksheet);
             if (isRegularTimeSeries(worksheet))
                 return RecordType.RegularTimeSeries;
             else if (isIrregularTimeSeries(worksheet))
@@ -372,6 +372,7 @@ namespace Hec.Dss.Excel
 
         public bool isRegularTimeSeries(string worksheet)
         {
+            ActiveSheetInfo = GetWorksheetInfo(worksheet);
             if (!ActiveSheetInfo.HasDate)
                 return false;
 
