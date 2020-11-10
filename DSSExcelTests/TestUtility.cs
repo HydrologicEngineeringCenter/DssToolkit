@@ -12,9 +12,9 @@ namespace DSSExcelTests
     {
         public static string BasePath = @"..\..\test-files\";
         public static string OutputPath = @"..\..\test-files\output\";
-        public static string SimpleIrregularTSPath = BasePath + "simple-ir-ts.xlsx";
-        public static string SimpleRegularTSPath = BasePath + "simple-r-ts.xlsx";
-        public static string SimplePDPath = BasePath + "simple-pd.xlsx";
+        public static string SimpleIrregularTSPath = BasePath + "small-ir-ts.xlsx";
+        public static string SimpleRegularTSPath = BasePath + "small-r-ts.xlsx";
+        public static string SimplePDPath = BasePath + "small-pd.xlsx";
 
         public static TimeSeries CreateTimeSeries(int numberOfVals, bool regular = true)
         {
@@ -84,6 +84,20 @@ namespace DSSExcelTests
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public static List<DateTime> CreateTimeSeriesTimes(string start, int count, double days, double hours, double minutes)
+        {
+            var expected_times = new List<DateTime>();
+            for (int i = 0; i < count; i++)
+            {
+                if (i == 0)
+                    expected_times.Add(DateTime.Parse(start));
+                else
+                    expected_times.Add(expected_times[i - 1].AddDays(days).AddHours(hours).AddMinutes(minutes));
+
+            }
+            return expected_times;
         }
     }
 }

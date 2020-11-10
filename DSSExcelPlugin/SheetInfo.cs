@@ -32,7 +32,7 @@ namespace Hec.Dss.Excel
             PathStructure = r.GetDSSPathLayout(sheet);
             PathStartRow = 1;
             PathStartRowIndex = PathStartRow - 1;
-            PathEndRow = r.DSSPathEndRow(sheet, 0);
+            PathEndRow = r.DSSPathEndRow(sheet);
             PathEndRowIndex = PathEndRow - 1;
             RowCount = r.RowCount(sheet);
             ColumnCount = r.ColumnCount(sheet);
