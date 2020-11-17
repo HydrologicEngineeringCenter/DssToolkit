@@ -76,14 +76,13 @@ namespace Hec.Dss.Excel
 
         private void GetTimeSeriesDataType(TimeSeries ts, string worksheet, int valueColumn)
         {
-            if (ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutTypeAndUnits &&
-                ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutDPartTypeAndUnits)
+            var s = "DataType";
+            if (ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutTypeAndUnits &&
+                ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutDPartTypeAndUnit)
             {
-                var s = "DataType";
                 int dataTypeIndex = (int)ActiveSheetInfo.PathStructure - 1;
                 int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
-                if (ActiveSheetInfo.PathStructure != PathLayout.NoPath)
-                    s = CellToString(workbook.Worksheets[worksheet].Cells[dataTypeIndex, offset]);
+                s = CellToString(workbook.Worksheets[worksheet].Cells[dataTypeIndex, offset]);
                 ts.DataType = s;
             }
                 
@@ -91,14 +90,13 @@ namespace Hec.Dss.Excel
 
         private void GetTimeSeriesUnits(TimeSeries ts, string worksheet, int valueColumn)
         {
-            if (ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutTypeAndUnits &&
-                ActiveSheetInfo.PathStructure != PathLayout.StandardPathWithoutDPartTypeAndUnits)
+            var s = "Unit";
+            if (ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutTypeAndUnits &&
+                ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutDPartTypeAndUnit)
             {
-                var s = "Units";
                 int unitIndex = (int)ActiveSheetInfo.PathStructure - 2;
                 int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
-                if (ActiveSheetInfo.PathStructure != PathLayout.NoPath)
-                    s = CellToString(workbook.Worksheets[worksheet].Cells[unitIndex, offset]);
+                s = CellToString(workbook.Worksheets[worksheet].Cells[unitIndex, offset]);
                 ts.Units = s;
             }
             
@@ -116,18 +114,17 @@ namespace Hec.Dss.Excel
             GetPath(ts, worksheet, offset, ActiveSheetInfo.PathStructure);
         }
 
-        private void GetPath(TimeSeries ts, string worksheet, int column, PathLayout lastPathEntry)
+        private void GetPath(TimeSeries ts, string worksheet, int column, PathLayout pathLayout)
         {
             ts.Path = new DssPath();
-
-            if (lastPathEntry == PathLayout.StandardPath || lastPathEntry == PathLayout.StandardPathWithoutTypeAndUnits)
+            if (pathLayout == PathLayout.TS_StandardPath || pathLayout == PathLayout.TS_PathWithoutTypeAndUnits)
             {
                 ts.Path.Apart = CellToString(workbook.Worksheets[worksheet].Cells[0, column]);
                 ts.Path.Bpart = CellToString(workbook.Worksheets[worksheet].Cells[1, column]);
                 ts.Path.Cpart = CellToString(workbook.Worksheets[worksheet].Cells[2, column]);
                 ts.Path.Fpart = CellToString(workbook.Worksheets[worksheet].Cells[5, column]);
             }
-            else if (lastPathEntry == PathLayout.PathWithoutDPart || lastPathEntry == PathLayout.StandardPathWithoutDPartTypeAndUnits)
+            else if (pathLayout == PathLayout.TS_PathWithoutDPart || pathLayout == PathLayout.TS_PathWithoutDPartTypeAndUnit)
             {
                 ts.Path.Apart = CellToString(workbook.Worksheets[worksheet].Cells[0, column]);
                 ts.Path.Bpart = CellToString(workbook.Worksheets[worksheet].Cells[1, column]);
@@ -214,18 +211,92 @@ namespace Hec.Dss.Excel
             if (!isPairedData(worksheet))
                 return new PairedData();
 
-            double[] ordinates = GetPairedDataOrdinates(worksheet);
-            List<double[]> vals = GetPairedDataValues(worksheet);
-            PairedData pd = new PairedData(ordinates, vals, new List<string>(), "", "", "", "", GetRandomPairedDataPath(worksheet).FullPath);
-            pd.UnitsDependent = "unit1";
-            pd.UnitsIndependent = "unit2";
-            pd.TypeDependent = "type1";
-            pd.TypeIndependent = "type2";
-            pd.Labels = new List<string>();
+            PairedData pd = new PairedData();
+            GetPairedDataOrdinates(pd, worksheet);
+            GetPairedDataValues(pd, worksheet);
+            GetPairedDataPath(pd, worksheet);
+            GetPairedDataUnits(pd, worksheet);
+            GetPairedDataTypes(pd, worksheet);
+            GetPairedDataLabels(pd, worksheet);
             return pd;
         }
 
-        public DssPath GetRandomPairedDataPath(string worksheet)
+        private void GetPairedDataPath(PairedData pd, string worksheet)
+        {
+            if (!ActiveSheetInfo.HasPath)
+            {
+                GetRandomPairedDataPath(pd, worksheet);
+                return;
+            }
+            int column = 1;
+            GetPath(pd, worksheet, column, ActiveSheetInfo.PathStructure);
+        }
+
+        private void GetPath(PairedData pd, string worksheet, int column, PathLayout pathLayout)
+        {
+            pd.Path = new DssPath();
+            if (pathLayout == PathLayout.PD_StandardPath || pathLayout == PathLayout.PD_PathWithoutTypesAndUnits ||
+                pathLayout == PathLayout.PD_PathWithoutTypes || pathLayout == PathLayout.PD_PathWithoutUnits)
+            {
+                pd.Path.Apart = CellToString(workbook.Worksheets[worksheet].Cells[0, column]);
+                pd.Path.Bpart = CellToString(workbook.Worksheets[worksheet].Cells[1, column]);
+                pd.Path.Cpart = CellToString(workbook.Worksheets[worksheet].Cells[2, column]);
+                pd.Path.Epart = CellToString(workbook.Worksheets[worksheet].Cells[4, column]);
+                pd.Path.Fpart = CellToString(workbook.Worksheets[worksheet].Cells[5, column]);
+            }
+            else if (pathLayout == PathLayout.PD_PathWithouDPart || pathLayout == PathLayout.PD_PathWithoutDPartTypesAndUnits ||
+                pathLayout == PathLayout.PD_PathWithoutDPartAndTypes || pathLayout == PathLayout.PD_PathWithoutDPartAndUnits)
+            {
+                pd.Path.Apart = CellToString(workbook.Worksheets[worksheet].Cells[0, column]);
+                pd.Path.Bpart = CellToString(workbook.Worksheets[worksheet].Cells[1, column]);
+                pd.Path.Cpart = CellToString(workbook.Worksheets[worksheet].Cells[2, column]);
+                pd.Path.Epart = CellToString(workbook.Worksheets[worksheet].Cells[3, column]);
+                pd.Path.Fpart = CellToString(workbook.Worksheets[worksheet].Cells[4, column]);
+            }
+        }
+
+        private void GetPairedDataLabels(PairedData pd, string worksheet)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void GetPairedDataTypes(PairedData pd, string worksheet)
+        {
+            string typeI = "Independent Type";
+            string typeD = "Dependent Type";
+            if (ActiveSheetInfo.PathStructure == PathLayout.PD_PathWithouDPart || ActiveSheetInfo.PathStructure == PathLayout.PD_PathWithoutDPartTypesAndUnits ||
+                ActiveSheetInfo.PathStructure == PathLayout.PD_PathWithoutDPartAndTypes || ActiveSheetInfo.PathStructure == PathLayout.PD_PathWithoutDPartAndUnits)
+            {
+                int typeIIndex = (int)ActiveSheetInfo.PathStructure - 2;
+                int typeDIndex = (int)ActiveSheetInfo.PathStructure - 1;
+                int column = 1;
+                typeI = CellToString(workbook.Worksheets[worksheet].Cells[typeIIndex, column]);
+                typeD = CellToString(workbook.Worksheets[worksheet].Cells[typeDIndex, column]);
+                pd.TypeIndependent = typeI;
+                pd.TypeDependent = typeD;
+            }
+            pd.TypeIndependent = typeI;
+            pd.TypeDependent = typeD;
+        }
+
+        private void GetPairedDataUnits(PairedData pd, string worksheet)
+        {
+            string unitI = "Independent Unit";
+            string unitD = "Dependent Unit";
+            if (ActiveSheetInfo.PathStructure == PathLayout.PD_StandardPath || ActiveSheetInfo.PathStructure == PathLayout.PD_PathWithoutTypesAndUnits ||
+                ActiveSheetInfo.PathStructure == PathLayout.PD_PathWithoutTypes || ActiveSheetInfo.PathStructure == PathLayout.PD_PathWithoutUnits)
+            {
+                int unitIIndex = (int)ActiveSheetInfo.PathStructure - 4;
+                int unitDIndex = (int)ActiveSheetInfo.PathStructure - 3;
+                int column = 1;
+                unitI = CellToString(workbook.Worksheets[worksheet].Cells[unitIIndex, column]);
+                unitD = CellToString(workbook.Worksheets[worksheet].Cells[unitDIndex, column]);
+                pd.UnitsIndependent = unitI;
+                pd.UnitsDependent = unitD;
+            }
+        }
+
+        public DssPath GetRandomPairedDataPath(PairedData pd, string worksheet)
         {
             return new DssPath("import", Path.GetFileNameWithoutExtension(workbook.FullName), worksheet, "", "excel", "pairedData" + ExcelTools.RandomString(3));
         }
@@ -235,25 +306,29 @@ namespace Hec.Dss.Excel
             return GetPairedData(workbook.Worksheets[worksheetIndex].Name);
         }
 
-        public double[] GetPairedDataOrdinates(string worksheet)
-        {
-            return GetTimeSeriesValues(worksheet);
-        }
-
-        public List<double[]> GetPairedDataValues(string worksheet)
+        public void GetPairedDataOrdinates(PairedData pd, string worksheet)
         {
             var vals = Values(worksheet);
-            var t = new List<double>();
-            var v = new List<double[]>();
+            var temp = new List<double>();
+            int column = 0;
+            for (int i = ActiveSheetInfo.DataStartRowIndex; i < ActiveSheetInfo.SmallestColumnRowCount; i++)
+                temp.Add(vals[i, column].Number);
+            pd.Ordinates = temp.ToArray();
+        }
+
+        public void GetPairedDataValues(PairedData pd, string worksheet)
+        {
+            var vals = Values(worksheet);
+            var temp = new List<double>();
+            pd.Values = new List<double[]>();
             var offset = ActiveSheetInfo.HasIndex ? 2 : 1;
             for (int i = offset; i < ActiveSheetInfo.ColumnCount; i++)
             {
                 for (int j = ActiveSheetInfo.DataStartRowIndex; j < ActiveSheetInfo.SmallestColumnRowCount; j++)
-                    t.Add(vals[j, i].Number);
-                v.Add(t.ToArray());
-                t.Clear();
+                    temp.Add(vals[j, i].Number);
+                pd.Values.Add(temp.ToArray());
+                temp.Clear();
             }
-            return v;
         }
 
         /// <summary>
@@ -306,9 +381,10 @@ namespace Hec.Dss.Excel
         public bool DSSPathExists(string worksheet, int column)
         {
             int pathEndRow = DSSPathEndRow(worksheet);
-            if (pathEndRow < (int)PathLayout.StandardPathWithoutDPartTypeAndUnits ||
-                pathEndRow > (int)PathLayout.StandardPath)
+            if (pathEndRow < (int)PathLayout.TS_PathWithoutDPartTypeAndUnit ||
+                pathEndRow > (int)PathLayout.PD_StandardPath)
                 return false;
+
             int blankEntries = 0;
             for (int i = 0; i < pathEndRow; i++) // check if all entries are blank
             {
@@ -316,7 +392,7 @@ namespace Hec.Dss.Excel
                     blankEntries++;
             }
 
-            return blankEntries < (int)PathLayout.StandardPathWithoutDPartTypeAndUnits; // return true if blank entries is less than the amount of entries for a minimal path
+            return blankEntries < (int)PathLayout.TS_PathWithoutDPartTypeAndUnit; // return true if blank entries is less than the amount of entries for a minimal path
         }
 
         public PathLayout GetDSSPathLayout(string worksheet)

@@ -111,14 +111,14 @@ namespace DSSExcelTests
         public void CheckPathLayoutRegularTS()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimpleRegularTSPath);
-            Assert.AreEqual(r.GetDSSPathLayout("Sheet1"), PathLayout.PathWithoutDPart);
+            Assert.AreEqual(r.GetDSSPathLayout("Sheet1"), PathLayout.TS_PathWithoutDPart);
         }
 
         [TestMethod]
         public void CheckPathLayoutIrregularTS()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimpleIrregularTSPath);
-            Assert.AreEqual(r.GetDSSPathLayout("Sheet1"), PathLayout.PathWithoutDPart);
+            Assert.AreEqual(r.GetDSSPathLayout("Sheet1"), PathLayout.TS_PathWithoutDPart);
         }
 
         [TestMethod]

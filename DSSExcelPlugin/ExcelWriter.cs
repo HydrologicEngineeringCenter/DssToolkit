@@ -108,8 +108,8 @@ namespace Hec.Dss.Excel
             ClearSheet(sheet);
             SetPathInExcelFile(sheet, record.Path);
             SetUnitsAndDataTypeInExcelFile(sheet, record.Units, record.DataType);
-            SetDateColumnInExcelFile(sheet, record, (int)PathLayout.StandardPath, 0);
-            SetTimeSeriesValueColumnInExcelFile(sheet, record, (int)PathLayout.StandardPath, 1);
+            SetDateColumnInExcelFile(sheet, record, (int)PathLayout.TS_StandardPath, 0);
+            SetTimeSeriesValueColumnInExcelFile(sheet, record, (int)PathLayout.TS_StandardPath, 1);
             if (workbook.FullName.EndsWith(".xls"))
                 workbook.SaveAs(workbook.FullName, FileFormat.Excel8);
             else if (workbook.FullName.EndsWith(".xlsx"))
@@ -136,9 +136,9 @@ namespace Hec.Dss.Excel
             if (!SheetExists(sheet))
                 AddSheet(sheet);
             ClearSheet(sheet);
-            SetDateColumnInExcelFile(sheet, records, (int)PathLayout.StandardPath, 0);
+            SetDateColumnInExcelFile(sheet, records, (int)PathLayout.TS_StandardPath, 0);
             SetPathUnitsAndDataTypeInExcelFile(sheet, records, 1);
-            SetTimeSeriesValueColumnInExcelFile(sheet, records, (int)PathLayout.StandardPath, 1);
+            SetTimeSeriesValueColumnInExcelFile(sheet, records, (int)PathLayout.TS_StandardPath, 1);
             if (workbook.FullName.EndsWith(".xls"))
                 workbook.SaveAs(workbook.FullName, FileFormat.Excel8);
             else if (workbook.FullName.EndsWith(".xlsx"))

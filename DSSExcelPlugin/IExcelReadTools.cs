@@ -11,10 +11,18 @@ namespace Hec.Dss.Excel
 {
     public enum PathLayout
     {
-        StandardPath = 8,
-        PathWithoutDPart = 7,
-        StandardPathWithoutTypeAndUnits = 6,
-        StandardPathWithoutDPartTypeAndUnits = 5,
+        TS_StandardPath = 8,
+        TS_PathWithoutDPart = 7,
+        TS_PathWithoutTypeAndUnits = 6,
+        TS_PathWithoutDPartTypeAndUnit = 5,
+        PD_StandardPath = 10,
+        PD_PathWithouDPart = 9,
+        PD_PathWithoutTypes = 8,
+        PD_PathWithoutUnits = 8,
+        PD_PathWithoutDPartAndTypes = 7,
+        PD_PathWithoutDPartAndUnits = 7,
+        PD_PathWithoutDPartTypesAndUnits = 5,
+        PD_PathWithoutTypesAndUnits = 6,
         NoPath = 0
     }
 

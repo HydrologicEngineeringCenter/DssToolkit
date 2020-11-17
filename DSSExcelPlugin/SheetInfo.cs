@@ -30,10 +30,10 @@ namespace Hec.Dss.Excel
             DataStartRow = r.DataStartRow(sheet);
             DataStartRowIndex = DataStartRow - 1;
             PathStructure = r.GetDSSPathLayout(sheet);
-            PathStartRow = 1;
-            PathStartRowIndex = PathStartRow - 1;
-            PathEndRow = r.DSSPathEndRow(sheet);
-            PathEndRowIndex = PathEndRow - 1;
+            PathStartRow = PathStructure == PathLayout.NoPath ? -1 : 1;
+            PathStartRowIndex = PathStartRow == -1 ? -1 : 0;
+            PathEndRow = PathStartRowIndex == -1 ? -1 : r.DSSPathEndRow(sheet);
+            PathEndRowIndex = PathEndRow == -1 ? -1 : PathEndRow - 1;
             RowCount = r.RowCount(sheet);
             ColumnCount = r.ColumnCount(sheet);
             SmallestColumnRowCount = r.SmallestColumnRowCount(sheet);
