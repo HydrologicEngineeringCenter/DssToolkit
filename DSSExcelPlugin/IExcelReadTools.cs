@@ -16,7 +16,7 @@ namespace Hec.Dss.Excel
         TS_PathWithoutTypeAndUnits = 6,
         TS_PathWithoutDPartTypeAndUnit = 5,
         PD_StandardPath = 10,
-        PD_PathWithouDPart = 9,
+        PD_PathWithoutDPart = 9,
         PD_PathWithoutTypes = 8,
         PD_PathWithoutUnits = 8,
         PD_PathWithoutDPartAndTypes = 7,

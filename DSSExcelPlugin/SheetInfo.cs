@@ -20,6 +20,7 @@ namespace Hec.Dss.Excel
         public int PathEndRowIndex { get; private set; }
         public int RowCount { get; private set; }
         public int ColumnCount { get; private set; }
+        public int ValueStartColumnIndex { get; private set; }
         public int SmallestColumnRowCount { get; private set; }
         public bool HasIndex { get; private set; }
         public bool HasDate { get; private set; }
@@ -40,7 +41,7 @@ namespace Hec.Dss.Excel
             HasIndex = r.HasIndex(sheet);
             HasDate = r.HasDate(sheet);
             HasPath = r.DSSPathExists(sheet, 0);
-
+            ValueStartColumnIndex = HasIndex ? 2 : 1;
         }
     }
 }
