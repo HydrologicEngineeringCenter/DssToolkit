@@ -26,10 +26,10 @@ namespace DSSExcelTests
             {
                 for (int i = 0; i < numberOfVals; i++)
                 {
-                    vals.Add(i * 10);
+                    vals.Add(i * 2);
                     dt.Add(d.AddDays(i));
                 }
-                var ts = new TimeSeries(new DssPath(RandomString(2), RandomString(2), RandomString(2), "", "1Day", RandomString(2)), vals.ToArray(), d, "", "");
+                var ts = new TimeSeries(new DssPath("a", "b", "c", "", "1Day", "f"), vals.ToArray(), d, "", "");
                 ts.Times = dt.ToArray();
                 return ts;
             }
@@ -40,10 +40,12 @@ namespace DSSExcelTests
                     vals.Add(i + 1);
                     dt.Add(d.AddDays(i * 2));
                 }
-                var ts = new TimeSeries(new DssPath(RandomString(2), RandomString(2), RandomString(2), "", "IR-Year", RandomString(2)), vals.ToArray(), d, "", "");
+                var ts = new TimeSeries(new DssPath("a", "b", "c", "", "IR-Year", "f"), vals.ToArray(), d, "", "");
                 ts.Times = dt.ToArray();
                 return ts;
             }
+
+
         }
 
         public static PairedData CreatePairedData(int numberOfCurves, int numberOfVals)

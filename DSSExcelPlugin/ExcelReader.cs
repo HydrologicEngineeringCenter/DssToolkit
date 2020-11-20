@@ -46,10 +46,10 @@ namespace Hec.Dss.Excel
 
             TimeSeries ts = new TimeSeries();
             GetTimeSeriesTimes(ts, worksheet);
-            GetTimeSeriesValues(ts, worksheet, 0);
-            GetTimeSeriesPath(ts, worksheet, 0);
-            GetTimeSeriesUnits(ts, worksheet, 0);
-            GetTimeSeriesDataType(ts, worksheet, 0);
+            GetTimeSeriesValues(ts, worksheet, ActiveSheetInfo.ValueStartColumnIndex);
+            GetTimeSeriesPath(ts, worksheet, ActiveSheetInfo.ValueStartColumnIndex);
+            GetTimeSeriesUnits(ts, worksheet, ActiveSheetInfo.ValueStartColumnIndex);
+            GetTimeSeriesDataType(ts, worksheet, ActiveSheetInfo.ValueStartColumnIndex);
 
             return ts;
         }
@@ -60,8 +60,7 @@ namespace Hec.Dss.Excel
             if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
                 return new List<TimeSeries>();
             var l = new List<TimeSeries>();
-            var c = TimeSeriesValueColumnCount();
-            for (int i = 0; i < c; i++)
+            for (int i = ActiveSheetInfo.ValueStartColumnIndex; i < ActiveSheetInfo.ColumnCount; i++)
             {
                 TimeSeries ts = new TimeSeries();
                 GetTimeSeriesTimes(ts, worksheet);
@@ -81,8 +80,7 @@ namespace Hec.Dss.Excel
                 ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutDPartTypeAndUnit)
             {
                 int dataTypeIndex = (int)ActiveSheetInfo.PathStructure - 1;
-                int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
-                s = CellToString(workbook.Worksheets[worksheet].Cells[dataTypeIndex, offset]);
+                s = CellToString(workbook.Worksheets[worksheet].Cells[dataTypeIndex, valueColumn]);
                 ts.DataType = s;
             }
                 
@@ -95,8 +93,7 @@ namespace Hec.Dss.Excel
                 ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutDPartTypeAndUnit)
             {
                 int unitIndex = (int)ActiveSheetInfo.PathStructure - 2;
-                int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
-                s = CellToString(workbook.Worksheets[worksheet].Cells[unitIndex, offset]);
+                s = CellToString(workbook.Worksheets[worksheet].Cells[unitIndex, valueColumn]);
                 ts.Units = s;
             }
             
@@ -104,14 +101,13 @@ namespace Hec.Dss.Excel
 
         private void GetTimeSeriesPath(TimeSeries ts, string worksheet, int valueColumn)
         {
-            int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
             if (!ActiveSheetInfo.HasPath)
             {
                 GetRandomTimeSeriesPath(ts, worksheet);
                 return;
             }
 
-            GetPath(ts, worksheet, offset, ActiveSheetInfo.PathStructure);
+            GetPath(ts, worksheet, valueColumn, ActiveSheetInfo.PathStructure);
         }
 
         private void GetPath(TimeSeries ts, string worksheet, int column, PathLayout pathLayout)
@@ -148,18 +144,17 @@ namespace Hec.Dss.Excel
         {
             var vals = Values(worksheet);
             var v = new List<double>();
-            int offset = ActiveSheetInfo.HasIndex ? valueColumn + 2 : valueColumn + 1;
             for (int i = ActiveSheetInfo.DataStartRowIndex; i < ActiveSheetInfo.SmallestColumnRowCount; i++)
-                v.Add(vals[i, offset].Number);
+                v.Add(vals[i, valueColumn].Number);
              ts.Values = v.ToArray();
         }
 
-        public int TimeSeriesValueColumnCount()
+        private int TimeSeriesValueColumnCount()
         {
             return ActiveSheetInfo.HasIndex ? ActiveSheetInfo.ColumnCount - 2 : ActiveSheetInfo.ColumnCount - 1;
         }
 
-        public DssPath GetRandomTimeSeriesPath(TimeSeries ts, string worksheet)
+        private DssPath GetRandomTimeSeriesPath(TimeSeries ts, string worksheet)
         {
             if (IsRegular(ts.Times.ToList()))
             {
@@ -179,21 +174,6 @@ namespace Hec.Dss.Excel
         public TimeSeries GetTimeSeries(int worksheetIndex)
         {
             return GetTimeSeries(workbook.Worksheets[worksheetIndex].Name);
-        }
-
-        /// <summary>
-        /// Get all values from the first value column in a worksheet.
-        /// </summary>
-        /// <param name="worksheet"></param>
-        /// <returns></returns>
-        public double[] GetTimeSeriesValues(string worksheet)
-        {
-            var vals = Values(worksheet);
-            var v = new List<double>();
-            int offset = ActiveSheetInfo.HasIndex ? 2 : 1;
-            for (int i = ActiveSheetInfo.DataStartRowIndex; i < ActiveSheetInfo.SmallestColumnRowCount; i++)
-                v.Add(vals[i, offset].Number);
-            return v.ToArray();
         }
 
         private void GetTimeSeriesTimes(TimeSeries ts, string worksheet)
@@ -330,7 +310,7 @@ namespace Hec.Dss.Excel
                 ActiveSheetInfo.PathStructure == PathLayout.PD_PathWithoutDPartAndTypes;
         }
 
-        public DssPath GetRandomPairedDataPath(PairedData pd, string worksheet)
+        private DssPath GetRandomPairedDataPath(PairedData pd, string worksheet)
         {
             return new DssPath("import", Path.GetFileNameWithoutExtension(workbook.FullName), worksheet, "", "excel", "pairedData" + ExcelTools.RandomString(3));
         }
@@ -340,7 +320,7 @@ namespace Hec.Dss.Excel
             return GetPairedData(workbook.Worksheets[worksheetIndex].Name);
         }
 
-        public void GetPairedDataOrdinates(PairedData pd, string worksheet)
+        private void GetPairedDataOrdinates(PairedData pd, string worksheet)
         {
             var vals = Values(worksheet);
             var temp = new List<double>();
@@ -350,7 +330,7 @@ namespace Hec.Dss.Excel
             pd.Ordinates = temp.ToArray();
         }
 
-        public void GetPairedDataValues(PairedData pd, string worksheet)
+        private void GetPairedDataValues(PairedData pd, string worksheet)
         {
             var vals = Values(worksheet);
             var temp = new List<double>();
@@ -585,7 +565,7 @@ namespace Hec.Dss.Excel
             return dt;
         }
 
-        public static bool IsRegular(List<DateTime> times)
+        private static bool IsRegular(List<DateTime> times)
         {
             var temp = times;
             var td = temp[1] - temp[0];
@@ -658,7 +638,7 @@ namespace Hec.Dss.Excel
             return l;
         }
 
-        public static double[] RangeToTimeSeriesValues(IRange values, int columnIndex)
+        private static double[] RangeToTimeSeriesValues(IRange values, int columnIndex)
         {
             var d = new List<double>();
 
@@ -670,7 +650,7 @@ namespace Hec.Dss.Excel
             return d.ToArray();
         }
 
-        public static DateTime[] RangeToDateTimes(IRange dateTimes)
+        private static DateTime[] RangeToDateTimes(IRange dateTimes)
         {
             var r = new List<DateTime>();
             for (int i = 0; i < dateTimes.RowCount; i++)
@@ -691,7 +671,7 @@ namespace Hec.Dss.Excel
             return pd;
         }
 
-        public static List<double[]> RangeToPairedDataValues(IRange values)
+        private static List<double[]> RangeToPairedDataValues(IRange values)
         {
             var d = new List<List<double>>();
 
@@ -711,7 +691,7 @@ namespace Hec.Dss.Excel
             return r;
         }
 
-        public static double[] RangeToOrdinates(IRange ordinates)
+        private static double[] RangeToOrdinates(IRange ordinates)
         {
             var d = new List<double>();
 
@@ -723,7 +703,7 @@ namespace Hec.Dss.Excel
             return d.ToArray();
         }
 
-        public static RecordType CheckTimeSeriesType(DateTime[] times)
+        private static RecordType CheckTimeSeriesType(DateTime[] times)
         {
             return IsRegular(times.ToList()) ? RecordType.RegularTimeSeries : RecordType.IrregularTimeSeries;
         }
@@ -755,7 +735,7 @@ namespace Hec.Dss.Excel
             return true;
         }
 
-        public static void CorrectDateFormat(string s, out DateTime d)
+        private static void CorrectDateFormat(string s, out DateTime d)
         {
             if (s.Contains("2400") || s.Contains("24:00") || s.Contains("24:00:00"))
             {
@@ -774,7 +754,7 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public static bool IsDifferentDateFromat(string s, out DateTime d)
+        private static bool IsDifferentDateFromat(string s, out DateTime d)
         {
             string[] formats =
             {
