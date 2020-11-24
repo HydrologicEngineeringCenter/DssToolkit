@@ -532,15 +532,11 @@ namespace Hec.Dss.Excel
             var start = DataStartRowIndex(worksheet);
             var end = SmallestColumnRowCount(worksheet);
 
-            if (!IsValue(workbook.Worksheets[worksheet].Cells[start, 0]) &&
-                vals[start, 0].Number != 0 && vals[start, 0].Number != 1)
-                return false;
-
             for (int i = start; i < end; i++)
-                l.Add((int)(vals[i, 0].Number));
+                l.Add((int)vals[i, 0].Number);
 
             return l.ToArray().SequenceEqual(Enumerable.Range(1, l.Count)) ||
-                l.ToArray().SequenceEqual(Enumerable.Range(0, l.Count - 1)) ? true : false;
+                l.ToArray().SequenceEqual(Enumerable.Range(0, l.Count - 1));
         }
 
         public bool HasDate(string worksheet)
@@ -551,12 +547,26 @@ namespace Hec.Dss.Excel
 
         public int RowCount(string worksheet)
         {
-            return workbook.Worksheets[worksheet].Cells.CurrentRegion.RowCount;
+            try
+            {
+                return workbook.Worksheets[worksheet].Cells.CurrentRegion.RowCount;
+            }
+            catch (NullReferenceException)
+            {
+                return 0;
+            }
         }
 
         public int ColumnCount(string worksheet)
         {
-            return workbook.Worksheets[worksheet].Cells.CurrentRegion.ColumnCount;
+            try
+            {
+                return workbook.Worksheets[worksheet].Cells.CurrentRegion.ColumnCount;
+            }
+            catch (NullReferenceException)
+            {
+                return 0;
+            }
         }
 
         public DateTime GetDateFromCell(string s)

@@ -57,12 +57,10 @@ namespace DSSExcelTests
             {
                 temp.Add(new List<double>());
             }
-
             for (int i = 0; i < numberOfVals; i++)
             {
                 ordinates.Add(i + 3);
             }
-
             for (int i = 0; i < numberOfCurves; i++)
             {
                 for (int j = 0; j < numberOfVals; j++)
@@ -70,13 +68,17 @@ namespace DSSExcelTests
                     temp[i].Add(j * i);
                 }
             }
-
             for (int i = 0; i < numberOfCurves; i++)
             {
                 vals.Add(temp[i].ToArray());
             }
 
             var pd = new PairedData(ordinates.ToArray(), vals);
+            pd.Path = new DssPath("a", "b", "c", "", "e", "f");
+            pd.UnitsIndependent = "unit 1";
+            pd.UnitsDependent = "unit 2";
+            pd.TypeIndependent = "type 1";
+            pd.TypeDependent = "type 2";
             return pd;
         }
 
