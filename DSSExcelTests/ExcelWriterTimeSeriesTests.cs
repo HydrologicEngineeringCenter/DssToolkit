@@ -29,7 +29,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void WriteTest()
         {
-            var filename = TestUtility.BasePath + "write-test-existing.xlsx";
+            var filename = TestUtility.OutputPath + "write-test.xlsx";
             TimeSeries ts1 = TestUtility.CreateTimeSeries(10);
             ExcelWriter w = new ExcelWriter(filename);
             w.Write(ts1, "Sheet1");
@@ -40,13 +40,13 @@ namespace DSSExcelTests
             Assert.IsTrue(Enumerable.SequenceEqual(ts1.Times, ts2.Times));
             Assert.IsTrue(Enumerable.SequenceEqual(ts1.Values, ts2.Values));
 
-            w.ClearSheet("Sheet1");
+            File.Delete(filename);
         }
 
         [TestMethod]
         public void WriteMultipleTest()
         {
-            var filename = TestUtility.BasePath + "write-test-existing.xlsx";
+            var filename = TestUtility.OutputPath + "write-multiple-test.xlsx";
             TimeSeries ts1 = TestUtility.CreateTimeSeries(15);
             TimeSeries ts2 = TestUtility.CreateTimeSeries(15);
             ExcelWriter w = new ExcelWriter(filename);
@@ -63,13 +63,15 @@ namespace DSSExcelTests
             Assert.IsTrue(Enumerable.SequenceEqual(ts1.Values, ts3.Values));
             Assert.IsTrue(Enumerable.SequenceEqual(ts2.Times, ts4.Times));
             Assert.IsTrue(Enumerable.SequenceEqual(ts2.Values, ts4.Values));
+
+            File.Delete(filename);
         }
 
         [Ignore]
         [TestMethod]
         public void ClearSheetTest()
         {
-            var filename = TestUtility.BasePath + "write-test-existing.xlsx";
+            var filename = TestUtility.OutputPath + "clear-sheet-test.xlsx";
             TimeSeries ts1 = TestUtility.CreateTimeSeries(10);
             ExcelWriter w = new ExcelWriter(filename);
             w.Write(ts1, "Sheet1");
@@ -85,12 +87,14 @@ namespace DSSExcelTests
             TimeSeries ts3 = r.GetTimeSeries("Sheet1");
 
             Assert.AreEqual(new TimeSeries(), ts3);
+
+            File.Delete(filename);
         }
 
         [TestMethod]
         public void AddSheetTest()
         {
-            var filename = TestUtility.OutputPath + "add-sheet.xlsx";
+            var filename = TestUtility.OutputPath + "add-sheet-test.xlsx";
             var sheetname = "Sheet2";
             File.Delete(filename);
 

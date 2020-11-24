@@ -28,7 +28,7 @@ namespace DSSExcelTests
         [TestMethod]
         public void WriteTest()
         {
-            var filename = TestUtility.BasePath + "write-test-existing.xlsx";
+            var filename = TestUtility.OutputPath + "write-test.xlsx";
             PairedData pd1 = TestUtility.CreatePairedData(3, 10);
             ExcelWriter w = new ExcelWriter(filename);
             w.Write(pd1, "Sheet1");
@@ -41,14 +41,14 @@ namespace DSSExcelTests
             Assert.IsTrue(Enumerable.SequenceEqual(pd1.Values[1], pd2.Values[1]));
             Assert.IsTrue(Enumerable.SequenceEqual(pd1.Values[2], pd2.Values[2]));
 
-            w.ClearSheet("Sheet1");
+            File.Delete(filename);
         }
 
         [Ignore]
         [TestMethod]
         public void ClearSheetTest()
         {
-            var filename = TestUtility.BasePath + "write-test-existing.xlsx";
+            var filename = TestUtility.OutputPath + "clear-sheet-test.xlsx";
             PairedData pd1 = TestUtility.CreatePairedData(3, 10);
             ExcelWriter w = new ExcelWriter(filename);
             w.Write(pd1, "Sheet1");
@@ -66,6 +66,8 @@ namespace DSSExcelTests
             PairedData pd3 = r.GetPairedData("Sheet1");
 
             Assert.AreEqual(new PairedData(), pd3);
+
+            File.Delete(filename);
         }
 
         [TestMethod]
