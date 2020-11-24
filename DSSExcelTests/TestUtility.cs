@@ -12,6 +12,9 @@ namespace DSSExcelTests
     {
         public static string BasePath = @"..\..\test-files\";
         public static string OutputPath = @"..\..\test-files\output\";
+        public static string SimpleIrregularTSPath = BasePath + "small-ir-ts.xlsx";
+        public static string SimpleRegularTSPath = BasePath + "small-r-ts.xlsx";
+        public static string SimplePDPath = BasePath + "small-pd.xlsx";
 
         public static TimeSeries CreateTimeSeries(int numberOfVals, bool regular = true)
         {
@@ -23,10 +26,10 @@ namespace DSSExcelTests
             {
                 for (int i = 0; i < numberOfVals; i++)
                 {
-                    vals.Add(i * 10);
+                    vals.Add(i * 2);
                     dt.Add(d.AddDays(i));
                 }
-                var ts = new TimeSeries(new DssPath(RandomString(2), RandomString(2), RandomString(2), "", "1Day", RandomString(2)), vals.ToArray(), d, "", "");
+                var ts = new TimeSeries(new DssPath("a", "b", "c", "", "1Day", "f"), vals.ToArray(), d, "", "");
                 ts.Times = dt.ToArray();
                 return ts;
             }
@@ -37,10 +40,12 @@ namespace DSSExcelTests
                     vals.Add(i + 1);
                     dt.Add(d.AddDays(i * 2));
                 }
-                var ts = new TimeSeries(new DssPath(RandomString(2), RandomString(2), RandomString(2), "", "IR-Year", RandomString(2)), vals.ToArray(), d, "", "");
+                var ts = new TimeSeries(new DssPath("a", "b", "c", "", "IR-Year", "f"), vals.ToArray(), d, "", "");
                 ts.Times = dt.ToArray();
                 return ts;
             }
+
+
         }
 
         public static PairedData CreatePairedData(int numberOfCurves, int numberOfVals)
@@ -52,12 +57,10 @@ namespace DSSExcelTests
             {
                 temp.Add(new List<double>());
             }
-
             for (int i = 0; i < numberOfVals; i++)
             {
                 ordinates.Add(i + 3);
             }
-
             for (int i = 0; i < numberOfCurves; i++)
             {
                 for (int j = 0; j < numberOfVals; j++)
@@ -65,13 +68,17 @@ namespace DSSExcelTests
                     temp[i].Add(j * i);
                 }
             }
-
             for (int i = 0; i < numberOfCurves; i++)
             {
                 vals.Add(temp[i].ToArray());
             }
 
             var pd = new PairedData(ordinates.ToArray(), vals);
+            pd.Path = new DssPath("a", "b", "c", "", "e", "f");
+            pd.UnitsIndependent = "unit 1";
+            pd.UnitsDependent = "unit 2";
+            pd.TypeIndependent = "type 1";
+            pd.TypeDependent = "type 2";
             return pd;
         }
 
@@ -81,6 +88,20 @@ namespace DSSExcelTests
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public static List<DateTime> CreateTimeSeriesTimes(string start, int count, double days, double hours, double minutes)
+        {
+            var expected_times = new List<DateTime>();
+            for (int i = 0; i < count; i++)
+            {
+                if (i == 0)
+                    expected_times.Add(DateTime.Parse(start));
+                else
+                    expected_times.Add(expected_times[i - 1].AddDays(days).AddHours(hours).AddMinutes(minutes));
+
+            }
+            return expected_times;
         }
     }
 }
