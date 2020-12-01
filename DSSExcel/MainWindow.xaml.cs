@@ -12,7 +12,7 @@ namespace DSSExcel
 {
     public class Options
     {
-        [Option('d', "dss-file", Required = true, HelpText = "The source file used for exporting or importing from or to the destination file.")]
+        [Option('d', "dss-file", Required = false, HelpText = "The source file used for exporting or importing from or to the destination file.")]
         public string DSSFile { get; set; }
 
         [Option('e', "data-file", Required = false, HelpText = "The destination file where the source file will export or import data.")]
