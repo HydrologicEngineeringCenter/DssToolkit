@@ -3,20 +3,22 @@ using Hec.Dss.Excel;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics;
 using System.IO;
-using System.Resources;
 using System.Windows;
-using System.Windows.Controls;
-using SpreadsheetGear;
-using System.Windows.Media;
+using CommandLine;
 
 namespace DSSExcel
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    public class Options
+    {
+        [Option('d', "dss-file", Required = false, HelpText = "The source file used for exporting or importing from or to the destination file.")]
+        public string DSSFile { get; set; }
+
+        [Option('e', "data-file", Required = false, HelpText = "The destination file where the source file will export or import data.")]
+        public string DataFile { get; set; }
+    }
+
     public partial class MainWindow : Window
     {
         public QuickImportVM GetDataContext
@@ -26,6 +28,29 @@ namespace DSSExcel
         public MainWindow()
         {
             InitializeComponent();
+            if (Environment.GetCommandLineArgs().Length != 0) // If command line args were passed
+                Parser.Default.ParseArguments<Options>(Environment.GetCommandLineArgs())
+                    .WithParsed(HandleCommandLineArgs);
+        }
+
+        private void HandleCommandLineArgs(Options options)
+        {
+            if (options.DSSFile != "")
+            {
+                if (File.Exists(options.DSSFile)) // if file exists
+                {
+                    GetDataContext.DssFilePath = options.DSSFile;
+                    GetDataContext.GetAllPaths();
+                }
+            }
+            if (options.DataFile != "")
+            {
+                if (File.Exists(options.DataFile)) // if file exists
+                {
+                    GetDataContext.DataFilePath = options.DataFile;
+                    GetDataContext.GetAllSheets();
+                }
+            }
         }
 
         private void DssFileButton_Click(object sender, RoutedEventArgs e)

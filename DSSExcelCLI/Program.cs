@@ -10,7 +10,7 @@ using Hec.Dss.Excel;
 
 namespace DSSExcelCLI
 {
-    class Program
+    public class Program
     {
         public class Options
         {
@@ -20,13 +20,13 @@ namespace DSSExcelCLI
             [Option('d', "dss-file", Required = true, HelpText = "The source file used for exporting or importing from or to the destination file.")]
             public string DssFile { get; set; }
 
-            [Option('e', "excel-file", Required = true, HelpText = "The destination file where the source file will export or import data.")]
+            [Option('e', "excel-file", Required = false, HelpText = "The destination file where the source file will export or import data.")]
             public string ExcelFile { get; set; }
 
-            [Option('s', "excel-sheet", Required = false, HelpText = "The sheet in excel file used for importing or exporting data.", Separator = ',')]
+            [Option('s', "excel-sheet", Required = false, HelpText = "The sheet in excel file used for importing or exporting data.", Separator = ';')]
             public IEnumerable<string> Sheets { get; set; }
 
-            [Option('p', "path", Required = false, HelpText = "Path of DSS Record in the form of '/a/b/c/d/e/f/'.", Separator = ',')]
+            [Option('p', "path", Required = false, HelpText = "Path of DSS Record in the form of '/a/b/c/d/e/f/'.", Separator = ';')]
             public IEnumerable<string> Paths { get; set; }
         }
 

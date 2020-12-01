@@ -71,7 +71,6 @@ namespace Hec.Dss.Excel
             {
                 workbook.Worksheets[sheet].Cells[i, colOffset].Value = record.Times[i - rowOffset - 1];
             }
-       
         }
 
         private void SetOrdinateColumnInExcelFile(string sheet, PairedData record, int rowOffset, int colOffset)
