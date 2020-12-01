@@ -20,7 +20,7 @@ namespace DSSExcelCLI
             [Option('d', "dss-file", Required = true, HelpText = "The source file used for exporting or importing from or to the destination file.")]
             public string DssFile { get; set; }
 
-            [Option('e', "excel-file", Required = false, HelpText = "The destination file where the source file will export or import data.")]
+            [Option('e', "excel-file", Required = true, HelpText = "The destination file where the source file will export or import data.")]
             public string ExcelFile { get; set; }
 
             [Option('s', "excel-sheet", Required = false, HelpText = "The sheet in excel file used for importing or exporting data.", Separator = ';')]
