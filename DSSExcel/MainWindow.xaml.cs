@@ -12,6 +12,9 @@ namespace DSSExcel
 {
     public class Options
     {
+        [Option('c', "command", Required = false, HelpText = "The only command that will be shown.")]
+        public string Command { get; set; }
+
         [Option('d', "dss-file", Required = false, HelpText = "The source file used for exporting or importing from or to the destination file.")]
         public string DSSFile { get; set; }
 
@@ -102,25 +105,33 @@ namespace DSSExcel
 
         private void ImportButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CheckImportSelections())
+            try
             {
-                GetDataContext.SelectedSheets = GetSelectedImportSheets();
+                if (CheckImportSelections())
+                {
+                    GetDataContext.SelectedSheets = GetSelectedImportSheets();
 
-                if (!File.Exists(GetDataContext.DssFilePath))
-                    if (!GetDssFile()) { return; }
+                    if (!File.Exists(GetDataContext.DssFilePath))
+                        if (!GetDssFile()) { return; }
 
-                if (!GetDataContext.AreSelectedSheetsRowCountsUniform() && !CanRecordDataBeCut())
-                    return;
+                    if (!GetDataContext.AreSelectedSheetsRowCountsUniform() && !CanRecordDataBeCut())
+                        return;
 
-                GetDataContext.QuickImport();
-                SheetList.SelectedItems.Clear();
-                DssPathList.SelectedItems.Clear();
-                var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}. Show DSS file in File Explorer?",
-                    GetDataContext.DataFilePath, GetDataContext.DssFilePath),
-                    "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK)
-                    Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DssFilePath));
+                    GetDataContext.QuickImport();
+                    SheetList.SelectedItems.Clear();
+                    DssPathList.SelectedItems.Clear();
+                    var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}. Show DSS file in File Explorer?",
+                        GetDataContext.DataFilePath, GetDataContext.DssFilePath),
+                        "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (result == MessageBoxResult.OK)
+                        Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DssFilePath));
+                }
             }
+            catch (IOException error)
+            {
+                MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
         }
 
         private bool CanRecordDataBeCut()
@@ -148,23 +159,31 @@ namespace DSSExcel
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CheckExportSelections())
+            try
             {
-                GetDataContext.SelectedSheets = GetExportExcelSheets();
-                GetDataContext.SelectedPaths = GetSelectedDssPaths();
+                if (CheckExportSelections())
+                {
+                    GetDataContext.SelectedPaths = GetSelectedDssPaths();
+                    GetDataContext.SelectedSheets = GetExportExcelSheets();
 
-                if (!File.Exists(GetDataContext.DataFilePath))
-                    if (!GetDataFile()) { return; }
+                    if (!File.Exists(GetDataContext.DataFilePath))
+                        if (!GetDataFile()) { return; }
 
-                GetDataContext.QuickExport();
-                SheetList.SelectedItems.Clear();
-                DssPathList.SelectedItems.Clear();
-                var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show data file in File Explorer?",
-                    GetDataContext.DssFilePath, GetDataContext.DataFilePath),
-                    "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                if (result == MessageBoxResult.OK)
-                    Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DataFilePath));
+                    GetDataContext.QuickExport();
+                    SheetList.SelectedItems.Clear();
+                    DssPathList.SelectedItems.Clear();
+                    var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show data file in File Explorer?",
+                        GetDataContext.DssFilePath, GetDataContext.DataFilePath),
+                        "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (result == MessageBoxResult.OK)
+                        Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DataFilePath));
+                }
             }
+            catch (IOException error)
+            {
+                MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
         }
 
         private List<string> GetSelectedDssPaths()
@@ -202,23 +221,25 @@ namespace DSSExcel
             {
                 int c = DssPathList.Items.Count > SheetList.Items.Count ? SheetList.Items.Count : DssPathList.Items.Count;
                 for (int i = 0; i < c; i++)
-                {
                     sheets.Add(SheetList.Items[i].ToString());
-                }
 
                 if (DssPathList.Items.Count > SheetList.Items.Count)
                 {
                     for (int i = 0; i < Math.Abs(SheetList.Items.Count - DssPathList.Items.Count); i++)
-                    {
                         sheets.Add("SheetImport" + ExcelTools.RandomString(3));
-                    }
                 }
             }
             else
             {
-                for (int i = 0; i < DssPathList.Items.Count; i++)
+                if (DssPathList.SelectedItems.Count == 0)
                 {
-                    sheets.Add("SheetImport" + ExcelTools.RandomString(3));
+                    for (int i = 0; i < DssPathList.Items.Count; i++)
+                        sheets.Add("SheetImport" + ExcelTools.RandomString(3));
+                }
+                else
+                {
+                    for (int i = 0; i < DssPathList.SelectedItems.Count; i++)
+                        sheets.Add("SheetImport" + ExcelTools.RandomString(3));
                 }
             }
             return sheets;
@@ -267,6 +288,7 @@ namespace DSSExcel
             }
             ExcelReader er = new ExcelReader(GetDataContext.DataFilePath);
             DSSExcelManualImport s = new DSSExcelManualImport(er.workbook.FullName);
+            GetDataContext.GetAllPaths();
             s.ShowDialog();
         }
     }

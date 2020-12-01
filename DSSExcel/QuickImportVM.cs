@@ -86,57 +86,60 @@ namespace DSSExcel
 
         public void QuickImport()
         {
-            ExcelReader er = new ExcelReader(DataFilePath);
             using (DssWriter w = new DssWriter(DssFilePath))
-            {
-
-                foreach (var sheet in SelectedSheets)
-                {
-                    var t = er.CheckType(sheet);
-                    if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
-                        WriteTimeSeries(er, w, sheet);
-                    else if (t is RecordType.PairedData)
-                        WritePairedData(er, w, sheet);
-                }
-            }
+                ImportRecords(new ExcelReader(DataFilePath), w);
+            
             GetAllPaths();
         }
 
-        private void WritePairedData(ExcelReader er, DssWriter w, string sheet)
+        private void ImportRecords(ExcelReader er, DssWriter w)
         {
-            w.Write(er.Read(sheet) as PairedData);
-        }
-
-        private void WriteTimeSeries(ExcelReader er, DssWriter w, string sheet)
-        {
-            List<TimeSeries> l = er.ReadAll(sheet) as List<TimeSeries>;
-            foreach (var record in l)
-                w.Write(record);
+            foreach (var sheet in SelectedSheets)
+            {
+                var t = er.CheckType(sheet);
+                if (t is RecordType.RegularTimeSeries || t is RecordType.IrregularTimeSeries)
+                {
+                    List<TimeSeries> l = er.ReadAll(sheet) as List<TimeSeries>;
+                    foreach (var record in l)
+                        w.Write(record);
+                }
+                else if (t is RecordType.PairedData)
+                    w.Write(er.Read(sheet) as PairedData);
+            }
         }
 
         public void QuickExport()
         {
             using (DssReader r = new DssReader(DssFilePath))
-            {
-                object record;
-                ExcelWriter ew = new ExcelWriter(DataFilePath);
-                for (int i = 0; i < SelectedPaths.Count; i++)
-                {
-                    DssPath p = new DssPath(SelectedPaths[i]);
-                    var type = r.GetRecordType(p);
-                    if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
-                    {
-                        record = r.GetTimeSeries(p);
-                        ew.Write(record as TimeSeries, SelectedSheets[i]);
-                    }
-                    else if (type is RecordType.PairedData)
-                    {
-                        record = r.GetPairedData(p.FullPath);
-                        ew.Write(record as PairedData, SelectedSheets[i]);
-                    }
-                }
-            }
+                ExportRecords(GetRecords(r), new ExcelWriter(DataFilePath));
+
             GetAllSheets();
+        }
+
+        private List<object> GetRecords(DssReader r)
+        {
+            List<object> records = new List<object>();
+            for (int i = 0; i < SelectedPaths.Count; i++)
+            {
+                if (r.GetRecordType(new DssPath(SelectedPaths[i])) == RecordType.RegularTimeSeries ||
+                    r.GetRecordType(new DssPath(SelectedPaths[i])) == RecordType.IrregularTimeSeries)
+                    records.Add(r.GetTimeSeries(new DssPath(SelectedPaths[i])));
+                if (r.GetRecordType(new DssPath(SelectedPaths[i])) == RecordType.PairedData)
+                    records.Add(r.GetPairedData(new DssPath(SelectedPaths[i]).FullPath));
+            }
+            return records;
+        }
+
+        private void ExportRecords(List<object> records, ExcelWriter ew)
+        {
+            for (int i = 0; i < records.Count; i++)
+            {
+                if (records[i] is TimeSeries)
+                    ew.Write(records[i] as TimeSeries, SelectedSheets[i]);
+
+                if (records[i] is PairedData)
+                    ew.Write(records[i] as PairedData, SelectedSheets[i]);
+            }
         }
 
         public void GetAllSheets()
