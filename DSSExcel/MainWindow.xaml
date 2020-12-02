@@ -26,8 +26,8 @@
         <Button x:Name="ExportButton" Content="Export" Margin="0,0,16,10" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="107" Height="20" IsEnabled="{Binding HasDssFile}" Click="ExportButton_Click"/>
         <ListBox x:Name="SheetList" Margin="19,89,16,51" BorderBrush="#FFB3ABAD" SelectionMode="Extended" Background="#FFF3F3F3" ItemsSource="{Binding Sheets}"/>
         <ListBox x:Name="DssPathList" Margin="19,79,16,50" SelectionMode="Extended" Background="#FFF3F3F3" Grid.Row="1" ItemsSource="{Binding Paths}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="19,57,0,0" TextWrapping="Wrap" Text="Select DSS Paths:" VerticalAlignment="Top" Height="22" Width="120" FontSize="14" Grid.Row="1"/>
-        <TextBlock HorizontalAlignment="Left" Margin="19,66,0,0" TextWrapping="Wrap" Text="Select Excel Sheets:" VerticalAlignment="Top" Height="23" Width="120" FontSize="14"/>
+        <TextBlock x:Name="DssPathListHeader" HorizontalAlignment="Left" Margin="19,57,0,0" TextWrapping="Wrap" Text="Select DSS Paths:" VerticalAlignment="Top" Height="22" Width="120" FontSize="14" Grid.Row="1"/>
+        <TextBlock x:Name="DataHeader" HorizontalAlignment="Left" Margin="19,66,0,0" TextWrapping="Wrap" Text="Select Sheets:" VerticalAlignment="Top" Height="23" Width="120" FontSize="14"/>
         <Menu Height="22" VerticalAlignment="Top">
             <MenuItem Header="Options" Height="22">
                 <MenuItem x:Name="ManualImportButton" Header="Manual Import..." Click="ManualImportButton_Click"/>

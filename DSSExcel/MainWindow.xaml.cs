@@ -54,6 +54,32 @@ namespace DSSExcel
                     GetDataContext.GetAllSheets();
                 }
             }
+            if (options.Command == "import")
+            {
+                ExportVisibility(false);
+            }
+            if (options.Command == "export")
+            {
+                ImportVisibility(false);
+            }
+        }
+
+        private void ExportVisibility(bool show)
+        {
+            DssFileButton.Visibility = Visibility.Collapsed;
+            DssFilePath.Visibility = Visibility.Collapsed;
+            DssPathListHeader.Visibility = Visibility.Collapsed;
+            DssPathList.Visibility = Visibility.Collapsed;
+            ExportButton.Visibility = Visibility.Collapsed;
+        }
+
+        private void ImportVisibility(bool show)
+        {
+            DataFileButton.Visibility = Visibility.Collapsed;
+            DataFilePath.Visibility = Visibility.Collapsed;
+            DataHeader.Visibility = Visibility.Collapsed;
+            SheetList.Visibility = Visibility.Collapsed;
+            ImportButton.Visibility = Visibility.Collapsed;
         }
 
         private void DssFileButton_Click(object sender, RoutedEventArgs e)
