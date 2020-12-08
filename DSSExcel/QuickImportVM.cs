@@ -15,7 +15,6 @@ namespace DSSExcel
     {
         private string dataFilePath = "";
         private string dssFilePath = "";
-        private bool overwriteSheets = false;
         private List<string> paths = new List<string>();
         private List<string> sheets = new List<string>();
         public bool HasDataFile { get; private set; }
@@ -40,15 +39,6 @@ namespace DSSExcel
                 HasDssFile = true;
                 NotifyPropertyChanged(nameof(DssFilePath));
                 NotifyPropertyChanged(nameof(HasDssFile));
-            }
-        }
-        public bool OverwriteSheets 
-        { 
-            get { return overwriteSheets; }
-            set
-            {
-                overwriteSheets = value;
-                NotifyPropertyChanged(nameof(OverwriteSheets));
             }
         }
 
