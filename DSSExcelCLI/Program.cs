@@ -23,10 +23,10 @@ namespace DSSExcelCLI
             [Option('e', "excel-file", Required = true, HelpText = "The destination file where the source file will export or import data.")]
             public string ExcelFile { get; set; }
 
-            [Option('s', "excel-sheet", Required = false, HelpText = "The sheet in excel file used for importing or exporting data.", Separator = ';')]
+            [Option('s', "excel-sheets", Required = false, HelpText = "The sheet in excel file used for importing or exporting data.", Separator = ';')]
             public IEnumerable<string> Sheets { get; set; }
 
-            [Option('p', "path", Required = false, HelpText = "Path of DSS Record in the form of '/a/b/c/d/e/f/'.", Separator = ';')]
+            [Option('p', "paths", Required = false, HelpText = "Path of DSS Record in the form of '/a/b/c/d/e/f/'.", Separator = ';')]
             public IEnumerable<string> Paths { get; set; }
         }
 
@@ -96,27 +96,28 @@ namespace DSSExcelCLI
                 {
                     object record;
                     ExcelWriter ew = new ExcelWriter(opts.ExcelFile);
-                    if (opts.Sheets.ToList<string>().Count == 0)
+                    if (opts.Sheets.ToList().Count == 0)
                     {
                         for (int i = 0; i < opts.Paths.ToList<string>().Count; i++)
                         {
+                            string sheet = "import_" + ExcelTools.RandomString(5);
                             DssPath p = new DssPath(opts.Paths.ElementAt(i));
                             var type = r.GetRecordType(p);
                             if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                             {
                                 record = r.GetTimeSeries(p);
-                                ew.Write(record as TimeSeries, i);
+                                ew.Write(record as TimeSeries, sheet);
                             }
                             else if (type is RecordType.PairedData)
                             {
                                 record = r.GetPairedData(p.FullPath);
-                                ew.Write(record as PairedData, i);
+                                ew.Write(record as PairedData, sheet);
                             }
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < opts.Sheets.ToList<string>().Count; i++)
+                        for (int i = 0; i < opts.Sheets.ToList().Count; i++)
                         {
                             DssPath p = new DssPath(opts.Paths.ElementAt(i));
                             var type = r.GetRecordType(p);
@@ -150,7 +151,7 @@ namespace DSSExcelCLI
                 Environment.Exit(1);
             }
 
-            if (opts.Paths.ToList<string>().Count != opts.Sheets.ToList<string>().Count)
+            if (opts.Sheets.ToList().Count != 0 && opts.Paths.ToList().Count != opts.Sheets.ToList().Count)
             {
                 Console.WriteLine("The sheet and path counts are not equal.");
                 Environment.Exit(1);
