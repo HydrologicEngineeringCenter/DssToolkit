@@ -54,6 +54,30 @@ namespace DSSExcel
                     GetDataContext.GetAllSheets();
                 }
             }
+            if (options.Command == "import")
+            {
+                HideExport();
+            }
+            if (options.Command == "export")
+            {
+                HideImport();
+            }
+        }
+
+        private void HideExport()
+        {
+            DssPathListHeader.Visibility = Visibility.Collapsed;
+            DssPathList.Visibility = Visibility.Collapsed;
+            ExportButton.Visibility = Visibility.Collapsed;
+            grid.RowDefinitions[3].Height = new GridLength(0);
+        }
+
+        private void HideImport()
+        {
+            DataHeader.Visibility = Visibility.Collapsed;
+            SheetList.Visibility = Visibility.Collapsed;
+            ImportButton.Visibility = Visibility.Collapsed;
+            grid.RowDefinitions[1].Height = new GridLength(0);
         }
 
         private void DssFileButton_Click(object sender, RoutedEventArgs e)
@@ -217,31 +241,18 @@ namespace DSSExcel
         private List<string> GenerateExportSheets()
         {
             var sheets = new List<string>();
-            if (GetDataContext.OverwriteSheets)
-            {
-                int c = DssPathList.Items.Count > SheetList.Items.Count ? SheetList.Items.Count : DssPathList.Items.Count;
-                for (int i = 0; i < c; i++)
-                    sheets.Add(SheetList.Items[i].ToString());
 
-                if (DssPathList.Items.Count > SheetList.Items.Count)
-                {
-                    for (int i = 0; i < Math.Abs(SheetList.Items.Count - DssPathList.Items.Count); i++)
-                        sheets.Add("SheetImport" + ExcelTools.RandomString(3));
-                }
+            if (DssPathList.SelectedItems.Count == 0)
+            {
+                for (int i = 0; i < DssPathList.Items.Count; i++)
+                    sheets.Add("SheetImport" + ExcelTools.RandomString(3));
             }
             else
             {
-                if (DssPathList.SelectedItems.Count == 0)
-                {
-                    for (int i = 0; i < DssPathList.Items.Count; i++)
-                        sheets.Add("SheetImport" + ExcelTools.RandomString(3));
-                }
-                else
-                {
-                    for (int i = 0; i < DssPathList.SelectedItems.Count; i++)
-                        sheets.Add("SheetImport" + ExcelTools.RandomString(3));
-                }
+                for (int i = 0; i < DssPathList.SelectedItems.Count; i++)
+                    sheets.Add("SheetImport" + ExcelTools.RandomString(3));
             }
+            
             return sheets;
         }
 
