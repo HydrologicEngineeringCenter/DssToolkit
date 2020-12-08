@@ -76,7 +76,8 @@ namespace Hec.Dss.Excel
         private void GetTimeSeriesDataType(TimeSeries ts, string worksheet, int valueColumn)
         {
             var s = "DataType";
-            if (ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutTypeAndUnits &&
+            if (ActiveSheetInfo.PathStructure != PathLayout.NoPath && 
+                ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutTypeAndUnits &&
                 ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutDPartTypeAndUnit)
             {
                 int dataTypeIndex = (int)ActiveSheetInfo.PathStructure - 1;
@@ -89,7 +90,8 @@ namespace Hec.Dss.Excel
         private void GetTimeSeriesUnits(TimeSeries ts, string worksheet, int valueColumn)
         {
             var s = "Unit";
-            if (ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutTypeAndUnits &&
+            if (ActiveSheetInfo.PathStructure != PathLayout.NoPath &&
+                ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutTypeAndUnits &&
                 ActiveSheetInfo.PathStructure != PathLayout.TS_PathWithoutDPartTypeAndUnit)
             {
                 int unitIndex = (int)ActiveSheetInfo.PathStructure - 2;
