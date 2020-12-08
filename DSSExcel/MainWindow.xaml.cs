@@ -159,16 +159,20 @@ namespace DSSExcel
             }
             catch (IOException error)
             {
-                MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (popups) MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             
         }
 
         private bool CanRecordDataBeCut()
         {
-            var result = MessageBox.Show("Not all sheets have uniform row counts and data will need to be cut. Is that ok?",
-                   "Import Successful", MessageBoxButton.YesNo, MessageBoxImage.Information);
-            return result == MessageBoxResult.Yes ? true : false;
+            if (popups)
+            {
+                var result = MessageBox.Show("Not all sheets have uniform row counts and data will need to be cut. Is that ok?",
+                   "Import", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                return result == MessageBoxResult.Yes ? true : false;
+            }
+            return true;
         }
 
         private List<string> GetSelectedImportSheets()
@@ -214,7 +218,7 @@ namespace DSSExcel
             }
             catch (IOException error)
             {
-                MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (popups) MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             
         }
@@ -280,7 +284,7 @@ namespace DSSExcel
             if (SheetList.SelectedItems.Count != 0 && DssPathList.SelectedItems.Count != 0 &&
                 SheetList.SelectedItems.Count != DssPathList.SelectedItems.Count)
             {
-                MessageBox.Show("The amound of selected sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (popups) MessageBox.Show("The amound of selected sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -292,7 +296,7 @@ namespace DSSExcel
             if (DssPathList.SelectedItems.Count != 0 && SheetList.SelectedItems.Count != 0 && 
                 DssPathList.SelectedItems.Count != SheetList.SelectedItems.Count)
             {
-                MessageBox.Show("The amound of selected sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (popups) MessageBox.Show("The amound of selected sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
