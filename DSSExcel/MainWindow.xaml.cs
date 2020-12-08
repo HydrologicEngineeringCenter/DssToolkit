@@ -20,10 +20,14 @@ namespace DSSExcel
 
         [Option('e', "data-file", Required = false, HelpText = "The destination file where the source file will export or import data.")]
         public string DataFile { get; set; }
+
+        [Option('s', "show-pop-up-windows", Required = false, HelpText = "Toggle whether or not status windows should be displayed (Default = true).", Default = "true")]
+        public string ShowPopups { get; set; }
     }
 
     public partial class MainWindow : Window
     {
+        private bool popups = true;
         public QuickImportVM GetDataContext
         {
             get { return (QuickImportVM)DataContext; }
@@ -55,13 +59,11 @@ namespace DSSExcel
                 }
             }
             if (options.Command == "import")
-            {
                 HideExport();
-            }
             if (options.Command == "export")
-            {
                 HideImport();
-            }
+            if (options.ShowPopups.ToLower().Equals("false") || options.ShowPopups.ToLower().Equals("f"))
+                popups = false;
         }
 
         private void HideExport()
@@ -144,11 +146,15 @@ namespace DSSExcel
                     GetDataContext.QuickImport();
                     SheetList.SelectedItems.Clear();
                     DssPathList.SelectedItems.Clear();
-                    var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}. Show DSS file in File Explorer?",
-                        GetDataContext.DataFilePath, GetDataContext.DssFilePath),
-                        "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                    if (result == MessageBoxResult.OK)
-                        Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DssFilePath));
+                    if (popups)
+                    {
+                        var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}. Show DSS file in File Explorer?",
+                            GetDataContext.DataFilePath, GetDataContext.DssFilePath),
+                            "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (result == MessageBoxResult.OK)
+                            Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DssFilePath));
+                    }
+                    
                 }
             }
             catch (IOException error)
@@ -196,11 +202,14 @@ namespace DSSExcel
                     GetDataContext.QuickExport();
                     SheetList.SelectedItems.Clear();
                     DssPathList.SelectedItems.Clear();
-                    var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show data file in File Explorer?",
-                        GetDataContext.DssFilePath, GetDataContext.DataFilePath),
-                        "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                    if (result == MessageBoxResult.OK)
-                        Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DataFilePath));
+                    if (popups)
+                    {
+                        var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show data file in File Explorer?",
+                            GetDataContext.DssFilePath, GetDataContext.DataFilePath),
+                            "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (result == MessageBoxResult.OK)
+                            Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DataFilePath));
+                    }
                 }
             }
             catch (IOException error)
