@@ -34,6 +34,7 @@
             <MenuItem Header="Options" Height="22">
                 <MenuItem x:Name="ManualImportButton" Header="Manual Import..." Click="ManualImportButton_Click"/>
             </MenuItem>
+            <MenuItem x:Name="HelpButton" Header="Help" Click="HelpButton_Click"></MenuItem>
         </Menu>
     </Grid>
 </Window>
