@@ -318,7 +318,7 @@ namespace DSSExcel
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://www.hec.usace.army.mil/confluence/display/DSS/DSSExcel+Documentation");
+            Process.Start("https://www.hec.usace.army.mil/fwlink/?linkid=46");
         }
     }
 }
