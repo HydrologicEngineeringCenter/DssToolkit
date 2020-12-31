@@ -25,6 +25,7 @@ namespace Hec.Dss.Excel
         public bool HasIndex { get; private set; }
         public bool HasDate { get; private set; }
         public bool HasPath { get; private set; }
+        public bool HasHeaders { get; private set; }
         public SheetInfo(ExcelReader r, string sheet)
         {
             Name = sheet;
@@ -42,6 +43,7 @@ namespace Hec.Dss.Excel
             HasDate = r.HasDate(sheet);
             HasPath = r.DSSPathExists(sheet, 0);
             ValueStartColumnIndex = HasIndex ? 2 : 1;
+            HasHeaders = DataStartRowIndex != 0;
         }
     }
 }
