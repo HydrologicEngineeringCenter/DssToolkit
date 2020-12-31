@@ -43,7 +43,7 @@ namespace Hec.Dss.Excel
             HasDate = r.HasDate(sheet);
             HasPath = r.DSSPathExists(sheet, 0);
             ValueStartColumnIndex = HasIndex ? 2 : 1;
-            HasHeaders = DataStartRowIndex != 0;
+            HasHeaders = DataStartRowIndex != 0 && PathEndRow != DataStartRow - 1;
         }
     }
 }
