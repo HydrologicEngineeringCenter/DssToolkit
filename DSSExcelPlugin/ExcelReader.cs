@@ -386,7 +386,8 @@ namespace Hec.Dss.Excel
         {
             int headerRow = 1;
             int dataStartRow = 1;
-            return DataStartRowIndex(worksheet) - headerRow - dataStartRow; // remove the header and data start rows from data start index to get path end index
+            int index = DataStartRowIndex(worksheet);
+            return index == 0 ? -1 : index - headerRow - dataStartRow; // remove the header and data start rows from data start index to get path end index
         }
 
         public int DSSPathEndRow(string worksheet)
