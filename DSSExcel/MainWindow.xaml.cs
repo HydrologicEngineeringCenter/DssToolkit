@@ -20,14 +20,10 @@ namespace DSSExcel
 
         [Option('e', "data-file", Required = false, HelpText = "The destination file where the source file will export or import data.")]
         public string DataFile { get; set; }
-
-        [Option('s', "show-pop-up-windows", Required = false, HelpText = "Toggle whether or not status windows should be displayed (Default = true).", Default = "true")]
-        public string ShowPopups { get; set; }
     }
 
     public partial class MainWindow : Window
     {
-        private bool popups = true;
         public QuickImportVM GetDataContext
         {
             get { return (QuickImportVM)DataContext; }
@@ -62,8 +58,6 @@ namespace DSSExcel
                 HideExport();
             if (options.Command == "export")
                 HideImport();
-            if (options.ShowPopups.ToLower().Equals("false") || options.ShowPopups.ToLower().Equals("f"))
-                popups = false;
         }
 
         private void HideExport()
@@ -146,33 +140,27 @@ namespace DSSExcel
                     GetDataContext.QuickImport();
                     SheetList.SelectedItems.Clear();
                     DssPathList.SelectedItems.Clear();
-                    if (popups)
-                    {
-                        var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}. Show DSS file in File Explorer?",
-                            GetDataContext.DataFilePath, GetDataContext.DssFilePath),
-                            "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (result == MessageBoxResult.OK)
-                            Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DssFilePath));
-                    }
+                    var result = MessageBox.Show(String.Format("DSS data has successfully been imported from {0} to {1}. Show DSS file in File Explorer?",
+                        GetDataContext.DataFilePath, GetDataContext.DssFilePath),
+                        "Import Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (result == MessageBoxResult.OK)
+                        Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DssFilePath));
+                    
                     
                 }
             }
             catch (IOException error)
             {
-                if (popups) MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             
         }
 
         private bool CanRecordDataBeCut()
         {
-            if (popups)
-            {
-                var result = MessageBox.Show("Not all sheets have uniform row counts and data will need to be cut. Is that ok?",
-                   "Import", MessageBoxButton.YesNo, MessageBoxImage.Information);
-                return result == MessageBoxResult.Yes ? true : false;
-            }
-            return true;
+            var result = MessageBox.Show("Not all sheets have uniform row counts and data will need to be cut. Is that ok?",
+                "Import", MessageBoxButton.YesNo, MessageBoxImage.Information);
+            return result == MessageBoxResult.Yes ? true : false;
         }
 
         private List<string> GetSelectedImportSheets()
@@ -206,19 +194,16 @@ namespace DSSExcel
                     GetDataContext.QuickExport();
                     SheetList.SelectedItems.Clear();
                     DssPathList.SelectedItems.Clear();
-                    if (popups)
-                    {
-                        var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show data file in File Explorer?",
-                            GetDataContext.DssFilePath, GetDataContext.DataFilePath),
-                            "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (result == MessageBoxResult.OK)
-                            Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DataFilePath));
-                    }
+                    var result = MessageBox.Show(String.Format("DSS data has successfully been exported from {0} to {1}. Show data file in File Explorer?",
+                        GetDataContext.DssFilePath, GetDataContext.DataFilePath),
+                        "Export Successful", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (result == MessageBoxResult.OK)
+                        Process.Start("explorer.exe", @"/select," + Path.GetFullPath(GetDataContext.DataFilePath));
                 }
             }
             catch (IOException error)
             {
-                if (popups) MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(error.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             
         }
@@ -284,7 +269,7 @@ namespace DSSExcel
             if (SheetList.SelectedItems.Count != 0 && DssPathList.SelectedItems.Count != 0 &&
                 SheetList.SelectedItems.Count != DssPathList.SelectedItems.Count)
             {
-                if (popups) MessageBox.Show("The amound of selected sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("The amound of selected sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -296,7 +281,7 @@ namespace DSSExcel
             if (DssPathList.SelectedItems.Count != 0 && SheetList.SelectedItems.Count != 0 && 
                 DssPathList.SelectedItems.Count != SheetList.SelectedItems.Count)
             {
-                if (popups) MessageBox.Show("The amound of selected sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("The amound of selected sheets and DSS paths do not match.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
