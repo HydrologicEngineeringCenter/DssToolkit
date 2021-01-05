@@ -4,6 +4,7 @@ using Hec.Dss.Excel;
 using System.Windows;
 using System.Windows.Controls;
 using static Hec.Dss.Excel.ExcelTools;
+using System.Collections.Generic;
 
 namespace DSSExcel
 {
@@ -14,10 +15,10 @@ namespace DSSExcel
     {
         public UserControl PreviousPage;
         public RecordType currentRecordType;
-        private bool tsPathGenerated = false;
-        private bool pdPathGenerated = false;
-        private DssPath tsPath = new DssPath();
-        private DssPath pdPath = new DssPath();
+        private bool ts_paths_generated = false;
+        private bool pd_path_generated = false;
+        private List<DssPath> ts_paths = new List<DssPath>();
+        private DssPath pd_path = new DssPath();
 
         public string Apart 
         {
@@ -63,7 +64,7 @@ namespace DSSExcel
         }
 
 
-        public string GetPath 
+        public string GetCurrentPath 
         { 
             get
             {
@@ -92,40 +93,47 @@ namespace DSSExcel
             this.BackClick?.Invoke(this, e);
         }
 
-        private void ShowTimeSeriesPath()
+        private void ShowTimeSeriesPaths(IRange values)
         {
-            if (!tsPathGenerated)
-                GenerateTimeSeriesPath();
-            DataContext = tsPath;
+            if (!ts_paths_generated)
+                GenerateTimeSeriesPaths(values.ColumnCount);
+            DataContext = ts_paths[0];
         }
 
-        private void GenerateTimeSeriesPath()
+        private void GenerateTimeSeriesPaths(int count)
         {
-            tsPath.Apart = "a" + RandomString(3);
-            tsPath.Bpart = "b" + RandomString(3);
-            tsPath.Cpart = "c" + RandomString(3);
-            tsPath.Dpart = "";
-            tsPath.Epart = "";
-            tsPath.Fpart = "TimeSeries" + RandomString(3);
-            tsPathGenerated = true;
+            ts_paths.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                DssPath path = new DssPath();
+                path.Apart = "a" + RandomString(3);
+                path.Bpart = "b" + RandomString(3);
+                path.Cpart = "c" + RandomString(3);
+                path.Dpart = "";
+                path.Epart = "";
+                path.Fpart = "TimeSeries" + RandomString(3);
+                ts_paths.Add(path);
+            }
+            
+            ts_paths_generated = true;
         }
 
         private void ShowPairedDataPath()
         {
-            if (!pdPathGenerated)
+            if (!pd_path_generated)
                 GeneratePairedDataPath();
-            DataContext = pdPath;
+            DataContext = pd_path;
         }
 
         private void GeneratePairedDataPath()
         {
-            pdPath.Apart = "a" + RandomString(3);
-            pdPath.Bpart = "b" + RandomString(3);
-            pdPath.Cpart = "c" + RandomString(3);
-            pdPath.Dpart = "";
-            pdPath.Epart = "e" + RandomString(3);
-            pdPath.Fpart = "PairedData" + RandomString(3);
-            pdPathGenerated = true;
+            pd_path.Apart = "a" + RandomString(3);
+            pd_path.Bpart = "b" + RandomString(3);
+            pd_path.Cpart = "c" + RandomString(3);
+            pd_path.Dpart = "";
+            pd_path.Epart = "e" + RandomString(3);
+            pd_path.Fpart = "PairedData" + RandomString(3);
+            pd_path_generated = true;
         }
 
         public void ShowPath(RecordType recordType, IRange range1, IRange range2)
@@ -134,7 +142,7 @@ namespace DSSExcel
             if (recordType is RecordType.IrregularTimeSeries || recordType is RecordType.RegularTimeSeries)
             {
                 currentRecordType = RecordType.RegularTimeSeries;
-                ShowTimeSeriesPath();
+                ShowTimeSeriesPaths(range2);
             }
             else if (recordType is RecordType.PairedData)
             {
@@ -146,6 +154,7 @@ namespace DSSExcel
             ExcelView.ActiveWorksheet.Cells.Columns.AutoFit();
             ExcelView.ActiveWorkbookSet.ReleaseLock();
             IsReadOnly(true);
+            InitializePathButtons();
         }
 
         private void IsReadOnly(bool option)
@@ -186,7 +195,7 @@ namespace DSSExcel
 
             for (int i = 1; i < values.ColumnCount + 1; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, i].Value = "Values" + i.ToString();
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, i].Value = "Value " + i.ToString();
                 for (int j = 1; j < values.RowCount + 1; j++)
                 {
                     ExcelView.ActiveWorkbook.Worksheets[0].Cells[j, i].Value = CellToString(values.Cells[j - 1, i - 1]);
@@ -208,7 +217,7 @@ namespace DSSExcel
 
             for (int i = 1; i < values.ColumnCount + 1; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, i].Value = "Values" + i.ToString();
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, i].Value = "Value " + i.ToString();
                 for (int j = 1; j < values.RowCount + 1; j++)
                 {
                     ExcelView.ActiveWorkbook.Worksheets[0].Cells[j, i].Value = CellToString(values.Cells[j - 1, i - 1]);
@@ -220,16 +229,51 @@ namespace DSSExcel
 
         public void ResetPath()
         {
-            tsPathGenerated = false;
-            pdPathGenerated = false;
-            tsPath = new DssPath();
-            pdPath = new DssPath();
+            ts_paths_generated = false;
+            pd_path_generated = false;
+            ts_paths.Clear();
+            pd_path = new DssPath();
             PreviousPage = null;
         }
 
         private void ExcelView_ShowError(object sender, SpreadsheetGear.Windows.Controls.ShowErrorEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void prev_path_button_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentRecordType is RecordType.RegularTimeSeries || currentRecordType is RecordType.IrregularTimeSeries)
+            {
+                int index = ts_paths.IndexOf(DataContext as DssPath);
+                DataContext = ts_paths[index--];
+                if (index - 1 == 0)
+                    prev_path_button.IsEnabled = false;
+                if (!next_path_button.IsEnabled)
+                    next_path_button.IsEnabled = true;
+            }
+        }
+
+        private void next_path_button_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentRecordType is RecordType.RegularTimeSeries || currentRecordType is RecordType.IrregularTimeSeries)
+            {
+                int index = ts_paths.IndexOf(DataContext as DssPath);
+                DataContext = ts_paths[index++];
+                if (index + 1 == ts_paths.Count)
+                    next_path_button.IsEnabled = false;
+                if (!prev_path_button.IsEnabled)
+                    prev_path_button.IsEnabled = true;
+            }
+        }
+
+        private void InitializePathButtons()
+        {
+            if (currentRecordType is RecordType.RegularTimeSeries || currentRecordType is RecordType.IrregularTimeSeries)
+            {
+                if (ts_paths.Count > 1)
+                    next_path_button.IsEnabled = true;
+            }
         }
     }
 }

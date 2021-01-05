@@ -23,10 +23,14 @@ namespace DSSExcel
     /// </summary>
     public partial class DSSExcelManualImport : Window
     {
-        public DSSExcelManualImport(string filename)
+        private string excel_filename = "";
+        private string dss_filename = "";
+        public DSSExcelManualImport(string excel_fn, string dss_fn)
         {
             InitializeComponent();
-            ExcelReader r = new ExcelReader(filename);
+            excel_filename = excel_fn;
+            dss_filename = dss_fn;
+            ExcelReader r = new ExcelReader(excel_filename);
             DatePage.ExcelView.ActiveWorkbook = r.workbook;
             OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
             TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
@@ -256,34 +260,47 @@ namespace DSSExcel
 
         private void WriteRecords(IEnumerable<TimeSeries> records)
         {
-            SaveFileDialog openFileDialog = new SaveFileDialog();
-            openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
-            if (openFileDialog.ShowDialog() == true)
+            if (dss_filename.Equals(""))
             {
-                using (DssWriter w = new DssWriter(openFileDialog.FileName))
-                {
-                    foreach (var record in records)
-                        w.Write(record);
-                }
-                DisplayImportStatus(openFileDialog.FileName);
+                SaveFileDialog openFileDialog = new SaveFileDialog();
+                openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
+                openFileDialog.OverwritePrompt = false;
+                if (openFileDialog.ShowDialog() == true)
+                    dss_filename = openFileDialog.FileName;
+                else
+                    return;
             }
+
+            using (DssWriter w = new DssWriter(dss_filename))
+            {
+                foreach (var record in records)
+                    w.Write(record);
+            }
+            DisplayImportStatus(dss_filename);
+            
         }
 
         private void WriteRecord(object record)
         {
-            SaveFileDialog openFileDialog = new SaveFileDialog();
-            openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
-            if (openFileDialog.ShowDialog() == true)
+            if (dss_filename.Equals(""))
             {
-                using (DssWriter w = new DssWriter(openFileDialog.FileName))
-                {
-                    if (record is TimeSeries)
-                        w.Write(record as TimeSeries);
-                    else if (record is PairedData)
-                        w.Write(record as PairedData);
-                }
-                DisplayImportStatus(openFileDialog.FileName);
+                SaveFileDialog openFileDialog = new SaveFileDialog();
+                openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
+                openFileDialog.OverwritePrompt = false;
+                if (openFileDialog.ShowDialog() == true)
+                    dss_filename = openFileDialog.FileName;
+                else
+                    return;
             }
+            
+            using (DssWriter w = new DssWriter(dss_filename))
+            {
+                if (record is TimeSeries)
+                    w.Write(record as TimeSeries);
+                else if (record is PairedData)
+                    w.Write(record as PairedData);
+            }
+            DisplayImportStatus(dss_filename);
         }
 
         private void DisplayImportStatus(string filename)
@@ -335,6 +352,4 @@ namespace DSSExcel
             PairedDataValuePage.ExcelView.ActiveSheet = activeSheet;
         }
     }
-
-    //TODO impliment multi value column selection with manual time series import
 }
