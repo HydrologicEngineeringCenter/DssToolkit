@@ -27,9 +27,7 @@ namespace DSSExcel
 
         private void TimeSeriesOption_Selected(object sender, RoutedEventArgs e)
         {
-            PairedDataImage.Visibility = Visibility.Collapsed;
             PairedDataSummary.Visibility = Visibility.Collapsed;
-            TimeSeriesImage.Visibility = Visibility.Visible;
             TimeSeriesSummary.Visibility = Visibility.Visible;
             TimeSeriesNextButton.Visibility = Visibility.Visible;
             PairedDataNextButton.Visibility = Visibility.Collapsed;
@@ -37,9 +35,7 @@ namespace DSSExcel
 
         private void PairedDataOption_Selected(object sender, RoutedEventArgs e)
         {
-            TimeSeriesImage.Visibility = Visibility.Collapsed;
             TimeSeriesSummary.Visibility = Visibility.Collapsed;
-            PairedDataImage.Visibility = Visibility.Visible;
             PairedDataSummary.Visibility = Visibility.Visible;
             PairedDataNextButton.Visibility = Visibility.Visible;
             TimeSeriesNextButton.Visibility = Visibility.Collapsed;
