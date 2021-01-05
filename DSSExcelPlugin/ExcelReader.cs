@@ -651,6 +651,28 @@ namespace Hec.Dss.Excel
             return l;
         }
 
+        public static IEnumerable<TimeSeries> GetTimeSeries(IRange DateTimes, IRange Values, IEnumerable<DssPath> paths)
+        {
+            var l = new List<TimeSeries>();
+            var c = Values.ColumnCount;
+            for (int i = 0; i < c; i++)
+            {
+                var ts = new TimeSeries();
+                ts.Times = RangeToDateTimes(DateTimes);
+                ts.Values = RangeToTimeSeriesValues(Values, i);
+                ts.Path = paths.ElementAt(i);
+                if (CheckTimeSeriesType(ts.Times) == RecordType.RegularTimeSeries)
+                    ts.Path.Epart = TimeWindow.GetInterval(ts);
+                else
+                    ts.Path.Epart = "IR-Year";
+                ts.Units = "unit1";
+                ts.DataType = "type1";
+                l.Add(ts);
+            }
+
+            return l;
+        }
+
         private static double[] RangeToTimeSeriesValues(IRange values, int columnIndex)
         {
             var d = new List<double>();

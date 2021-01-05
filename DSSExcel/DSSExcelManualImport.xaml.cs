@@ -23,8 +23,9 @@ namespace DSSExcel
     /// </summary>
     public partial class DSSExcelManualImport : Window
     {
-        private string excel_filename = "";
-        private string dss_filename = "";
+        public string excel_filename = "";
+        public string dss_filename = "";
+        private bool operation_performed = false;
         public DSSExcelManualImport(string excel_fn, string dss_fn)
         {
             InitializeComponent();
@@ -251,8 +252,7 @@ namespace DSSExcel
         {
             DatePage.ExcelView.ActiveWorkbookSet.GetLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            List<TimeSeries> ts = ExcelReader.GetTimeSeries(DatePage.Dates, TimeSeriesValuePage.Values, PathPage.Apart, PathPage.Bpart,
-                PathPage.Cpart, PathPage.Dpart, PathPage.Epart, PathPage.Fpart) as List<TimeSeries>;
+            List<TimeSeries> ts = ExcelReader.GetTimeSeries(DatePage.Dates, TimeSeriesValuePage.Values, PathPage.ts_paths) as List<TimeSeries>;
             DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             WriteRecords(ts);
@@ -276,6 +276,7 @@ namespace DSSExcel
                 foreach (var record in records)
                     w.Write(record);
             }
+            operation_performed = true;
             DisplayImportStatus(dss_filename);
             
         }
@@ -300,6 +301,7 @@ namespace DSSExcel
                 else if (record is PairedData)
                     w.Write(record as PairedData);
             }
+            operation_performed = true;
             DisplayImportStatus(dss_filename);
         }
 
@@ -308,13 +310,17 @@ namespace DSSExcel
             var r = MessageBox.Show("Import to " + filename + " succeeded. Would you like to import another record?", "Import Success", MessageBoxButton.YesNo, MessageBoxImage.Information);
             if (r == MessageBoxResult.Yes)
             {
-                PathPage.ResetPath();
+                PathPage.ResetPaths();
                 PathPage.Visibility = Visibility.Collapsed;
                 RecordTypePage.Visibility = Visibility.Visible;
                 Title = "Select Record Type";
             }
             else
+            {
+                this.DialogResult = operation_performed;
                 this.Close();
+            }
+                
         }
 
         private void PathPage_BackClick(object sender, RoutedEventArgs e)
@@ -350,6 +356,11 @@ namespace DSSExcel
             OrdinatePage.ExcelView.ActiveSheet = activeSheet;
             TimeSeriesValuePage.ExcelView.ActiveSheet = activeSheet;
             PairedDataValuePage.ExcelView.ActiveSheet = activeSheet;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.DialogResult = operation_performed;
         }
     }
 }

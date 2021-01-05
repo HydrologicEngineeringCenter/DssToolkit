@@ -17,8 +17,8 @@ namespace DSSExcel
         public RecordType currentRecordType;
         private bool ts_paths_generated = false;
         private bool pd_path_generated = false;
-        private List<DssPath> ts_paths = new List<DssPath>();
-        private DssPath pd_path = new DssPath();
+        public List<DssPath> ts_paths = new List<DssPath>();
+        public DssPath pd_path = new DssPath();
 
         public string Apart 
         {
@@ -227,7 +227,7 @@ namespace DSSExcel
 
         }
 
-        public void ResetPath()
+        public void ResetPaths()
         {
             ts_paths_generated = false;
             pd_path_generated = false;
@@ -246,8 +246,8 @@ namespace DSSExcel
             if (currentRecordType is RecordType.RegularTimeSeries || currentRecordType is RecordType.IrregularTimeSeries)
             {
                 int index = ts_paths.IndexOf(DataContext as DssPath);
-                DataContext = ts_paths[index--];
-                if (index - 1 == 0)
+                DataContext = ts_paths[--index];
+                if (index == 0)
                     prev_path_button.IsEnabled = false;
                 if (!next_path_button.IsEnabled)
                     next_path_button.IsEnabled = true;
@@ -259,8 +259,8 @@ namespace DSSExcel
             if (currentRecordType is RecordType.RegularTimeSeries || currentRecordType is RecordType.IrregularTimeSeries)
             {
                 int index = ts_paths.IndexOf(DataContext as DssPath);
-                DataContext = ts_paths[index++];
-                if (index + 1 == ts_paths.Count)
+                DataContext = ts_paths[++index];
+                if (index == ts_paths.Count - 1)
                     next_path_button.IsEnabled = false;
                 if (!prev_path_button.IsEnabled)
                     prev_path_button.IsEnabled = true;

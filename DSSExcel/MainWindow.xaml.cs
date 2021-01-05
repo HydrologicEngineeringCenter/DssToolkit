@@ -24,9 +24,9 @@ namespace DSSExcel
 
     public partial class MainWindow : Window
     {
-        public QuickImportVM GetDataContext
+        public QuickVM GetDataContext
         {
-            get { return (QuickImportVM)DataContext; }
+            get { return (QuickVM)DataContext; }
         }
         public MainWindow()
         {
@@ -296,9 +296,12 @@ namespace DSSExcel
                     return;
             }
             ExcelReader er = new ExcelReader(GetDataContext.DataFilePath);
-            DSSExcelManualImport s = new DSSExcelManualImport(er.workbook.FullName);
-            GetDataContext.GetAllPaths();
-            s.ShowDialog();
+            DSSExcelManualImport s = new DSSExcelManualImport(GetDataContext.DataFilePath, GetDataContext.DssFilePath);
+            if (s.ShowDialog() == true) 
+            {
+                GetDataContext.DssFilePath = s.dss_filename;
+                GetDataContext.GetAllPaths(); 
+            }
         }
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)

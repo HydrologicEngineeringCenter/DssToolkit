@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace DSSExcel
 {
 
-    public class QuickImportVM : INotifyPropertyChanged
+    public class QuickVM : INotifyPropertyChanged
     {
         private string dataFilePath = "";
         private string dssFilePath = "";
@@ -63,7 +63,7 @@ namespace DSSExcel
         public List<string> SelectedPaths { get; set; }
         public List<string> SelectedSheets { get; set; }
 
-        public QuickImportVM()
+        public QuickVM()
         {
 
         }

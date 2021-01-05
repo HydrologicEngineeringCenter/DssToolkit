@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="DSSExcel" Height="566.333" Width="400.5" MinWidth="600" MinHeight="500">
     <Window.DataContext>
-        <local:QuickImportVM/>
+        <local:QuickVM/>
     </Window.DataContext>
     <Grid x:Name="grid">
         <Grid.ColumnDefinitions>

@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:DSSExcel"
         xmlns:ssg="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF"
         mc:Ignorable="d"
-        Height="500" Width="700" Title="Select Record Type">
+        Height="500" Width="700" Title="Select Record Type" Closing="Window_Closing">
     <Grid>
         <uc:SelectDataTypePage x:Name="RecordTypePage" TimeSeriesNextClick="RecordTypePage_TimeSeriesNextClick" PairedDataNextClick="RecordTypePage_PairedDataNextClick" Height="Auto" Width="Auto"/>
         <uc:DateSelectPage x:Name="DatePage" NextClick="DatePage_NextClick" BackClick="DatePage_BackClick" TabSelectionChanged="DatePage_TabSelectionChanged" Visibility="Collapsed" Height="Auto" Width="Auto"/>
