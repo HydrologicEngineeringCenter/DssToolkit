@@ -26,12 +26,13 @@ namespace DSSExcel
         public string excel_filename = "";
         public string dss_filename = "";
         private bool operation_performed = false;
+        private ExcelReader r;
         public DSSExcelManualImport(string excel_fn, string dss_fn)
         {
             InitializeComponent();
             excel_filename = excel_fn;
             dss_filename = dss_fn;
-            ExcelReader r = new ExcelReader(excel_filename);
+            r = new ExcelReader(excel_filename);
             DatePage.ExcelView.ActiveWorkbook = r.workbook;
             OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
             TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
@@ -135,13 +136,13 @@ namespace DSSExcel
             if (!CheckTimeSeriesValues(TimeSeriesValuePage.Values))
                 return;
             TimeSeriesValuePage.Visibility = Visibility.Collapsed;
-            PathPage.PreviousPage = TimeSeriesValuePage;
+            ReviewPage.PreviousPage = TimeSeriesValuePage;
             DatePage.ExcelView.ActiveWorkbookSet.GetLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            PathPage.ShowPath(RecordType.RegularTimeSeries, DatePage.Dates, TimeSeriesValuePage.Values);
+            ReviewPage.SetupReviewPage(RecordType.RegularTimeSeries, DatePage.Dates, TimeSeriesValuePage.Values);
             DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-            PathPage.Visibility = Visibility.Visible;
+            ReviewPage.Visibility = Visibility.Visible;
             Title = "Review Time Series";
         }
 
@@ -182,13 +183,13 @@ namespace DSSExcel
                 return;
             
             PairedDataValuePage.Visibility = Visibility.Collapsed;
-            PathPage.PreviousPage = PairedDataValuePage;
+            ReviewPage.PreviousPage = PairedDataValuePage;
             OrdinatePage.ExcelView.ActiveWorkbookSet.GetLock();
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            PathPage.ShowPath(RecordType.PairedData, OrdinatePage.Ordinates, PairedDataValuePage.Values);
+            ReviewPage.SetupReviewPage(RecordType.PairedData, OrdinatePage.Ordinates, PairedDataValuePage.Values);
             OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-            PathPage.Visibility = Visibility.Visible;
+            ReviewPage.Visibility = Visibility.Visible;
             Title = "Review Paired Data";
         }
 
@@ -225,36 +226,29 @@ namespace DSSExcel
             Title = "Select Ordinate Range";
         }
 
-        private void PathPage_ImportClick(object sender, RoutedEventArgs e)
+        private void ReviewPage_ImportClick(object sender, RoutedEventArgs e)
         {
-            if (PathPage.currentRecordType == RecordType.RegularTimeSeries || PathPage.currentRecordType == RecordType.IrregularTimeSeries)
+            if (ReviewPage.currentRecordType == RecordType.RegularTimeSeries || ReviewPage.currentRecordType == RecordType.IrregularTimeSeries)
                 ImportTimeSeries();
-            if (PathPage.currentRecordType == RecordType.PairedData)
+            if (ReviewPage.currentRecordType == RecordType.PairedData)
                 ImportPairedData();
         }
 
         private void ImportPairedData()
         {
-            OrdinatePage.ExcelView.ActiveWorkbookSet.GetLock();
-            PairedDataValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            PairedData pd = ExcelReader.GetPairedData(OrdinatePage.Ordinates, PairedDataValuePage.Values, PathPage.Apart, PathPage.Bpart,
-                PathPage.Cpart, PathPage.Dpart, PathPage.Epart, PathPage.Fpart);
-            pd.TypeIndependent = "type1";
-            pd.TypeDependent = "type2";
-            pd.UnitsIndependent = "unit1";
-            pd.UnitsDependent = "unit2";
-            OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-            PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
+            ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
+            PairedData pd = reader.GetPairedData("Sheet1");
+            ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             WriteRecord(pd);
         }
 
         private void ImportTimeSeries()
         {
-            DatePage.ExcelView.ActiveWorkbookSet.GetLock();
-            TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            List<TimeSeries> ts = ExcelReader.GetTimeSeries(DatePage.Dates, TimeSeriesValuePage.Values, PathPage.ts_paths) as List<TimeSeries>;
-            DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-            TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
+            ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
+            List<TimeSeries> ts = reader.GetMultipleTimeSeries("Sheet1").ToList();
+            ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             WriteRecords(ts);
         }
 
@@ -310,8 +304,8 @@ namespace DSSExcel
             var r = MessageBox.Show("Import to " + filename + " succeeded. Would you like to import another record?", "Import Success", MessageBoxButton.YesNo, MessageBoxImage.Information);
             if (r == MessageBoxResult.Yes)
             {
-                PathPage.ResetPaths();
-                PathPage.Visibility = Visibility.Collapsed;
+                ReviewPage.ResetPaths();
+                ReviewPage.Visibility = Visibility.Collapsed;
                 RecordTypePage.Visibility = Visibility.Visible;
                 Title = "Select Record Type";
             }
@@ -323,10 +317,10 @@ namespace DSSExcel
                 
         }
 
-        private void PathPage_BackClick(object sender, RoutedEventArgs e)
+        private void ReviewPage_BackClick(object sender, RoutedEventArgs e)
         {
-            PathPage.Visibility = Visibility.Collapsed;
-            PathPage.PreviousPage.Visibility = Visibility.Visible;
+            ReviewPage.Visibility = Visibility.Collapsed;
+            ReviewPage.PreviousPage.Visibility = Visibility.Visible;
             Title = "Select Value Range";
         }
 

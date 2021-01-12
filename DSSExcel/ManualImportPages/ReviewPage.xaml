@@ -5,35 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DSSExcel"
              xmlns:Dss="clr-namespace:Hec.Dss;assembly=Hec.Dss" xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Class="DSSExcel.ReviewPage"
-             mc:Ignorable="d" Background="White" Height="584.013" Width="819.983">
+             mc:Ignorable="d" Background="White" Height="625.268" Width="951.483">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="86"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="102"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="209"/>
             <RowDefinition/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
-        <Button x:Name="DSSPathImportButton" Content="Import" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" RenderTransformOrigin="0.467,1" Height="23" Grid.Row="2" Click="DSSPathImportButton_Click" Grid.ColumnSpan="2" Grid.Column="1"/>
-        <Button x:Name="DSSPathBackButton" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" RenderTransformOrigin="0.467,1" Height="23" Grid.Row="2" Click="DSSPathBackButton_Click" Grid.ColumnSpan="2"/>
-        <TextBlock HorizontalAlignment="Left" Margin="14,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="75" FontSize="18" Grid.Column="1"><Run Text="A part:"/><LineBreak/><Run/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="14,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="75" FontSize="18" Grid.Column="1"><Run Text="B part:"/><LineBreak/><Run/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="14,80,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="75" FontSize="18" Grid.Column="1"><Run Text="C part:"/><LineBreak/><Run/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="14,110,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="75" FontSize="18" Foreground="#FF919191" Grid.Column="1"><Run Text="D part:"/><LineBreak/><Run/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="14,140,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="75" FontSize="18" Foreground="#FF919191" Grid.Column="1"><Run Text="E part:"/><LineBreak/><Run/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="14,170,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="75" FontSize="18" Grid.Column="1"><Run Text="F part:"/><LineBreak/><Run/></TextBlock>
-        <TextBox x:Name="ApartTextBox" Height="25" Margin="89,20,14,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Apart, Mode=TwoWay}" Grid.Column="1"/>
-        <TextBox x:Name="BpartTextBox" Height="25" Margin="89,50,14,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Bpart, Mode=TwoWay}" Grid.Column="1"/>
-        <TextBox x:Name="CpartTextBox" Height="25" Margin="89,80,14,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Cpart, Mode=TwoWay}" Grid.Column="1"/>
-        <TextBox x:Name="DpartTextBox" Height="25" Margin="89,110,14,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Dpart, Mode=TwoWay}" ToolTip="The D part will be automatically generated when importing." IsReadOnlyCaretVisible="True" IsEnabled="False" Grid.Column="1"/>
-        <TextBox x:Name="EpartTextBox" Height="25" Margin="89,140,14,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Epart, Mode=TwoWay}" ToolTip="The E part will be automatically generated when importing." IsEnabled="False" Grid.Column="1"/>
-        <TextBox x:Name="FpartTextBox" Height="25" Margin="89,170,14,0" TextWrapping="Wrap" VerticalAlignment="Top" BorderBrush="Black" Background="#FFE6E6E6" Text="{Binding Fpart, Mode=TwoWay}" Grid.Column="1"/>
-        <Controls:WorkbookView x:Name="ExcelView" Margin="0,45,0,10" ShowError="ExcelView_ShowError" Grid.Row="1" Grid.ColumnSpan="3"/>
-        <TextBlock Margin="10,2,178,0" TextWrapping="Wrap" Text="Record Preview:" Height="43" VerticalAlignment="Top" FontSize="20" Grid.Row="1" Grid.ColumnSpan="2"/>
-        <Button x:Name="prev_path_button" FontFamily="Marlett" FontSize="20" Content="3" Margin="0,69,0,0" VerticalAlignment="Top" Width="38" Height="72" HorizontalAlignment="Right" IsEnabled="False" Click="prev_path_button_Click"/>
-        <Button x:Name="next_path_button" FontFamily="Marlett" FontSize="20" Content="4" Margin="0,69,0,0" VerticalAlignment="Top" Height="72" Grid.Column="2" HorizontalAlignment="Left" Width="36" IsEnabled="False" Click="next_path_button_Click"/>
+        <Button x:Name="DSSPathImportButton" Content="Import" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" RenderTransformOrigin="0.467,1" Height="23" Grid.Row="1" Click="DSSPathImportButton_Click"/>
+        <Button x:Name="DSSPathBackButton" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" RenderTransformOrigin="0.467,1" Height="23" Grid.Row="1" Click="DSSPathBackButton_Click"/>
+        <Controls:WorkbookView x:Name="ExcelView" Margin="0,94,0,10" ShowError="ExcelView_ShowError"/>
+        <TextBlock Margin="10,10,280,0" TextWrapping="Wrap" Text="Import Preview:" Height="43" VerticalAlignment="Top" FontSize="20"/>
+        <Controls:FormulaBar Margin="0,72,0,0" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>
