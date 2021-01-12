@@ -81,7 +81,7 @@ namespace Hec.Dss.Excel
         private void GetTimeSeriesDataType(TimeSeries ts, string worksheet, int valueColumn)
         {
             var s = "DataType";
-            if (ActiveSheetInfo.PathLayout != PathLayout.NoPath && 
+            if (ActiveSheetInfo.PathLayout != PathLayout.NoPath &&
                 ActiveSheetInfo.PathLayout != PathLayout.TS_PathWithoutTypeAndUnits &&
                 ActiveSheetInfo.PathLayout != PathLayout.TS_PathWithoutDPartTypeAndUnit)
             {
@@ -89,7 +89,7 @@ namespace Hec.Dss.Excel
                 s = CellToString(workbook.Worksheets[worksheet].Cells[dataTypeIndex, valueColumn]);
                 ts.DataType = s;
             }
-                
+
         }
 
         private void GetTimeSeriesUnits(TimeSeries ts, string worksheet, int valueColumn)
@@ -103,7 +103,7 @@ namespace Hec.Dss.Excel
                 s = CellToString(workbook.Worksheets[worksheet].Cells[unitIndex, valueColumn]);
                 ts.Units = s;
             }
-            
+
         }
 
         private void GetTimeSeriesPath(TimeSeries ts, string worksheet, int valueColumn)
@@ -113,7 +113,7 @@ namespace Hec.Dss.Excel
                 GetRandomTimeSeriesPath(ts, worksheet);
                 return;
             }
-            
+
             GetPath(ts, worksheet, valueColumn, ActiveSheetInfo.PathLayout);
             if (!PathPartsAreValid(ts.Path))
             {
@@ -147,7 +147,7 @@ namespace Hec.Dss.Excel
 
         private bool PathPartsAreValid(DssPath path)
         {
-            return path.Apart != "" && path.Bpart != "" && path.Cpart != "" && path.Fpart != "";
+            return path.Apart != "" || path.Bpart != "" || path.Cpart != "" || path.Fpart != "";
         }
         /// <summary>
         /// Get all values from a specified value column number in a worksheet (non-zero-based indexing).

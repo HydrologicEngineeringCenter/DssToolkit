@@ -121,30 +121,35 @@ namespace DSSExcel
             ExcelView.ActiveWorkbookSet.GetLock();
             ExcelView.ActiveWorksheet.Cells.Clear();
 
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 0].Value = "A";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[1, 0].Value = "B";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[2, 0].Value = "C";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[3, 0].Value = "D";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[4, 0].Value = "E";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[5, 0].Value = "F";
-
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[6, 0].Value = "Date/Time";
-            int rowStart = 7;
+            int rowStart = 0;
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "A";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "B";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "C";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "D";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "E";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "F";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Unit";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Data Type";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Date/Time";
             for (int i = 0; i < dateTimes.RowCount; i++)
             {
                 ExcelView.ActiveWorkbook.Worksheets[0].Cells[i + rowStart, 0].Value = CellToString(dateTimes.Cells[i, 0]);
             }
 
+            
             int colStart = 1;
             for (int i = 0; i < values.ColumnCount; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, i + colStart].Value = ts_paths[i].Apart;
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[1, i + colStart].Value = ts_paths[i].Bpart;
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[2, i + colStart].Value = ts_paths[i].Cpart;
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[3, i + colStart].Value = "";
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[4, i + colStart].Value = "";
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[5, i + colStart].Value = ts_paths[i].Fpart;
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[6, i + colStart].Value = "Value " + i.ToString();
+                rowStart = 0;
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = ts_paths[i].Apart;
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = ts_paths[i].Bpart;
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = ts_paths[i].Cpart;
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "";
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "";
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = ts_paths[i].Fpart;
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "Unit";
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "Data Type";
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "Value " + (i + 1).ToString();
                 for (int j = 0; j < values.RowCount; j++)
                 {
                     ExcelView.ActiveWorkbook.Worksheets[0].Cells[j + rowStart, i + colStart].Value = CellToString(values.Cells[j, i]);
@@ -158,34 +163,43 @@ namespace DSSExcel
             ExcelView.ActiveWorkbookSet.GetLock();
             ExcelView.ActiveWorksheet.Cells.Clear();
 
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 0].Value = "A";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[1, 0].Value = "B";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[2, 0].Value = "C";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[3, 0].Value = "D";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[4, 0].Value = "E";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[5, 0].Value = "F";
-
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[6, 0].Value = "Ordinates";
-            int rowStart = 7;
+            int rowStart = 0;
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "A";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "B";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "C";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "D";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "E";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "F";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Unit 1";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Unit 2";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Data Type 1";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Data Type 2";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Ordinates";
             for (int i = 0; i < ordinates.RowCount; i++)
             {
                 ExcelView.ActiveWorkbook.Worksheets[0].Cells[i + rowStart, 0].Value = CellToString(ordinates.Cells[i, 0]);
             }
 
+            rowStart = 0;
             int colStart = 1;
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, colStart].Value = pd_path.Apart;
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[1, colStart].Value = pd_path.Bpart;
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[2, colStart].Value = pd_path.Cpart;
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[3, colStart].Value = "";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[4, colStart].Value = "";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[5, colStart].Value = pd_path.Fpart;
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = pd_path.Apart;
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = pd_path.Bpart;
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = pd_path.Cpart;
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = "";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = "";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = pd_path.Fpart;
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Unit 1";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Unit 2";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Data Type 1";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Data Type 2";
             for (int i = 0; i < values.ColumnCount; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[6, i].Value = "Value " + i.ToString();
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i].Value = "Value " + (i + 1).ToString();
                 for (int j = 0; j < values.RowCount; j++)
                 {
                     ExcelView.ActiveWorkbook.Worksheets[0].Cells[j + rowStart, i + colStart].Value = CellToString(values.Cells[j, i]);
                 }
+                rowStart--;
             }
             ExcelView.ActiveWorkbookSet.ReleaseLock();
 
