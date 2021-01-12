@@ -228,10 +228,19 @@ namespace DSSExcel
 
         private void ReviewPage_ImportClick(object sender, RoutedEventArgs e)
         {
+            ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
+            ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
+            if (!reader.IsAllColumnRowCountsEqual(ReviewPage.ExcelView.ActiveWorksheet.Name))
+            {
+                MessageBox.Show("The sheet being imported doesn't have proper formatting. Not all columns have the same number of values.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
+                ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+                return;
+            }
             if (ReviewPage.currentRecordType == RecordType.RegularTimeSeries || ReviewPage.currentRecordType == RecordType.IrregularTimeSeries)
                 ImportTimeSeries();
             if (ReviewPage.currentRecordType == RecordType.PairedData)
                 ImportPairedData();
+            ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
         }
 
         private void ImportPairedData()

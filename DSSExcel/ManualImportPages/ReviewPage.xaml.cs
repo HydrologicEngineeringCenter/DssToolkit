@@ -88,7 +88,6 @@ namespace DSSExcel
             ExcelView.ActiveWorkbookSet.GetLock();
             ExcelView.ActiveWorksheet.Cells.Columns.AutoFit();
             ExcelView.ActiveWorkbookSet.ReleaseLock();
-            //IsReadOnly(true);
         }
 
         private void IsReadOnly(bool option)

@@ -835,12 +835,25 @@ namespace Hec.Dss.Excel
 
         public static bool IsAllColumnRowCountsEqual(IRange range)
         {
-
             for (int i = 0; i < range.ColumnCount; i++)
             {
                 for (int j = 0; j < range.RowCount; j++)
                 {
                     if (!IsDate(range[j, i]) && !IsValue(range[j, i]) && j != range.RowCount)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        public bool IsAllColumnRowCountsEqual(string worksheet)
+        {
+            ActiveSheetInfo = GetWorksheetInfo(worksheet);
+            for (int i = 0; i < ActiveSheetInfo.ColumnCount; i++)
+            {
+                for (int j = ActiveSheetInfo.DataStartRowIndex; j < ActiveSheetInfo.RowCount; j++)
+                {
+                    if (!IsDate(workbook.Worksheets[worksheet].Cells[j, i]) && !IsValue(workbook.Worksheets[worksheet].Cells[j, i]) && j != ActiveSheetInfo.RowCount)
                         return false;
                 }
             }
