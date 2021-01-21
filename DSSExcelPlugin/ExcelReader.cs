@@ -923,4 +923,14 @@ namespace Hec.Dss.Excel
         PD_PathWithoutTypesAndUnits = 6,
         NoPath = 0
     }
+
+    public enum UnitsAndTypes
+    {
+        TS_UnitAndType,
+        TS_Unit,
+        TS_Type,
+        PD_UnitsAndTypes,
+        PD_Units,
+        PD_Types
+    }
 }
