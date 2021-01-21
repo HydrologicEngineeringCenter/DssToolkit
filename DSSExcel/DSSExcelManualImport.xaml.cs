@@ -23,10 +23,16 @@ namespace DSSExcel
     /// </summary>
     public partial class DSSExcelManualImport : Window
     {
-        public DSSExcelManualImport(string filename)
+        public string excel_filename = "";
+        public string dss_filename = "";
+        private bool operation_performed = false;
+        private ExcelReader r;
+        public DSSExcelManualImport(string excel_fn, string dss_fn)
         {
             InitializeComponent();
-            ExcelReader r = new ExcelReader(filename);
+            excel_filename = excel_fn;
+            dss_filename = dss_fn;
+            r = new ExcelReader(excel_filename);
             DatePage.ExcelView.ActiveWorkbook = r.workbook;
             OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
             TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
@@ -130,13 +136,13 @@ namespace DSSExcel
             if (!CheckTimeSeriesValues(TimeSeriesValuePage.Values))
                 return;
             TimeSeriesValuePage.Visibility = Visibility.Collapsed;
-            PathPage.PreviousPage = TimeSeriesValuePage;
+            ReviewPage.PreviousPage = TimeSeriesValuePage;
             DatePage.ExcelView.ActiveWorkbookSet.GetLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            PathPage.ShowPath(RecordType.RegularTimeSeries, DatePage.Dates, TimeSeriesValuePage.Values);
+            ReviewPage.SetupReviewPage(RecordType.RegularTimeSeries, DatePage.Dates, TimeSeriesValuePage.Values);
             DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-            PathPage.Visibility = Visibility.Visible;
+            ReviewPage.Visibility = Visibility.Visible;
             Title = "Review Time Series";
         }
 
@@ -177,13 +183,13 @@ namespace DSSExcel
                 return;
             
             PairedDataValuePage.Visibility = Visibility.Collapsed;
-            PathPage.PreviousPage = PairedDataValuePage;
+            ReviewPage.PreviousPage = PairedDataValuePage;
             OrdinatePage.ExcelView.ActiveWorkbookSet.GetLock();
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            PathPage.ShowPath(RecordType.PairedData, OrdinatePage.Ordinates, PairedDataValuePage.Values);
+            ReviewPage.SetupReviewPage(RecordType.PairedData, OrdinatePage.Ordinates, PairedDataValuePage.Values);
             OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-            PathPage.Visibility = Visibility.Visible;
+            ReviewPage.Visibility = Visibility.Visible;
             Title = "Review Paired Data";
         }
 
@@ -220,70 +226,102 @@ namespace DSSExcel
             Title = "Select Ordinate Range";
         }
 
-        private void PathPage_ImportClick(object sender, RoutedEventArgs e)
+        private void ReviewPage_ImportClick(object sender, RoutedEventArgs e)
         {
-            if (PathPage.currentRecordType == RecordType.RegularTimeSeries || PathPage.currentRecordType == RecordType.IrregularTimeSeries)
+            ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
+            ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
+            
+            if (!IsProperlyFormatted(reader))
+                return;
+
+            if (ReviewPage.currentRecordType == RecordType.RegularTimeSeries || ReviewPage.currentRecordType == RecordType.IrregularTimeSeries)
                 ImportTimeSeries();
-            if (PathPage.currentRecordType == RecordType.PairedData)
+            if (ReviewPage.currentRecordType == RecordType.PairedData)
                 ImportPairedData();
+            ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+        }
+
+        private bool IsProperlyFormatted(ExcelReader reader)
+        {
+            if (!reader.IsAllColumnRowCountsEqual(ReviewPage.ExcelView.ActiveWorksheet.Name))
+            {
+                MessageBox.Show("The sheet being imported doesn't have proper formatting. Not all columns have the same number of values.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
+                ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+                return false;
+            }
+            else if (!reader.AllPathsAreProper(reader.workbook.ActiveWorksheet.Name))
+            {
+                MessageBox.Show("Not all paths are properly formatted.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
+                ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+                return false;
+            }
+
+            return true;
         }
 
         private void ImportPairedData()
         {
-            OrdinatePage.ExcelView.ActiveWorkbookSet.GetLock();
-            PairedDataValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            PairedData pd = ExcelReader.GetPairedData(OrdinatePage.Ordinates, PairedDataValuePage.Values, PathPage.Apart, PathPage.Bpart,
-                PathPage.Cpart, PathPage.Dpart, PathPage.Epart, PathPage.Fpart);
-            pd.TypeIndependent = "type1";
-            pd.TypeDependent = "type2";
-            pd.UnitsIndependent = "unit1";
-            pd.UnitsDependent = "unit2";
-            OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-            PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
+            ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
+            PairedData pd = reader.GetPairedData(reader.workbook.ActiveWorksheet.Name);
+            ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             WriteRecord(pd);
         }
 
         private void ImportTimeSeries()
         {
-            DatePage.ExcelView.ActiveWorkbookSet.GetLock();
-            TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
-            List<TimeSeries> ts = ExcelReader.GetTimeSeries(DatePage.Dates, TimeSeriesValuePage.Values, PathPage.Apart, PathPage.Bpart,
-                PathPage.Cpart, PathPage.Dpart, PathPage.Epart, PathPage.Fpart) as List<TimeSeries>;
-            DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
-            TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
+            ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
+            List<TimeSeries> ts = reader.GetMultipleTimeSeries(reader.workbook.ActiveWorksheet.Name).ToList();
+            ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             WriteRecords(ts);
         }
 
         private void WriteRecords(IEnumerable<TimeSeries> records)
         {
-            SaveFileDialog openFileDialog = new SaveFileDialog();
-            openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
-            if (openFileDialog.ShowDialog() == true)
+            if (dss_filename.Equals(""))
             {
-                using (DssWriter w = new DssWriter(openFileDialog.FileName))
-                {
-                    foreach (var record in records)
-                        w.Write(record);
-                }
-                DisplayImportStatus(openFileDialog.FileName);
+                SaveFileDialog openFileDialog = new SaveFileDialog();
+                openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
+                openFileDialog.OverwritePrompt = false;
+                if (openFileDialog.ShowDialog() == true)
+                    dss_filename = openFileDialog.FileName;
+                else
+                    return;
             }
+
+            using (DssWriter w = new DssWriter(dss_filename))
+            {
+                foreach (var record in records)
+                    w.Write(record);
+            }
+            operation_performed = true;
+            DisplayImportStatus(dss_filename);
+            
         }
 
         private void WriteRecord(object record)
         {
-            SaveFileDialog openFileDialog = new SaveFileDialog();
-            openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
-            if (openFileDialog.ShowDialog() == true)
+            if (dss_filename.Equals(""))
             {
-                using (DssWriter w = new DssWriter(openFileDialog.FileName))
-                {
-                    if (record is TimeSeries)
-                        w.Write(record as TimeSeries);
-                    else if (record is PairedData)
-                        w.Write(record as PairedData);
-                }
-                DisplayImportStatus(openFileDialog.FileName);
+                SaveFileDialog openFileDialog = new SaveFileDialog();
+                openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
+                openFileDialog.OverwritePrompt = false;
+                if (openFileDialog.ShowDialog() == true)
+                    dss_filename = openFileDialog.FileName;
+                else
+                    return;
             }
+            
+            using (DssWriter w = new DssWriter(dss_filename))
+            {
+                if (record is TimeSeries)
+                    w.Write(record as TimeSeries);
+                else if (record is PairedData)
+                    w.Write(record as PairedData);
+            }
+            operation_performed = true;
+            DisplayImportStatus(dss_filename);
         }
 
         private void DisplayImportStatus(string filename)
@@ -291,19 +329,23 @@ namespace DSSExcel
             var r = MessageBox.Show("Import to " + filename + " succeeded. Would you like to import another record?", "Import Success", MessageBoxButton.YesNo, MessageBoxImage.Information);
             if (r == MessageBoxResult.Yes)
             {
-                PathPage.ResetPath();
-                PathPage.Visibility = Visibility.Collapsed;
+                ReviewPage.ResetPaths();
+                ReviewPage.Visibility = Visibility.Collapsed;
                 RecordTypePage.Visibility = Visibility.Visible;
                 Title = "Select Record Type";
             }
             else
+            {
+                this.DialogResult = operation_performed;
                 this.Close();
+            }
+                
         }
 
-        private void PathPage_BackClick(object sender, RoutedEventArgs e)
+        private void ReviewPage_BackClick(object sender, RoutedEventArgs e)
         {
-            PathPage.Visibility = Visibility.Collapsed;
-            PathPage.PreviousPage.Visibility = Visibility.Visible;
+            ReviewPage.Visibility = Visibility.Collapsed;
+            ReviewPage.PreviousPage.Visibility = Visibility.Visible;
             Title = "Select Value Range";
         }
 
@@ -334,7 +376,10 @@ namespace DSSExcel
             TimeSeriesValuePage.ExcelView.ActiveSheet = activeSheet;
             PairedDataValuePage.ExcelView.ActiveSheet = activeSheet;
         }
-    }
 
-    //TODO impliment multi value column selection with manual time series import
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.DialogResult = operation_performed;
+        }
+    }
 }

@@ -4,6 +4,7 @@ using Hec.Dss.Excel;
 using System.Windows;
 using System.Windows.Controls;
 using static Hec.Dss.Excel.ExcelTools;
+using System.Collections.Generic;
 
 namespace DSSExcel
 {
@@ -14,67 +15,8 @@ namespace DSSExcel
     {
         public UserControl PreviousPage;
         public RecordType currentRecordType;
-        private bool tsPathGenerated = false;
-        private bool pdPathGenerated = false;
-        private DssPath tsPath = new DssPath();
-        private DssPath pdPath = new DssPath();
-
-        public string Apart 
-        {
-            get
-            {
-                return ApartTextBox.Text;
-            }
-        }
-        public string Bpart 
-        {
-            get
-            {
-                return BpartTextBox.Text;
-            }
-        }
-        public string Cpart 
-        {
-            get
-            {
-                return CpartTextBox.Text;
-            }
-        }
-        public string Dpart 
-        {
-            get
-            {
-                return DpartTextBox.Text;
-            }
-        }
-        public string Epart 
-        {
-            get
-            {
-                return EpartTextBox.Text;
-            }
-        }
-        public string Fpart 
-        {
-            get
-            {
-                return FpartTextBox.Text;
-            }
-        }
-
-
-        public string GetPath 
-        { 
-            get
-            {
-                return "/" + Apart +
-                    "/" + Bpart +
-                    "/" + Cpart +
-                    "/" + Dpart +
-                    "/" + Epart +
-                    "/" + Fpart + "/";
-            }
-        }
+        public List<DssPath> ts_paths = new List<DssPath>();
+        public DssPath pd_path = new DssPath();
         public ReviewPage()
         {
             InitializeComponent();
@@ -92,60 +34,58 @@ namespace DSSExcel
             this.BackClick?.Invoke(this, e);
         }
 
-        private void ShowTimeSeriesPath()
+        private void ShowTimeSeriesPaths(IRange values)
         {
-            if (!tsPathGenerated)
-                GenerateTimeSeriesPath();
-            DataContext = tsPath;
+            GenerateTimeSeriesPaths(values.ColumnCount);
         }
 
-        private void GenerateTimeSeriesPath()
+        private void GenerateTimeSeriesPaths(int count)
         {
-            tsPath.Apart = "a" + RandomString(3);
-            tsPath.Bpart = "b" + RandomString(3);
-            tsPath.Cpart = "c" + RandomString(3);
-            tsPath.Dpart = "";
-            tsPath.Epart = "";
-            tsPath.Fpart = "TimeSeries" + RandomString(3);
-            tsPathGenerated = true;
+            ts_paths.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                DssPath path = new DssPath();
+                path.Apart = "a" + RandomString(3);
+                path.Bpart = "b" + RandomString(3);
+                path.Cpart = "c" + RandomString(3);
+                path.Dpart = "";
+                path.Epart = "";
+                path.Fpart = "TimeSeries";
+                ts_paths.Add(path);
+            }
         }
 
         private void ShowPairedDataPath()
         {
-            if (!pdPathGenerated)
-                GeneratePairedDataPath();
-            DataContext = pdPath;
+            GeneratePairedDataPath();
         }
 
         private void GeneratePairedDataPath()
         {
-            pdPath.Apart = "a" + RandomString(3);
-            pdPath.Bpart = "b" + RandomString(3);
-            pdPath.Cpart = "c" + RandomString(3);
-            pdPath.Dpart = "";
-            pdPath.Epart = "e" + RandomString(3);
-            pdPath.Fpart = "PairedData" + RandomString(3);
-            pdPathGenerated = true;
+            pd_path = new DssPath();
+            pd_path.Apart = "a" + RandomString(3);
+            pd_path.Bpart = "b" + RandomString(3);
+            pd_path.Cpart = "c" + RandomString(3);
+            pd_path.Dpart = "";
+            pd_path.Epart = "e" + RandomString(3);
+            pd_path.Fpart = "PairedData";
         }
 
-        public void ShowPath(RecordType recordType, IRange range1, IRange range2)
+        public void SetupReviewPage(RecordType recordType, IRange range1, IRange range2)
         {
             IsReadOnly(false);
             if (recordType is RecordType.IrregularTimeSeries || recordType is RecordType.RegularTimeSeries)
             {
                 currentRecordType = RecordType.RegularTimeSeries;
-                ShowTimeSeriesPath();
             }
             else if (recordType is RecordType.PairedData)
             {
                 currentRecordType = RecordType.PairedData;
-                ShowPairedDataPath();
             }
             ShowRecordPreview(recordType, range1, range2);
             ExcelView.ActiveWorkbookSet.GetLock();
             ExcelView.ActiveWorksheet.Cells.Columns.AutoFit();
             ExcelView.ActiveWorkbookSet.ReleaseLock();
-            IsReadOnly(true);
         }
 
         private void IsReadOnly(bool option)
@@ -178,18 +118,46 @@ namespace DSSExcel
             ExcelView.ActiveWorkbookSet.GetLock();
             ExcelView.ActiveWorksheet.Cells.Clear();
 
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 0].Value = "Date/Time";
-            for (int i = 1; i < dateTimes.RowCount + 1; i++)
+            int rowStart = 0;
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "A";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "B";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "C";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "D";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "E";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "F";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Unit";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Data Type";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Date/Time";
+            for (int i = 0; i < dateTimes.RowCount; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 0].Value = CellToString(dateTimes.Cells[i - 1, 0]);
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i + rowStart, 0].Value = CellToString(dateTimes.Cells[i, 0]);
             }
 
-            for (int i = 1; i < values.ColumnCount + 1; i++)
+            
+            int colStart = 1;
+            for (int i = 0; i < values.ColumnCount; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, i].Value = "Values" + i.ToString();
-                for (int j = 1; j < values.RowCount + 1; j++)
+                rowStart = 0;
+                rowStart++;
+                rowStart++;
+                rowStart++;
+                rowStart++;
+                rowStart++;
+                rowStart++;
+                rowStart++;
+                rowStart++;
+                //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = ts_paths[i].Apart;
+                //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = ts_paths[i].Bpart;
+                //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = ts_paths[i].Cpart;
+                //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "";
+                //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "";
+                //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = ts_paths[i].Fpart;
+                //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "Unit";
+                //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "Data Type";
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "Value " + (i + 1).ToString();
+                for (int j = 0; j < values.RowCount; j++)
                 {
-                    ExcelView.ActiveWorkbook.Worksheets[0].Cells[j, i].Value = CellToString(values.Cells[j - 1, i - 1]);
+                    ExcelView.ActiveWorkbook.Worksheets[0].Cells[j + rowStart, i + colStart].Value = CellToString(values.Cells[j, i]);
                 }
             }
             ExcelView.ActiveWorkbookSet.ReleaseLock();
@@ -200,30 +168,62 @@ namespace DSSExcel
             ExcelView.ActiveWorkbookSet.GetLock();
             ExcelView.ActiveWorksheet.Cells.Clear();
 
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, 0].Value = "Ordinates";
-            for (int i = 1; i < ordinates.RowCount + 1; i++)
+            int rowStart = 0;
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "A";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "B";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "C";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "D";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "E";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "F";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Unit 1";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Unit 2";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Data Type 1";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Data Type 2";
+            ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Ordinates";
+            for (int i = 0; i < ordinates.RowCount; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i, 0].Value = CellToString(ordinates.Cells[i - 1, 0]);
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i + rowStart, 0].Value = CellToString(ordinates.Cells[i, 0]);
             }
 
-            for (int i = 1; i < values.ColumnCount + 1; i++)
+            rowStart = 0;
+            int colStart = 1;
+            rowStart++;
+            rowStart++;
+            rowStart++;
+            rowStart++;
+            rowStart++;
+            rowStart++;
+            rowStart++;
+            rowStart++;
+            rowStart++;
+            rowStart++;
+            //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = pd_path.Apart;
+            //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = pd_path.Bpart;
+            //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = pd_path.Cpart;
+            //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = "";
+            //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = "";
+            //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, colStart].Value = pd_path.Fpart;
+            //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Unit 1";
+            //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Unit 2";
+            //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Data Type 1";
+            //ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, 0].Value = "Data Type 2";
+            for (int i = 0; i < values.ColumnCount; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[0, i].Value = "Values" + i.ToString();
-                for (int j = 1; j < values.RowCount + 1; j++)
+                ExcelView.ActiveWorkbook.Worksheets[0].Cells[rowStart++, i + colStart].Value = "Value " + (i + 1).ToString();
+                for (int j = 0; j < values.RowCount; j++)
                 {
-                    ExcelView.ActiveWorkbook.Worksheets[0].Cells[j, i].Value = CellToString(values.Cells[j - 1, i - 1]);
+                    ExcelView.ActiveWorkbook.Worksheets[0].Cells[j + rowStart, i + colStart].Value = CellToString(values.Cells[j, i]);
                 }
+                rowStart--;
             }
             ExcelView.ActiveWorkbookSet.ReleaseLock();
 
         }
 
-        public void ResetPath()
+        public void ResetPaths()
         {
-            tsPathGenerated = false;
-            pdPathGenerated = false;
-            tsPath = new DssPath();
-            pdPath = new DssPath();
+            ts_paths.Clear();
+            pd_path = new DssPath();
             PreviousPage = null;
         }
 
@@ -231,5 +231,6 @@ namespace DSSExcel
         {
             e.Handled = true;
         }
+
     }
 }
