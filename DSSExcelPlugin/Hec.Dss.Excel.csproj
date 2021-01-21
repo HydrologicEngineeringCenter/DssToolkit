@@ -206,9 +206,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IExcelWriteTools.cs" />
     <Compile Include="SheetInfo.cs" />
-    <Compile Include="IExcelReadTools.cs" />
     <Compile Include="ExcelReader.cs" />
     <Compile Include="ExcelWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

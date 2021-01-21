@@ -11,7 +11,7 @@ using SpreadsheetGear.Shapes;
 
 namespace Hec.Dss.Excel
 {
-    public class ExcelWriter : IExcelWriteTools
+    public class ExcelWriter
     {
         public IWorkbookSet workbookSet = Factory.GetWorkbookSet();
         public IWorkbook workbook;

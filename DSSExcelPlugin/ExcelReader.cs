@@ -10,7 +10,7 @@ using static Hec.Dss.Excel.ExcelTools;
 
 namespace Hec.Dss.Excel
 {
-    public class ExcelReader : IExcelReadTools
+    public class ExcelReader
     {
         public IWorkbookSet workbookSet = Factory.GetWorkbookSet();
         public IWorkbook workbook;
@@ -886,5 +886,41 @@ namespace Hec.Dss.Excel
             }
             return s + 1;
         }
+
+        public bool AllPathsAreProper(string worksheet)
+        {
+            var type = CheckType(worksheet);
+            if (type == RecordType.IrregularTimeSeries || type == RecordType.RegularTimeSeries)
+            {
+                for (int i = ActiveSheetInfo.ValueStartColumnIndex; i < ActiveSheetInfo.ColumnCount; i++)
+                {
+                    if (!DSSPathExists(worksheet, i))
+                        return false;
+                }
+            }
+            else if (type == RecordType.PairedData)
+            {
+                if (!DSSPathExists(worksheet, ActiveSheetInfo.ValueStartColumnIndex))
+                    return false;
+            }
+            return true;
+        }
+    }
+
+    public enum PathLayout
+    {
+        TS_StandardPath = 8,
+        TS_PathWithoutDPart = 7,
+        TS_PathWithoutTypeAndUnits = 6,
+        TS_PathWithoutDPartTypeAndUnit = 5,
+        PD_StandardPath = 10,
+        PD_PathWithoutDPart = 9,
+        PD_PathWithoutTypes = 8,
+        PD_PathWithoutUnits = 8,
+        PD_PathWithoutDPartAndTypes = 7,
+        PD_PathWithoutDPartAndUnits = 7,
+        PD_PathWithoutDPartTypesAndUnits = 5,
+        PD_PathWithoutTypesAndUnits = 6,
+        NoPath = 0
     }
 }

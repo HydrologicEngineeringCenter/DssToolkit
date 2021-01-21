@@ -230,12 +230,10 @@ namespace DSSExcel
         {
             ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
             ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
-            if (!reader.IsAllColumnRowCountsEqual(ReviewPage.ExcelView.ActiveWorksheet.Name))
-            {
-                MessageBox.Show("The sheet being imported doesn't have proper formatting. Not all columns have the same number of values.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
-                ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            
+            if (!IsProperlyFormatted(reader))
                 return;
-            }
+
             if (ReviewPage.currentRecordType == RecordType.RegularTimeSeries || ReviewPage.currentRecordType == RecordType.IrregularTimeSeries)
                 ImportTimeSeries();
             if (ReviewPage.currentRecordType == RecordType.PairedData)
@@ -243,11 +241,29 @@ namespace DSSExcel
             ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
         }
 
+        private bool IsProperlyFormatted(ExcelReader reader)
+        {
+            if (!reader.IsAllColumnRowCountsEqual(ReviewPage.ExcelView.ActiveWorksheet.Name))
+            {
+                MessageBox.Show("The sheet being imported doesn't have proper formatting. Not all columns have the same number of values.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
+                ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+                return false;
+            }
+            else if (!reader.AllPathsAreProper(reader.workbook.ActiveWorksheet.Name))
+            {
+                MessageBox.Show("Not all paths are properly formatted.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
+                ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+                return false;
+            }
+
+            return true;
+        }
+
         private void ImportPairedData()
         {
             ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
             ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
-            PairedData pd = reader.GetPairedData("Sheet1");
+            PairedData pd = reader.GetPairedData(reader.workbook.ActiveWorksheet.Name);
             ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             WriteRecord(pd);
         }
@@ -256,7 +272,7 @@ namespace DSSExcel
         {
             ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
             ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
-            List<TimeSeries> ts = reader.GetMultipleTimeSeries("Sheet1").ToList();
+            List<TimeSeries> ts = reader.GetMultipleTimeSeries(reader.workbook.ActiveWorksheet.Name).ToList();
             ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             WriteRecords(ts);
         }
