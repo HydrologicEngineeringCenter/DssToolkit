@@ -89,8 +89,8 @@ namespace Hec.Dss.Excel
             ClearSheet(sheet);
             SetPathInExcelFile(sheet, record.Path);
             SetUnitAndDataTypeInExcelFile(sheet, record);
-            SetDateColumnInExcelFile(sheet, record, (int)PathLayout.TS_StandardPath, 0);
-            SetTimeSeriesValueColumnInExcelFile(sheet, record, (int)PathLayout.TS_StandardPath, 1);
+            SetDateColumnInExcelFile(sheet, record, (int)PathLayout.StandardPath + (int)UnitsAndTypes.TS_UnitAndType, 0);
+            SetTimeSeriesValueColumnInExcelFile(sheet, record, (int)PathLayout.StandardPath + (int)UnitsAndTypes.TS_UnitAndType, 1);
             if (workbook.FullName.EndsWith(".xls"))
                 workbook.SaveAs(workbook.FullName, FileFormat.Excel8);
             else if (workbook.FullName.EndsWith(".xlsx"))
@@ -105,11 +105,11 @@ namespace Hec.Dss.Excel
 
         private void SetUnitAndDataTypeInExcelFile(string sheet, TimeSeries record)
         {
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.TS_PathWithoutTypeAndUnits, 0].Value = "Units";
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.TS_PathWithoutTypeAndUnits, 1].Value = record.Units;
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath, 0].Value = "Units";
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath, 1].Value = record.Units;
 
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.TS_PathWithoutTypeAndUnits + 1, 0].Value = "Data Type";
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.TS_PathWithoutTypeAndUnits + 1, 1].Value = record.DataType;
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath + 1, 0].Value = "Data Type";
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath + 1, 1].Value = record.DataType;
         }
 
         public void Write(IEnumerable<TimeSeries> records, string sheet)
@@ -119,8 +119,8 @@ namespace Hec.Dss.Excel
             ClearSheet(sheet);
             SetPathsInExcelFile(sheet, records, 1);
             SetUnitsAndDataTypeInExcelFile(sheet, records, 1);
-            SetDateColumnInExcelFile(sheet, records.ElementAt(0), (int)PathLayout.TS_StandardPath, 0);
-            SetTimeSeriesValueColumnInExcelFile(sheet, records, (int)PathLayout.TS_StandardPath, 1);
+            SetDateColumnInExcelFile(sheet, records.ElementAt(0), (int)PathLayout.StandardPath + (int)UnitsAndTypes.TS_UnitAndType, 0);
+            SetTimeSeriesValueColumnInExcelFile(sheet, records, (int)PathLayout.StandardPath + (int)UnitsAndTypes.TS_UnitAndType, 1);
             if (workbook.FullName.EndsWith(".xls"))
                 workbook.SaveAs(workbook.FullName, FileFormat.Excel8);
             else if (workbook.FullName.EndsWith(".xlsx"))
@@ -190,8 +190,8 @@ namespace Hec.Dss.Excel
             ClearSheet(sheet);
             SetPathInExcelFile(sheet, record.Path);
             SetUnitsAndDataTypeInExcelFile(sheet, record);
-            SetOrdinateColumnInExcelFile(sheet, record, (int)PathLayout.PD_StandardPath, 0);
-            SetPairedDataValueColumnsInExcelFile(sheet, record, (int)PathLayout.PD_StandardPath, 1);
+            SetOrdinateColumnInExcelFile(sheet, record, (int)PathLayout.StandardPath + (int)UnitsAndTypes.PD_UnitsAndTypes, 0);
+            SetPairedDataValueColumnsInExcelFile(sheet, record, (int)PathLayout.StandardPath + (int)UnitsAndTypes.PD_UnitsAndTypes, 1);
             if (workbook.FullName.EndsWith(".xls"))
                 workbook.SaveAs(workbook.FullName, FileFormat.Excel8);
             else if (workbook.FullName.EndsWith(".xlsx"))
@@ -206,15 +206,15 @@ namespace Hec.Dss.Excel
 
         private void SetUnitsAndDataTypeInExcelFile(string sheet, PairedData record)
         {
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.PD_PathWithoutTypesAndUnits, 0].Value = "Unit 1";
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.PD_PathWithoutTypesAndUnits + 1, 0].Value = "Unit 2";
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.PD_PathWithoutTypesAndUnits + 2, 0].Value = "Data Type 1";
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.PD_PathWithoutTypesAndUnits + 3, 0].Value = "Data Type 2";
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath, 0].Value = "Unit 1";
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath + 1, 0].Value = "Unit 2";
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath + 2, 0].Value = "Data Type 1";
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath + 3, 0].Value = "Data Type 2";
 
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.PD_PathWithoutTypesAndUnits, 1].Value = record.UnitsIndependent;
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.PD_PathWithoutTypesAndUnits + 1, 1].Value = record.UnitsDependent;
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.PD_PathWithoutTypesAndUnits + 2, 1].Value = record.TypeIndependent;
-            workbook.Worksheets[sheet].Cells[(int)PathLayout.PD_PathWithoutTypesAndUnits + 3, 1].Value = record.TypeDependent;
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath, 1].Value = record.UnitsIndependent;
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath + 1, 1].Value = record.UnitsDependent;
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath + 2, 1].Value = record.TypeIndependent;
+            workbook.Worksheets[sheet].Cells[(int)PathLayout.StandardPath + 3, 1].Value = record.TypeDependent;
         }
 
         public void ClearSheet(string sheet)
