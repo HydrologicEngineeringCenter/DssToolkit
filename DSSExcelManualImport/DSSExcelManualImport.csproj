@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="Hec.Dss, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Hec.Dss, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hec.Dss.1.0.26.14\lib\net472\Hec.Dss.dll</HintPath>
     </Reference>
     <Reference Include="SpreadsheetGear2017.Core">
@@ -89,6 +89,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ManualImportPages\ExcelFileSelect.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ManualImportPages\OrdinateSelectPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -113,6 +117,9 @@
   <ItemGroup>
     <Compile Include="ManualImportPages\DateSelectPage.xaml.cs">
       <DependentUpon>DateSelectPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ManualImportPages\ExcelFileSelect.xaml.cs">
+      <DependentUpon>ExcelFileSelect.xaml</DependentUpon>
     </Compile>
     <Compile Include="ManualImportPages\OrdinateSelectPage.xaml.cs">
       <DependentUpon>OrdinateSelectPage.xaml</DependentUpon>

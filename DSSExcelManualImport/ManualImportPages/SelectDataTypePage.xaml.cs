@@ -46,12 +46,12 @@ namespace DSSExcel
 
         private void TimeSeriesNextButton_Click(object sender, RoutedEventArgs e)
         {
-            this.TimeSeriesNextClick?.Invoke(this, e);
+            TimeSeriesNextClick?.Invoke(this, e);
         }
 
         private void PairedDataNextButton_Click(object sender, RoutedEventArgs e)
         {
-            this.PairedDataNextClick?.Invoke(this, e);
+            PairedDataNextClick?.Invoke(this, e);
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
