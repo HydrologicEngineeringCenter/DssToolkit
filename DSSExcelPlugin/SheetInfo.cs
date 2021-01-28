@@ -27,6 +27,7 @@ namespace Hec.Dss.Excel
         public bool HasPath { get; private set; }
         public bool HasHeaders { get; private set; }
         public RecordType RecordType { get; private set; }
+        public UnitsAndTypes UnitsAndTypes { get; private set; }
         public SheetInfo(ExcelReader r, string sheet)
         {
             Name = sheet;
@@ -35,7 +36,7 @@ namespace Hec.Dss.Excel
             PathLayout = r.GetDSSPathLayout(sheet);
             PathStartRow = PathLayout == PathLayout.NoPath ? -1 : 1;
             PathStartRowIndex = PathStartRow == -1 ? -1 : 0;
-            PathEndRow = PathStartRowIndex == -1 ? -1 : r.DSSPathEndRow(sheet);
+            PathEndRow = PathStartRowIndex == -1 ? -1 : (int)PathLayout;
             PathEndRowIndex = PathEndRow == -1 ? -1 : PathEndRow - 1;
             RowCount = r.RowCount(sheet);
             ColumnCount = r.ColumnCount(sheet);
@@ -45,6 +46,7 @@ namespace Hec.Dss.Excel
             HasPath = r.DSSPathExists(sheet, 0);
             ValueStartColumnIndex = HasIndex ? 2 : 1;
             HasHeaders = DataStartRowIndex != 0 && PathEndRow != DataStartRow - 1;
+            UnitsAndTypes = r.GetUnitsAndTypes(sheet);
         }
     }
 }

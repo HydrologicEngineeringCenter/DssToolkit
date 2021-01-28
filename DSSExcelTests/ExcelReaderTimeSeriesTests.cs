@@ -111,14 +111,14 @@ namespace DSSExcelTests
         public void CheckPathLayoutRegularTS()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimpleRegularTSPath);
-            Assert.AreEqual(r.GetDSSPathLayout("Sheet1"), PathLayout.TS_PathWithoutDPart);
+            Assert.AreEqual(r.GetDSSPathLayout("Sheet1"), PathLayout.PathWithoutDPart);
         }
 
         [TestMethod]
         public void CheckPathLayoutIrregularTS()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimpleIrregularTSPath);
-            Assert.AreEqual(r.GetDSSPathLayout("Sheet1"), PathLayout.TS_PathWithoutDPart);
+            Assert.AreEqual(r.GetDSSPathLayout("Sheet1"), PathLayout.PathWithoutDPart);
         }
 
         [TestMethod]
@@ -169,28 +169,28 @@ namespace DSSExcelTests
         public void GetPathEndRowRegularTS()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimpleRegularTSPath);
-            Assert.AreEqual(r.DSSPathEndRow("Sheet1"), 7);
+            Assert.AreEqual(r.DSSPathEndRow("Sheet1"), 5);
         }
 
         [TestMethod]
         public void GetPathEndRowIrregularTS()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimpleIrregularTSPath);
-            Assert.AreEqual(r.DSSPathEndRow("Sheet1"), 7);
+            Assert.AreEqual(r.DSSPathEndRow("Sheet1"), 5);
         }
 
         [TestMethod]
         public void GetPathEndRowIndexRegularTS()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimpleRegularTSPath);
-            Assert.AreEqual(r.DSSPathEndRowIndex("Sheet1"), 6);
+            Assert.AreEqual(r.DSSPathEndRowIndex("Sheet1"), 4);
         }
 
         [TestMethod]
         public void GetPathEndRowIndexIrregularTS()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimpleIrregularTSPath);
-            Assert.AreEqual(r.DSSPathEndRowIndex("Sheet1"), 6);
+            Assert.AreEqual(r.DSSPathEndRowIndex("Sheet1"), 4);
         }
 
         [TestMethod]

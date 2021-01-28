@@ -63,7 +63,7 @@ namespace DSSExcelTests
         public void CheckPathLayoutPD()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimplePDPath);
-            Assert.AreEqual(r.GetDSSPathLayout("Sheet1"), PathLayout.PD_StandardPath);
+            Assert.AreEqual(r.GetDSSPathLayout("Sheet1"), PathLayout.StandardPath);
         }
 
         [TestMethod]
@@ -96,14 +96,14 @@ namespace DSSExcelTests
         public void GetPathEndRowPD()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimplePDPath);
-            Assert.AreEqual(r.DSSPathEndRow("Sheet1"), 10);
+            Assert.AreEqual(r.DSSPathEndRow("Sheet1"), 6);
         }
 
         [TestMethod]
         public void GetPathEndRowIndexPD()
         {
             ExcelReader r = new ExcelReader(TestUtility.SimplePDPath);
-            Assert.AreEqual(r.DSSPathEndRowIndex("Sheet1"), 9);
+            Assert.AreEqual(r.DSSPathEndRowIndex("Sheet1"), 5);
         }
 
         [TestMethod]
