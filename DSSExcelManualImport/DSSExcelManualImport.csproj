@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+	<Reference Include="Hec.Dss, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hec.Dss.1.0.26.14\lib\net472\Hec.Dss.dll</HintPath>
+    </Reference>
     <Reference Include="SpreadsheetGear2017.Core">
       <HintPath>..\..\..\utils\SpreadsheetGear\SpreadsheetGear 2017 for .NET\DotNet40\Bin\SpreadsheetGear2017.Core.dll</HintPath>
     </Reference>
