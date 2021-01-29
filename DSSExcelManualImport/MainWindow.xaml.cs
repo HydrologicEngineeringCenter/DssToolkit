@@ -31,25 +31,27 @@ namespace DSSExcel
         public MainWindow()
         {
             InitializeComponent();
-            DatePage.ExcelView.ActiveWorkbook = r.workbook;
-            OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
-            TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
-            PairedDataValuePage.ExcelView.ActiveWorkbook = r.workbook;
+            ExcelFileName = "";
+            DssFileName = "";
         }
 
         private void RecordTypePage_PairedDataNextClick(object sender, RoutedEventArgs e)
         {
             RecordTypePage.Visibility = Visibility.Collapsed;
-            OrdinatePage.Visibility = Visibility.Visible;
-            Title = "Select Ordinate Range";
+            ExcelFileSelectPage.Visibility = Visibility.Visible;
+            ExcelFileSelectPage.NextPage = OrdinatePage;
+            //OrdinatePage.Visibility = Visibility.Visible;
+            Title = "Select Excel File";
         }
 
         private void RecordTypePage_TimeSeriesNextClick(object sender, RoutedEventArgs e)
         {
 
             RecordTypePage.Visibility = Visibility.Collapsed;
-            DatePage.Visibility = Visibility.Visible;
-            Title = "Select Date/Time Range";
+            ExcelFileSelectPage.Visibility = Visibility.Visible;
+            ExcelFileSelectPage.NextPage = DatePage;
+            //DatePage.Visibility = Visibility.Visible;
+            Title = "Select Excel File";
         }
 
         private void DatePage_NextClick(object sender, RoutedEventArgs e)
@@ -87,8 +89,8 @@ namespace DSSExcel
         private void DatePage_BackClick(object sender, RoutedEventArgs e)
         {
             DatePage.Visibility = Visibility.Collapsed;
-            RecordTypePage.Visibility = Visibility.Visible;
-            Title = "Select Record Type";
+            ExcelFileSelectPage.Visibility = Visibility.Visible;
+            Title = "Select Excel File";
         }
 
         private void OrdinatePage_NextClick(object sender, RoutedEventArgs e)
@@ -125,9 +127,9 @@ namespace DSSExcel
 
         private void OrdinatePage_BackClick(object sender, RoutedEventArgs e)
         {
+            Title = "Select Excel File";
             OrdinatePage.Visibility = Visibility.Collapsed;
-            RecordTypePage.Visibility = Visibility.Visible;
-            Title = "Select Record Type";
+            ExcelFileSelectPage.Visibility = Visibility.Visible;
         }
 
         private void TimeSeriesValuePage_NextClick(object sender, RoutedEventArgs e)
@@ -373,12 +375,32 @@ namespace DSSExcel
 
         private void ExcelFileSelectPage_NextClick(object sender, RoutedEventArgs e)
         {
+            ExcelFileSelectPage.Visibility = Visibility.Collapsed;
+            string newTitle = "";
+            if (ExcelFileSelectPage.NextPage is DateSelectPage)
+            {
+                ((DateSelectPage)ExcelFileSelectPage.NextPage).Visibility = Visibility.Visible;
+                newTitle = "Select Date/Time Range";
+            }
+            else if (ExcelFileSelectPage.NextPage is OrdinateSelectPage)
+            {
+                ((OrdinateSelectPage)ExcelFileSelectPage.NextPage).Visibility = Visibility.Visible;
+                newTitle = "Select Ordinate Range";
+            }
 
+            r = new ExcelReader(ExcelFileSelectPage.FileName);
+            DatePage.ExcelView.ActiveWorkbook = r.workbook;
+            OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
+            TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
+            PairedDataValuePage.ExcelView.ActiveWorkbook = r.workbook;
+            Title = newTitle;
         }
 
         private void ExcelFileSelectPage_BackClick(object sender, RoutedEventArgs e)
         {
-
+            ExcelFileSelectPage.Visibility = Visibility.Collapsed;
+            RecordTypePage.Visibility = Visibility.Visible;
+            Title = "Select Record Type";
         }
     }
 }

@@ -89,7 +89,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ManualImportPages\ExcelFileSelect.xaml">
+    <Page Include="ManualImportPages\ExcelFileSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -118,8 +118,8 @@
     <Compile Include="ManualImportPages\DateSelectPage.xaml.cs">
       <DependentUpon>DateSelectPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ManualImportPages\ExcelFileSelect.xaml.cs">
-      <DependentUpon>ExcelFileSelect.xaml</DependentUpon>
+    <Compile Include="ManualImportPages\ExcelFileSelectPage.xaml.cs">
+      <DependentUpon>ExcelFileSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ManualImportPages\OrdinateSelectPage.xaml.cs">
       <DependentUpon>OrdinateSelectPage.xaml</DependentUpon>

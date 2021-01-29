@@ -1,28 +1,17 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace DSSExcel
 {
     /// <summary>
-    /// Interaction logic for ExcelFileSelect.xaml
+    /// Interaction logic for ExcelFileSelectPage.xaml
     /// </summary>
-    public partial class ExcelFileSelect : Window
+    public partial class ExcelFileSelectPage : UserControl
     {
+        public object NextPage { get; set; }
         public string FileName { get; set; }
-        public ExcelFileSelect()
+        public ExcelFileSelectPage()
         {
             InitializeComponent();
         }
@@ -50,6 +39,7 @@ namespace DSSExcel
             {
                 FileName = dialog.FileName;
                 FileNameTextBox.Text = FileName;
+                NextButton.IsEnabled = true;
             }
         }
     }
