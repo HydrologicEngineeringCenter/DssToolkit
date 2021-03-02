@@ -14,7 +14,7 @@ namespace Hec.Dss.Excel
     {
         public IWorkbookSet workbookSet = Factory.GetWorkbookSet();
         public IWorkbook workbook;
-        public SheetInfo ActiveSheetInfo { get; private set; }
+        public SheetInfo ActiveSheetInfo { get; internal set; }
         public int WorksheetCount
         {
             get
@@ -24,13 +24,14 @@ namespace Hec.Dss.Excel
         }
 
         /// <summary>
-        /// Get sheet info for a specific sheet.
+        /// Set ActiveSheetInfo to hold information about a specific sheet.
         /// </summary>
         /// <param name="worksheet"></param>
         /// <returns></returns>
-        public SheetInfo GetWorksheetInfo(string worksheet)
+        public SheetInfo SetActiveSheetInfo(string worksheet)
         {
-            return ActiveSheetInfo != null && ActiveSheetInfo.Name == worksheet ? ActiveSheetInfo : new SheetInfo(this, worksheet);
+            ActiveSheetInfo = ActiveSheetInfo != null && ActiveSheetInfo.Name == worksheet ? ActiveSheetInfo : new SheetInfo(this, worksheet);
+            return ActiveSheetInfo;
         }
 
         public ExcelReader(string filename)
@@ -45,7 +46,7 @@ namespace Hec.Dss.Excel
 
         public TimeSeries GetTimeSeries(string worksheet)
         {
-            ActiveSheetInfo = GetWorksheetInfo(worksheet);
+            ActiveSheetInfo = SetActiveSheetInfo(worksheet);
             if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
                 return new TimeSeries();
 
@@ -59,7 +60,7 @@ namespace Hec.Dss.Excel
 
         public IEnumerable<TimeSeries> GetMultipleTimeSeries(string worksheet)
         {
-            ActiveSheetInfo = GetWorksheetInfo(worksheet);
+            ActiveSheetInfo = SetActiveSheetInfo(worksheet);
             if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
                 return new List<TimeSeries>();
             var l = new List<TimeSeries>();
@@ -237,7 +238,7 @@ namespace Hec.Dss.Excel
 
         public PairedData GetPairedData(string worksheet)
         {
-            ActiveSheetInfo = GetWorksheetInfo(worksheet);
+            ActiveSheetInfo = SetActiveSheetInfo(worksheet);
             if (!isPairedData(worksheet))
                 return new PairedData();
 
@@ -480,7 +481,7 @@ namespace Hec.Dss.Excel
 
         public RecordType CheckType(string worksheet)
         {
-            ActiveSheetInfo = GetWorksheetInfo(worksheet);
+            ActiveSheetInfo = SetActiveSheetInfo(worksheet);
             if (isRegularTimeSeries(worksheet))
                 return RecordType.RegularTimeSeries;
             else if (isIrregularTimeSeries(worksheet))
@@ -871,10 +872,12 @@ namespace Hec.Dss.Excel
 
         public bool IsAllColumnRowCountsEqual(string worksheet)
         {
-            ActiveSheetInfo = GetWorksheetInfo(worksheet);
-            for (int i = 0; i < ActiveSheetInfo.ColumnCount; i++)
+            var start = DataStartRowIndex(worksheet);
+            var rowCount = RowCount(worksheet);
+            var colCount = ColumnCount(worksheet);
+            for (int i = 0; i < colCount; i++)
             {
-                for (int j = ActiveSheetInfo.DataStartRowIndex; j < ActiveSheetInfo.RowCount; j++)
+                for (int j = start; j < rowCount; j++)
                 {
                     if (!IsDate(workbook.Worksheets[worksheet].Cells[j, i]) && !IsValue(workbook.Worksheets[worksheet].Cells[j, i]) && j != ActiveSheetInfo.RowCount)
                         return false;
@@ -913,6 +916,24 @@ namespace Hec.Dss.Excel
         public bool AllPathsAreProper(string worksheet)
         {
             var type = CheckType(worksheet);
+            if (type == RecordType.IrregularTimeSeries || type == RecordType.RegularTimeSeries)
+            {
+                for (int i = ActiveSheetInfo.ValueStartColumnIndex; i < ActiveSheetInfo.ColumnCount; i++)
+                {
+                    if (!DSSPathExists(worksheet, i))
+                        return false;
+                }
+            }
+            else if (type == RecordType.PairedData)
+            {
+                if (!DSSPathExists(worksheet, ActiveSheetInfo.ValueStartColumnIndex))
+                    return false;
+            }
+            return true;
+        }
+
+        public bool AllPathsAreProper(string worksheet, RecordType type)
+        {
             if (type == RecordType.IrregularTimeSeries || type == RecordType.RegularTimeSeries)
             {
                 for (int i = ActiveSheetInfo.ValueStartColumnIndex; i < ActiveSheetInfo.ColumnCount; i++)

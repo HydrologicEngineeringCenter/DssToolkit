@@ -12,11 +12,11 @@
             <RowDefinition/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
-        <Controls:WorkbookView x:Name="ExcelView" Margin="0,69,0,10" RangeSelectionBorderBrush="#D00F87FB" ActiveTabChanged="ExcelView_ActiveTabChanged"/>
-        <Button x:Name="OrdinateSelectBackButton" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" Click="OrdinateSelectBackButton_Click" Grid.Row="1" Height="23"/>
-        <Button x:Name="OrdinateSelectNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Click="OrdinateSelectNextButton_Click" Grid.Row="1" Height="23"/>
-        <Controls:FormulaBar Margin="0,43,0,0" VerticalAlignment="Top" Height="26"/>
-        <TextBlock Margin="10,0" TextWrapping="Wrap" Text="Select ordinate range:" Height="43" VerticalAlignment="Top" FontSize="20"/>
+        <Controls:WorkbookView x:Name="ExcelView" Margin="0,67,0,10" RangeSelectionBorderBrush="#D00F87FB" ActiveTabChanged="ExcelView_ActiveTabChanged"/>
+        <Button x:Name="OrdinateSelectBackButton" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" Click="OrdinateSelectBackButton_Click" Grid.Row="1" Height="27"/>
+        <Button x:Name="OrdinateSelectNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Click="OrdinateSelectNextButton_Click" Grid.Row="1" Height="27"/>
+        <Controls:FormulaBar Margin="0,41,0,0" VerticalAlignment="Top" Height="26"/>
+        <TextBlock Margin="10,10,10,0" TextWrapping="Wrap" Text="Select Ordinate Range:" Height="26" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
 
     </Grid>
 </UserControl>

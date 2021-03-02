@@ -26,7 +26,6 @@ namespace Hec.Dss.Excel
         public bool HasDate { get; private set; }
         public bool HasPath { get; private set; }
         public bool HasHeaders { get; private set; }
-        public RecordType RecordType { get; private set; }
         public UnitsAndTypes UnitsAndTypes { get; private set; }
         public SheetInfo(ExcelReader r, string sheet)
         {

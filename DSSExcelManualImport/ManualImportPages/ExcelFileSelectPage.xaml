@@ -10,16 +10,17 @@
         <Grid Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="45"/>
+                <ColumnDefinition Width="108"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="197*"/>
                 <RowDefinition Height="28*"/>
             </Grid.RowDefinitions>
-            <TextBox x:Name="FileNameTextBox" Height="20" Margin="14,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Background="WhiteSmoke" IsReadOnly="True"/>
-            <Button Content="..." x:Name="FileSelectButton" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="29" Click="FileSelectButton_Click" Grid.Column="1"/>
-            <Button Content="Next" x:Name="NextButton" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="23" Click="NextButton_Click" Grid.Row="1" HorizontalAlignment="Right" Grid.ColumnSpan="2" IsEnabled="False"/>
-            <Button Content="Back" x:Name="BackButton" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" Height="23" Click="BackButton_Click" Grid.Row="1"/>
+            <TextBox x:Name="FileNameTextBox" Height="27" Margin="10,41,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Background="WhiteSmoke" IsReadOnly="True" FontSize="16"/>
+            <Button Content="Browse..." x:Name="FileSelectButton" HorizontalAlignment="Right" Margin="0,41,10,0" VerticalAlignment="Top" Width="88" Click="FileSelectButton_Click" Grid.Column="1" Height="27"/>
+            <Button Content="Next" x:Name="NextButton" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="NextButton_Click" Grid.Row="1" HorizontalAlignment="Right" Grid.ColumnSpan="2" IsEnabled="False"/>
+            <Button Content="Back" x:Name="BackButton" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="BackButton_Click" Grid.Row="1"/>
+            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Select a File:" VerticalAlignment="Top" Height="26" Width="165" FontSize="20" FontWeight="Bold"/>
         </Grid>
     </Grid>
 </UserControl>

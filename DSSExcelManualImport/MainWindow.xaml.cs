@@ -40,8 +40,7 @@ namespace DSSExcel
             RecordTypePage.Visibility = Visibility.Collapsed;
             ExcelFileSelectPage.Visibility = Visibility.Visible;
             ExcelFileSelectPage.NextPage = OrdinatePage;
-            //OrdinatePage.Visibility = Visibility.Visible;
-            Title = "Select Excel File";
+            RecordType = RecordType.PairedData;
         }
 
         private void RecordTypePage_TimeSeriesNextClick(object sender, RoutedEventArgs e)
@@ -50,17 +49,15 @@ namespace DSSExcel
             RecordTypePage.Visibility = Visibility.Collapsed;
             ExcelFileSelectPage.Visibility = Visibility.Visible;
             ExcelFileSelectPage.NextPage = DatePage;
-            //DatePage.Visibility = Visibility.Visible;
-            Title = "Select Excel File";
+            RecordType = RecordType.RegularTimeSeries;
         }
 
         private void DatePage_NextClick(object sender, RoutedEventArgs e)
         {
-            if (!CheckDates(DatePage.Dates))
-                return;
+            //if (!CheckDates(DatePage.Dates))
+            //    return;
             DatePage.Visibility = Visibility.Collapsed;
             TimeSeriesValuePage.Visibility = Visibility.Visible;
-            Title = "Select Value Range";
         }
 
         private bool CheckDates(IRange dates)
@@ -90,7 +87,6 @@ namespace DSSExcel
         {
             DatePage.Visibility = Visibility.Collapsed;
             ExcelFileSelectPage.Visibility = Visibility.Visible;
-            Title = "Select Excel File";
         }
 
         private void OrdinatePage_NextClick(object sender, RoutedEventArgs e)
@@ -99,7 +95,6 @@ namespace DSSExcel
                 return;
             OrdinatePage.Visibility = Visibility.Collapsed;
             PairedDataValuePage.Visibility = Visibility.Visible;
-            Title = "Select Value Range";
         }
 
         private bool CheckOrdinates(IRange ordinates)
@@ -127,15 +122,14 @@ namespace DSSExcel
 
         private void OrdinatePage_BackClick(object sender, RoutedEventArgs e)
         {
-            Title = "Select Excel File";
             OrdinatePage.Visibility = Visibility.Collapsed;
             ExcelFileSelectPage.Visibility = Visibility.Visible;
         }
 
         private void TimeSeriesValuePage_NextClick(object sender, RoutedEventArgs e)
         {
-            if (!CheckTimeSeriesValues(TimeSeriesValuePage.Values))
-                return;
+            //if (!CheckTimeSeriesValues(TimeSeriesValuePage.Values))
+            //    return;
             TimeSeriesValuePage.Visibility = Visibility.Collapsed;
             ReviewPage.PreviousPage = TimeSeriesValuePage;
             DatePage.ExcelView.ActiveWorkbookSet.GetLock();
@@ -144,7 +138,6 @@ namespace DSSExcel
             DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             ReviewPage.Visibility = Visibility.Visible;
-            Title = "Review Time Series";
         }
 
         private bool CheckTimeSeriesValues(IRange values)
@@ -175,7 +168,6 @@ namespace DSSExcel
         {
             TimeSeriesValuePage.Visibility = Visibility.Collapsed;
             DatePage.Visibility = Visibility.Visible;
-            Title = "Select Date/Time Range";
         }
 
         private void PairedDataValuePage_NextClick(object sender, RoutedEventArgs e)
@@ -191,7 +183,6 @@ namespace DSSExcel
             OrdinatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             PairedDataValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             ReviewPage.Visibility = Visibility.Visible;
-            Title = "Review Paired Data";
         }
 
         private bool CheckPairedDataValues(IRange values)
@@ -224,35 +215,37 @@ namespace DSSExcel
         {
             PairedDataValuePage.Visibility = Visibility.Collapsed;
             OrdinatePage.Visibility = Visibility.Visible;
-            Title = "Select Ordinate Range";
         }
 
         private void ReviewPage_ImportClick(object sender, RoutedEventArgs e)
         {
             ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
+            
+            reader.workbookSet.GetLock();
             ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
-
+            reader.SetActiveSheetInfo(ReviewPage.ExcelView.ActiveWorksheet.Name);
             if (!IsProperlyFormatted(reader))
                 return;
 
             if (ReviewPage.currentRecordType == RecordType.RegularTimeSeries || ReviewPage.currentRecordType == RecordType.IrregularTimeSeries)
-                ImportTimeSeries();
+                ImportTimeSeries(reader);
             if (ReviewPage.currentRecordType == RecordType.PairedData)
-                ImportPairedData();
+                ImportPairedData(reader);
+            reader.workbookSet.ReleaseLock();
             ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
         }
 
         private bool IsProperlyFormatted(ExcelReader reader)
         {
-            if (!reader.IsAllColumnRowCountsEqual(ReviewPage.ExcelView.ActiveWorksheet.Name))
+            if (!reader.AllPathsAreProper(reader.workbook.ActiveWorksheet.Name, RecordType))
             {
-                MessageBox.Show("The sheet being imported doesn't have proper formatting. Not all columns have the same number of values.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Not all paths are properly formatted.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
                 ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
                 return false;
             }
-            else if (!reader.AllPathsAreProper(reader.workbook.ActiveWorksheet.Name))
+            else if (!reader.IsAllColumnRowCountsEqual(ReviewPage.ExcelView.ActiveWorksheet.Name))
             {
-                MessageBox.Show("Not all paths are properly formatted.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("The sheet being imported doesn't have proper formatting. Not all columns have the same number of values.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
                 ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
                 return false;
             }
@@ -260,21 +253,15 @@ namespace DSSExcel
             return true;
         }
 
-        private void ImportPairedData()
+        private void ImportPairedData(ExcelReader reader)
         {
-            ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
-            ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
             PairedData pd = reader.GetPairedData(reader.workbook.ActiveWorksheet.Name);
-            ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             WriteRecord(pd);
         }
 
-        private void ImportTimeSeries()
+        private void ImportTimeSeries(ExcelReader reader)
         {
-            ReviewPage.ExcelView.ActiveWorkbookSet.GetLock();
-            ExcelReader reader = new ExcelReader(ReviewPage.ExcelView.ActiveWorkbook);
             List<TimeSeries> ts = reader.GetMultipleTimeSeries(reader.workbook.ActiveWorksheet.Name).ToList();
-            ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             WriteRecords(ts);
         }
 
@@ -331,7 +318,6 @@ namespace DSSExcel
                 ReviewPage.ResetPaths();
                 ReviewPage.Visibility = Visibility.Collapsed;
                 RecordTypePage.Visibility = Visibility.Visible;
-                Title = "Select Record Type";
             }
             else
                 Close();
@@ -342,7 +328,6 @@ namespace DSSExcel
         {
             ReviewPage.Visibility = Visibility.Collapsed;
             ReviewPage.PreviousPage.Visibility = Visibility.Visible;
-            Title = "Select Value Range";
         }
 
         private void DatePage_TabSelectionChanged(object sender, EventArgs e)
@@ -376,16 +361,13 @@ namespace DSSExcel
         private void ExcelFileSelectPage_NextClick(object sender, RoutedEventArgs e)
         {
             ExcelFileSelectPage.Visibility = Visibility.Collapsed;
-            string newTitle = "";
             if (ExcelFileSelectPage.NextPage is DateSelectPage)
             {
                 ((DateSelectPage)ExcelFileSelectPage.NextPage).Visibility = Visibility.Visible;
-                newTitle = "Select Date/Time Range";
             }
             else if (ExcelFileSelectPage.NextPage is OrdinateSelectPage)
             {
                 ((OrdinateSelectPage)ExcelFileSelectPage.NextPage).Visibility = Visibility.Visible;
-                newTitle = "Select Ordinate Range";
             }
 
             r = new ExcelReader(ExcelFileSelectPage.FileName);
@@ -393,14 +375,12 @@ namespace DSSExcel
             OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
             TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
             PairedDataValuePage.ExcelView.ActiveWorkbook = r.workbook;
-            Title = newTitle;
         }
 
         private void ExcelFileSelectPage_BackClick(object sender, RoutedEventArgs e)
         {
             ExcelFileSelectPage.Visibility = Visibility.Collapsed;
             RecordTypePage.Visibility = Visibility.Visible;
-            Title = "Select Record Type";
         }
     }
 }
