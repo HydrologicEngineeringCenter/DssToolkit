@@ -87,55 +87,55 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ManualImportPages\DateSelectPage.xaml">
+    <Page Include="ImportPages\DateSelectPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ManualImportPages\ExcelFileSelectPage.xaml">
+    <Page Include="ImportPages\ExcelFileSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ManualImportPages\OrdinateSelectPage.xaml">
+    <Page Include="ImportPages\OrdinateSelectPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ManualImportPages\PairedDataValueSelectPage.xaml">
+    <Page Include="ImportPages\PairedDataValueSelectPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ManualImportPages\ReviewPage.xaml">
+    <Page Include="ImportPages\ReviewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ManualImportPages\SelectDataTypePage.xaml">
+    <Page Include="ImportPages\SelectDataTypePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ManualImportPages\TimeSeriesValueSelectPage.xaml">
+    <Page Include="ImportPages\TimeSeriesValueSelectPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ManualImportPages\DateSelectPage.xaml.cs">
+    <Compile Include="ImportPages\DateSelectPage.xaml.cs">
       <DependentUpon>DateSelectPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ManualImportPages\ExcelFileSelectPage.xaml.cs">
+    <Compile Include="ImportPages\ExcelFileSelectPage.xaml.cs">
       <DependentUpon>ExcelFileSelectPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ManualImportPages\OrdinateSelectPage.xaml.cs">
+    <Compile Include="ImportPages\OrdinateSelectPage.xaml.cs">
       <DependentUpon>OrdinateSelectPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ManualImportPages\PairedDataValueSelectPage.xaml.cs">
+    <Compile Include="ImportPages\PairedDataValueSelectPage.xaml.cs">
       <DependentUpon>PairedDataValueSelectPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ManualImportPages\ReviewPage.xaml.cs">
+    <Compile Include="ImportPages\ReviewPage.xaml.cs">
       <DependentUpon>ReviewPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ManualImportPages\SelectDataTypePage.xaml.cs">
+    <Compile Include="ImportPages\SelectDataTypePage.xaml.cs">
       <DependentUpon>SelectDataTypePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ManualImportPages\TimeSeriesValueSelectPage.xaml.cs">
+    <Compile Include="ImportPages\TimeSeriesValueSelectPage.xaml.cs">
       <DependentUpon>TimeSeriesValueSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
