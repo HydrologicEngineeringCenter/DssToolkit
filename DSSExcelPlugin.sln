@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSSExcelCLI", "DSSExcelCLI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSSExcel", "DSSExcel\DSSExcel.csproj", "{89805446-0E7D-4C44-A0B4-424AAFE58241}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSSExcelManualImport", "DSSExcelManualImport\DSSExcelManualImport.csproj", "{BF0B92A4-2A93-4027-B722-076F9A406E9A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSSExcelImport", "DSSExcelImport\DSSExcelImport.csproj", "{BF0B92A4-2A93-4027-B722-076F9A406E9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

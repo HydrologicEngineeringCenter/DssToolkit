@@ -1,0 +1,21 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DSSExcel"
+             xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Class="DSSExcel.DateSelectPage"
+             mc:Ignorable="d" MinWidth="550" MinHeight="350" Height="Auto" Width="Auto">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+        <Controls:WorkbookView x:Name="ExcelView" Margin="0,67,0,10" RangeSelectionBorderBrush="#D013D400" ActiveTabChanged="ExcelView_ActiveTabChanged"/>
+        <Button x:Name="DateSelectNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="DateSelectNextButton_Click" Grid.Row="1" RenderTransformOrigin="0.467,1"/>
+        <Button x:Name="DateSelectBackButton" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="DateSelectBackButton_Click" Grid.Row="1"/>
+        <TextBlock Margin="10,10,10,0" TextWrapping="Wrap" Text="Select Date/Time Range:" Height="26" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
+        <Controls:FormulaBar Margin="0,41,0,0" VerticalAlignment="Top" Height="26"/>
+
+    </Grid>
+</UserControl>
