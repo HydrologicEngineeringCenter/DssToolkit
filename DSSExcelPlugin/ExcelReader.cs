@@ -114,34 +114,6 @@ namespace Hec.Dss.Excel
             }
         }
 
-        //private void GetTimeSeriesDataType(TimeSeries ts, string worksheet, int valueColumn)
-        //{
-        //    var s = "DataType";
-        //    if (ActiveSheetInfo.PathLayout != PathLayout.NoPath &&
-        //        ActiveSheetInfo.PathLayout != PathLayout.TS_PathWithoutTypeAndUnits &&
-        //        ActiveSheetInfo.PathLayout != PathLayout.TS_PathWithoutDPartTypeAndUnit)
-        //    {
-        //        int dataTypeIndex = (int)ActiveSheetInfo.PathLayout - 1;
-        //        s = CellToString(workbook.Worksheets[worksheet].Cells[dataTypeIndex, valueColumn]);
-        //        ts.DataType = s;
-        //    }
-
-        //}
-
-        //private void GetTimeSeriesUnits(TimeSeries ts, string worksheet, int valueColumn)
-        //{
-        //    var s = "Unit";
-        //    if (ActiveSheetInfo.PathLayout != PathLayout.NoPath &&
-        //        ActiveSheetInfo.PathLayout != PathLayout.TS_PathWithoutTypeAndUnits &&
-        //        ActiveSheetInfo.PathLayout != PathLayout.TS_PathWithoutDPartTypeAndUnit)
-        //    {
-        //        int unitIndex = (int)ActiveSheetInfo.PathLayout - 2;
-        //        s = CellToString(workbook.Worksheets[worksheet].Cells[unitIndex, valueColumn]);
-        //        ts.Units = s;
-        //    }
-
-        //}
-
         private void GetTimeSeriesPath(TimeSeries ts, string worksheet, int valueColumn)
         {
             if (!ActiveSheetInfo.HasPath)
