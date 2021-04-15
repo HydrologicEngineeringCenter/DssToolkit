@@ -5,58 +5,93 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommandLine;
+using System.IO;
 
 namespace DSSExcel
 {
     class Program
     {
+        public class Options
+        {
+            [Option('d', "dss-file", Required = true, HelpText = "The source file used for exporting or importing from or to the destination file.")]
+            public string DssFile { get; set; }
+
+            [Option('e', "excel-file", Required = true, HelpText = "The destination file where the source file will export or import data.")]
+            public string ExcelFile { get; set; }
+
+            [Option('p', "paths", Required = true, HelpText = "Path of DSS Record in the form of '/a/b/c/d/e/f/'.", Separator = ';')]
+            public IEnumerable<string> Paths { get; set; }
+        }
+
         static void Main(string[] args)
         {
-            string DssFile = args[1];
-            string ExcelFile = args[2];
+            Parser.Default.ParseArguments<Options>(args)
+                .WithParsed(Run)
+                .WithNotParsed(HandleParseError);
+        }
 
-            using (DssReader r = new DssReader(DssFile))
+        private static void HandleParseError(IEnumerable<Error> errs)
+        {
+            if (errs.IsVersion())
+            {
+                Console.WriteLine("Version Request");
+                return;
+            }
+
+            if (errs.IsHelp())
+            {
+                Console.WriteLine("Help Request");
+                return;
+            }
+            Console.WriteLine("Parser Fail");
+        }
+
+        private static void Run(Options opts)
+        {
+            VerifyExportArgs(opts);
+
+            using (DssReader r = new DssReader(opts.DssFile))
             {
                 object record;
                 ExcelWriter ew = new ExcelWriter(opts.ExcelFile);
-                if (opts.Sheets.ToList().Count == 0)
+                
+                for (int i = 0; i < opts.Paths.ToList<string>().Count; i++)
                 {
-                    for (int i = 0; i < opts.Paths.ToList<string>().Count; i++)
+                    string sheet;
+                    while (true)
                     {
-                        string sheet = "import_" + ExcelTools.RandomString(5);
-                        DssPath p = new DssPath(opts.Paths.ElementAt(i));
-                        var type = r.GetRecordType(p);
-                        if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
-                        {
-                            record = r.GetTimeSeries(p);
-                            ew.Write(record as TimeSeries, sheet);
-                        }
-                        else if (type is RecordType.PairedData)
-                        {
-                            record = r.GetPairedData(p.FullPath);
-                            ew.Write(record as PairedData, sheet);
-                        }
+                        sheet = "dssvue_import_" + ExcelTools.RandomString(5);
+                        if (!ew.SheetExists(sheet))
+                            break;
                     }
-                }
-                else
-                {
-                    for (int i = 0; i < opts.Sheets.ToList().Count; i++)
+                    DssPath p = new DssPath(opts.Paths.ElementAt(i));
+                    var type = r.GetRecordType(p);
+                    if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
                     {
-                        DssPath p = new DssPath(opts.Paths.ElementAt(i));
-                        var type = r.GetRecordType(p);
-                        if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)
-                        {
-                            record = r.GetTimeSeries(p);
-                            ew.Write(record as TimeSeries, opts.Sheets.ElementAt(i));
-                        }
-                        else if (type is RecordType.PairedData)
-                        {
-                            record = r.GetPairedData(p.FullPath);
-                            ew.Write(record as PairedData, opts.Sheets.ElementAt(i));
-                        }
+                        record = r.GetTimeSeries(p);
+                        ew.Write(record as TimeSeries, sheet);
+                    }
+                    else if (type is RecordType.PairedData)
+                    {
+                        record = r.GetPairedData(p.FullPath);
+                        ew.Write(record as PairedData, sheet);
                     }
                 }
             }
+            
+        }
+
+        private static void VerifyExportArgs(Options opts)
+        {
+            if (opts.Paths == null)
+            {
+                Console.WriteLine("DSS record path is needed for exporting data.");
+                Environment.Exit(1);
+            }
+
+            if (!File.Exists(opts.DssFile))
+                throw new FileNotFoundException("Couldn't find DSS file to import data into Excel.");
         }
     }
 }
