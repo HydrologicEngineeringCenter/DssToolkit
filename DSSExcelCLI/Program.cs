@@ -100,7 +100,7 @@ namespace DSSExcelCLI
                     {
                         for (int i = 0; i < opts.Paths.ToList<string>().Count; i++)
                         {
-                            string sheet = "import_" + ExcelTools.RandomString(5);
+                            string sheet = "dssvue_import_" + ExcelTools.RandomString(5);
                             DssPath p = new DssPath(opts.Paths.ElementAt(i));
                             var type = r.GetRecordType(p);
                             if (type is RecordType.RegularTimeSeries || type is RecordType.IrregularTimeSeries)

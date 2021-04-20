@@ -16,6 +16,8 @@ using Hec.Dss.Excel;
 using Hec.Dss;
 using Microsoft.Win32;
 
+
+
 namespace DSSExcel
 {
     /// <summary>
@@ -31,15 +33,22 @@ namespace DSSExcel
         public MainWindow()
         {
             InitializeComponent();
-            ExcelFileName = "";
-            DssFileName = "";
+            string[] args = Environment.GetCommandLineArgs();
+            ExcelFileName = args[1];
+            DssFileName = args[2];
+
+            r = new ExcelReader(ExcelFileName);
+            DatePage.ExcelView.ActiveWorkbook = r.workbook;
+            OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
+            TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
+            PairedDataValuePage.ExcelView.ActiveWorkbook = r.workbook;
+
         }
 
         private void RecordTypePage_PairedDataNextClick(object sender, RoutedEventArgs e)
         {
             RecordTypePage.Visibility = Visibility.Collapsed;
-            ExcelFileSelectPage.Visibility = Visibility.Visible;
-            ExcelFileSelectPage.NextPage = OrdinatePage;
+            OrdinatePage.Visibility = Visibility.Visible;
             RecordType = RecordType.PairedData;
         }
 
@@ -47,8 +56,7 @@ namespace DSSExcel
         {
 
             RecordTypePage.Visibility = Visibility.Collapsed;
-            ExcelFileSelectPage.Visibility = Visibility.Visible;
-            ExcelFileSelectPage.NextPage = DatePage;
+            DatePage.Visibility = Visibility.Visible;
             RecordType = RecordType.RegularTimeSeries;
         }
 
@@ -86,7 +94,7 @@ namespace DSSExcel
         private void DatePage_BackClick(object sender, RoutedEventArgs e)
         {
             DatePage.Visibility = Visibility.Collapsed;
-            ExcelFileSelectPage.Visibility = Visibility.Visible;
+            RecordTypePage.Visibility = Visibility.Visible;
         }
 
         private void OrdinatePage_NextClick(object sender, RoutedEventArgs e)
@@ -123,7 +131,7 @@ namespace DSSExcel
         private void OrdinatePage_BackClick(object sender, RoutedEventArgs e)
         {
             OrdinatePage.Visibility = Visibility.Collapsed;
-            ExcelFileSelectPage.Visibility = Visibility.Visible;
+            RecordTypePage.Visibility = Visibility.Visible;
         }
 
         private void TimeSeriesValuePage_NextClick(object sender, RoutedEventArgs e)
@@ -358,29 +366,30 @@ namespace DSSExcel
             PairedDataValuePage.ExcelView.ActiveSheet = activeSheet;
         }
 
-        private void ExcelFileSelectPage_NextClick(object sender, RoutedEventArgs e)
-        {
-            ExcelFileSelectPage.Visibility = Visibility.Collapsed;
-            if (ExcelFileSelectPage.NextPage is DateSelectPage)
-            {
-                ((DateSelectPage)ExcelFileSelectPage.NextPage).Visibility = Visibility.Visible;
-            }
-            else if (ExcelFileSelectPage.NextPage is OrdinateSelectPage)
-            {
-                ((OrdinateSelectPage)ExcelFileSelectPage.NextPage).Visibility = Visibility.Visible;
-            }
+        //private void ExcelFileSelectPage_NextClick(object sender, RoutedEventArgs e)
+        //{
+        //    ExcelFileSelectPage.Visibility = Visibility.Collapsed;
+        //    if (ExcelFileSelectPage.NextPage is DateSelectPage)
+        //    {
+        //        ((DateSelectPage)ExcelFileSelectPage.NextPage).Visibility = Visibility.Visible;
+        //    }
+        //    else if (ExcelFileSelectPage.NextPage is OrdinateSelectPage)
+        //    {
+        //        ((OrdinateSelectPage)ExcelFileSelectPage.NextPage).Visibility = Visibility.Visible;
+        //    }
 
-            r = new ExcelReader(ExcelFileSelectPage.FileName);
-            DatePage.ExcelView.ActiveWorkbook = r.workbook;
-            OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
-            TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
-            PairedDataValuePage.ExcelView.ActiveWorkbook = r.workbook;
-        }
+        //    r = new ExcelReader(ExcelFileSelectPage.FileName);
+        //    DatePage.ExcelView.ActiveWorkbook = r.workbook;
+        //    OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
+        //    TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
+        //    PairedDataValuePage.ExcelView.ActiveWorkbook = r.workbook;
+        //}
 
-        private void ExcelFileSelectPage_BackClick(object sender, RoutedEventArgs e)
-        {
-            ExcelFileSelectPage.Visibility = Visibility.Collapsed;
-            RecordTypePage.Visibility = Visibility.Visible;
-        }
+        //private void ExcelFileSelectPage_BackClick(object sender, RoutedEventArgs e)
+        //{
+        //    ExcelFileSelectPage.Visibility = Visibility.Collapsed;
+        //    RecordTypePage.Visibility = Visibility.Visible;
+        //}
+
     }
 }
