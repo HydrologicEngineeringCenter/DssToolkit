@@ -58,5 +58,10 @@ namespace DSSExcel
         {
             TimeSeriesOption.IsSelected = true;
         }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

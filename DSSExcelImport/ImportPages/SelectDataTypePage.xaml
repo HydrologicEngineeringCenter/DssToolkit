@@ -10,12 +10,12 @@
             <RowDefinition/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
-        <ListBox HorizontalAlignment="Left" Width="177" Grid.RowSpan="2" Margin="0,55,0,0" BorderBrush="Black" BorderThickness="1,2,1,1">
+        <ListBox HorizontalAlignment="Left" Width="177" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="1,2,1,1" Background="#FFD4D4D4" SelectionChanged="ListBox_SelectionChanged">
             <ListBoxItem x:Name="TimeSeriesOption" Content="Time Series" Selected="TimeSeriesOption_Selected" FontSize="18"/>
             <ListBoxItem x:Name="PairedDataOption" Content="Paired Data" Selected="PairedDataOption_Selected" FontSize="18"/>
         </ListBox>
-        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Select Data Type:" VerticalAlignment="Top" Height="26" FontSize="20" FontWeight="Bold"/>
-        <TextBlock x:Name="TimeSeriesSummary" Margin="182,55,-1,134" HorizontalAlignment="Left" Visibility="Collapsed" FontSize="16" TextWrapping="Wrap"><Run Text="Import a Time Series record by selecting data ranges in existing excel files."/><LineBreak/><LineBreak/><Run Text="Time Series usually have two columns: date/time, and values."/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="182,10,0,0" TextWrapping="Wrap" Text="Select Record Type:" VerticalAlignment="Top" Height="40" FontSize="20" FontWeight="Bold"/>
+        <TextBlock x:Name="TimeSeriesSummary" Margin="182,55,-1,134" HorizontalAlignment="Left" Visibility="Collapsed" FontSize="16" TextWrapping="Wrap"><Run Text="Import a Time Series record by selecting data ranges in existing excel files."/><LineBreak/><LineBreak/><Run Text="Time Series usually have two components: date/time, and values. There may be multiple value columns if several Time Series exist in the same excel file."/></TextBlock>
         <TextBlock x:Name="PairedDataSummary" Margin="182,55,-2,134" HorizontalAlignment="Left" Visibility="Collapsed" FontSize="16" TextWrapping="Wrap"><Run Text="Import a Paired Data record by selecting data ranges in an existing excel file."/><LineBreak/><Run/><LineBreak/><Run Text="Paired Data usually have many columns, with a single ordinates column and multiple value columns."/></TextBlock>
         <Button x:Name="TimeSeriesNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27" Grid.Row="1" Click="TimeSeriesNextButton_Click" Visibility="Collapsed"/>
         <Button x:Name="PairedDataNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27" Grid.Row="1" Click="PairedDataNextButton_Click" Visibility="Collapsed"/>
