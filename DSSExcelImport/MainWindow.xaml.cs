@@ -320,16 +320,8 @@ namespace DSSExcel
 
         private void DisplayImportStatus(string filename)
         {
-            var r = MessageBox.Show("Import to " + filename + " succeeded. Would you like to import another record?", "Import Success", MessageBoxButton.YesNo, MessageBoxImage.Information);
-            if (r == MessageBoxResult.Yes)
-            {
-                ReviewPage.ResetPaths();
-                ReviewPage.Visibility = Visibility.Collapsed;
-                RecordTypePage.Visibility = Visibility.Visible;
-            }
-            else
-                Close();
-
+            var r = MessageBox.Show("Import to " + filename + " succeeded.", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            Close();
         }
 
         private void ReviewPage_BackClick(object sender, RoutedEventArgs e)
