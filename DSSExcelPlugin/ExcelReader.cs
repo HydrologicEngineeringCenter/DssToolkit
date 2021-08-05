@@ -416,14 +416,16 @@ namespace Hec.Dss.Excel
             if (pathEndRow != (int)PathLayout.StandardPath && pathEndRow != (int)PathLayout.PathWithoutDPart)
                 return false;
 
-            int blankEntries = 0;
+            int properEntries = 0;
             for (int i = 0; i < pathEndRow; i++) // check if all entries are blank
             {
-                if (!IsValidCell(workbook.Worksheets[worksheet].Cells[i, column]))
-                    blankEntries++;
+                if (i == (int)PathPartIndexes.DPart || i == (int)PathPartIndexes.Epart) // the D and E parts don't count since they'll automatically be calculated
+                    continue;
+                if (IsValidCell(workbook.Worksheets[worksheet].Cells[i, column]))
+                    properEntries++;
             }
 
-            return blankEntries < (int)PathLayout.PathWithoutDPart; // return true if blank entries is less than the amount of entries for a minimal path
+            return properEntries > 0; // return true if blank entries is less than the amount of entries for a minimal path
         }
 
         public PathLayout GetDSSPathLayout(string worksheet)
@@ -927,7 +929,18 @@ namespace Hec.Dss.Excel
     {
         StandardPath = 6,
         PathWithoutDPart = 5,
+        PathWithoutDandEPart = 4,
         NoPath = 0
+    }
+
+    public enum PathPartIndexes
+    {
+        Apart = 0,
+        Bpart = 1,
+        Cpart = 2,
+        DPart = 3, 
+        Epart = 4,
+        Fpart = 5
     }
 
     public enum UnitsAndTypes

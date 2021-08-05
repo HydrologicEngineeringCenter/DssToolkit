@@ -247,7 +247,7 @@ namespace DSSExcel
         {
             if (!reader.AllPathsAreProper(reader.workbook.ActiveWorksheet.Name, RecordType))
             {
-                MessageBox.Show("Not all paths are properly formatted.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Path(s) are not properly formatted.", "Error: Formatting", MessageBoxButton.OK, MessageBoxImage.Error);
                 ReviewPage.ExcelView.ActiveWorkbookSet.ReleaseLock();
                 return false;
             }
@@ -289,7 +289,9 @@ namespace DSSExcel
             using (DssWriter w = new DssWriter(DssFileName))
             {
                 foreach (var record in records)
+                {
                     w.Write(record);
+                }
             }
             DisplayImportStatus(DssFileName);
 
