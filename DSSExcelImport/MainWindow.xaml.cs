@@ -62,8 +62,6 @@ namespace DSSExcel
 
         private void DatePage_NextClick(object sender, RoutedEventArgs e)
         {
-            //if (!CheckDates(DatePage.Dates))
-            //    return;
             DatePage.Visibility = Visibility.Collapsed;
             TimeSeriesValuePage.Visibility = Visibility.Visible;
         }
@@ -136,15 +134,16 @@ namespace DSSExcel
 
         private void TimeSeriesValuePage_NextClick(object sender, RoutedEventArgs e)
         {
-            //if (!CheckTimeSeriesValues(TimeSeriesValuePage.Values))
-            //    return;
-            TimeSeriesValuePage.Visibility = Visibility.Collapsed;
+            if (!CheckTimeSeriesValues(TimeSeriesValuePage.Values) || !CheckDates(DatePage.Dates))
+                return;
+
             ReviewPage.PreviousPage = TimeSeriesValuePage;
             DatePage.ExcelView.ActiveWorkbookSet.GetLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
             ReviewPage.SetupReviewPage(RecordType.RegularTimeSeries, DatePage.Dates, TimeSeriesValuePage.Values);
             DatePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
             TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.ReleaseLock();
+            TimeSeriesValuePage.Visibility = Visibility.Collapsed;
             ReviewPage.Visibility = Visibility.Visible;
         }
 
@@ -180,7 +179,7 @@ namespace DSSExcel
 
         private void PairedDataValuePage_NextClick(object sender, RoutedEventArgs e)
         {
-            if (!CheckPairedDataValues(PairedDataValuePage.Values))
+            if (!CheckOrdinates(OrdinatePage.Ordinates) || !CheckPairedDataValues(PairedDataValuePage.Values))
                 return;
 
             PairedDataValuePage.Visibility = Visibility.Collapsed;
@@ -359,31 +358,6 @@ namespace DSSExcel
             TimeSeriesValuePage.ExcelView.ActiveSheet = activeSheet;
             PairedDataValuePage.ExcelView.ActiveSheet = activeSheet;
         }
-
-        //private void ExcelFileSelectPage_NextClick(object sender, RoutedEventArgs e)
-        //{
-        //    ExcelFileSelectPage.Visibility = Visibility.Collapsed;
-        //    if (ExcelFileSelectPage.NextPage is DateSelectPage)
-        //    {
-        //        ((DateSelectPage)ExcelFileSelectPage.NextPage).Visibility = Visibility.Visible;
-        //    }
-        //    else if (ExcelFileSelectPage.NextPage is OrdinateSelectPage)
-        //    {
-        //        ((OrdinateSelectPage)ExcelFileSelectPage.NextPage).Visibility = Visibility.Visible;
-        //    }
-
-        //    r = new ExcelReader(ExcelFileSelectPage.FileName);
-        //    DatePage.ExcelView.ActiveWorkbook = r.workbook;
-        //    OrdinatePage.ExcelView.ActiveWorkbook = r.workbook;
-        //    TimeSeriesValuePage.ExcelView.ActiveWorkbook = r.workbook;
-        //    PairedDataValuePage.ExcelView.ActiveWorkbook = r.workbook;
-        //}
-
-        //private void ExcelFileSelectPage_BackClick(object sender, RoutedEventArgs e)
-        //{
-        //    ExcelFileSelectPage.Visibility = Visibility.Collapsed;
-        //    RecordTypePage.Visibility = Visibility.Visible;
-        //}
 
     }
 }
