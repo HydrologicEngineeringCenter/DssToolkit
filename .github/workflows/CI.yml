@@ -74,9 +74,18 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
       
-    # Restore packages
-    - name: Restore dotnet packages
-      run: dotnet restore
+    - name: dotnet add MSTest.Framework package
+      run: dotnet add package MSTest.Framework --version 2.2.5
+      
+    - name: dotnet add MSTest.TestAdapter
+      run: dotnet add package MSTest.TestAdapter --version 2.2.5
+      
+    - name: dotnet add sdk package
+      run: dotnet add package Microsoft.NET.Test.Sdk --version 16.10.0
+      
+    - name: dotnet add code coverage
+      run: dotnet add package Microsoft.CodeCoverage --version 16.10.0
+      
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
