@@ -74,7 +74,7 @@ jobs:
       uses: NuGet/setup-nuget@v1.0.5
       
     - name: Restore Packages
-      run: nuget restore DSSExcelPlugin.sln
+      run: nuget restore DSSExcelPlugin.sln -Source https://www.hec.usace.army.mil/nexus/repository/dss/
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
