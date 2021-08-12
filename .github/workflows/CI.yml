@@ -71,7 +71,7 @@ jobs:
       uses: NuGet/setup-nuget@v1.0.5
         
     - name: Restore NuGet Packages
-      run: nuget restore -Source https://www.hec.usace.army.mil/nexus/repository/dss/
+      run: nuget restore -Source https://api.nuget.org/v3/index.json -Source https://www.hec.usace.army.mil/nexus/repository/dss/ 
       
     - name: Build Solution
       run: msbuild.exe DSSExcelPlugin.sln /p:platform="Any CPU" /p:configuration="Release"
