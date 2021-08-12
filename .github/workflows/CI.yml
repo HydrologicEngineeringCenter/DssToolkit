@@ -48,15 +48,8 @@ jobs:
 
   build:
 
-    strategy:
-      matrix:
-        configuration: [Debug, Release]
-
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
-
-    env:
-      Solution_Name: DSSExcelPlugin.sln
 
     steps:
     - name: Checkout
@@ -69,16 +62,13 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
-        
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.5
-      
-    - name: Restore Packages
-      run: nuget restore DSSExcelPlugin.sln -Source https://www.hec.usace.army.mil/nexus/repository/dss/
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
+      
+    - name: Build Solution
+      run: msbuild.exe DSSExcelPlugin.sln /p:platform="Any CPU" /p:configuration="Release"
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
