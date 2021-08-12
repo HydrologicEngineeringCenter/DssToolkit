@@ -69,24 +69,17 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
+        
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+      
+    - name: Restore Packages
+      run: nuget restore DSSExcelPlugin.sln
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
-      
-    - name: dotnet add MSTest.Framework package
-      run: dotnet add package MSTest.Framework --version 2.2.5
-      
-    - name: dotnet add MSTest.TestAdapter
-      run: dotnet add package MSTest.TestAdapter --version 2.2.5
-      
-    - name: dotnet add sdk package
-      run: dotnet add package Microsoft.NET.Test.Sdk --version 16.10.0
-      
-    - name: dotnet add code coverage
-      run: dotnet add package Microsoft.CodeCoverage --version 16.10.0
-      
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
-      run: dotnet test DSSExcelTests/DSSExcelTests.csproj
+      run: dotnet test
