@@ -181,6 +181,7 @@
     <Error Condition="!Exists('..\packages\Hec.Dss.1.0.26.16\build\Hec.Dss.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Hec.Dss.1.0.26.16\build\Hec.Dss.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>Xcopy $(ProjectDir)bin\$(ConfigurationName) $(ProjectDir)bin\DSSExcelImport_$(ConfigurationName)\ /e /h /c /i /s /y</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
