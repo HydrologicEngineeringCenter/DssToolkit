@@ -180,7 +180,6 @@ namespace DSSExcel
                 {
                     ExcelView.ActiveWorkbook.Worksheets[0].Cells[j + rowStart, i + colStart].Value = CellToString(values.Cells[j, i]);
                 }
-                rowStart--;
             }
             ExcelView.ActiveWorkbookSet.ReleaseLock();
 
