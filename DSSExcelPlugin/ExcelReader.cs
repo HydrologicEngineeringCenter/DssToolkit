@@ -763,17 +763,17 @@ namespace Hec.Dss.Excel
                 tmp = tmp.Replace("24:00", "00:00");
                 tmp = tmp.Replace("24:00:00", "00:00:00");
                 if (!DateTime.TryParse(tmp, out d))
-                    IsDifferentDateFromat(tmp, out d);
+                    TryParseAdditionalDateTimeFormats(tmp, out d);
                 d = d.AddDays(1);
             }
             else
             {
                 if (!DateTime.TryParse(s, out d))
-                    IsDifferentDateFromat(s, out d);
+                    TryParseAdditionalDateTimeFormats(s, out d);
             }
         }
 
-        private static bool IsDifferentDateFromat(string s, out DateTime d)
+        private static bool TryParseAdditionalDateTimeFormats(string s, out DateTime d)
         {
             string[] formats =
             {
