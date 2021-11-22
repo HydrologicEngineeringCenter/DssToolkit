@@ -204,9 +204,10 @@ namespace Hec.Dss.Excel
             var d = new List<DateTime>();
             var offset = ActiveSheetInfo.HasIndex ? 1 : 0;
             for (int i = ActiveSheetInfo.DataStartRowIndex; i < ActiveSheetInfo.SmallestColumnRowCount; i++)
-                d.Add(GetDateFromCell(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
+                d.Add(GetDateFromString(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
             ts.Times = d.ToArray();
         }
+
 
         public PairedData GetPairedData(string worksheet)
         {
@@ -462,13 +463,13 @@ namespace Hec.Dss.Excel
                 return RecordType.IrregularTimeSeries;
             else if (isPairedData(worksheet))
                 return RecordType.PairedData;
-            else if (isGrid(worksheet))
+            else if (IsGrid(worksheet))
                 return RecordType.Grid;
-            else if (isTin(worksheet))
+            else if (IsTin(worksheet))
                 return RecordType.Tin;
-            else if (isLocationInfo(worksheet))
+            else if (IsLocationInfo(worksheet))
                 return RecordType.LocationInfo;
-            else if (isText(worksheet))
+            else if (IsText(worksheet))
                 return RecordType.Text;
             else
                 return RecordType.Unknown;
@@ -487,7 +488,7 @@ namespace Hec.Dss.Excel
             var d = new List<DateTime>();
             var offset = ActiveSheetInfo.HasIndex ? 1 : 0;
             for (int i = ActiveSheetInfo.DataStartRowIndex; i < ActiveSheetInfo.SmallestColumnRowCount; i++)
-                d.Add(GetDateFromCell(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
+                d.Add(GetDateFromString(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
             if (IsRegular(d))
                 return true;
             return false;
@@ -524,22 +525,22 @@ namespace Hec.Dss.Excel
             return true;
         }
 
-        public bool isGrid(string worksheet)
+        public bool IsGrid(string worksheet)
         {
             return false;
         }
 
-        public bool isTin(string worksheet)
+        public bool IsTin(string worksheet)
         {
             return false;
         }
 
-        public bool isLocationInfo(string worksheet)
+        public bool IsLocationInfo(string worksheet)
         {
             return false;
         }
 
-        public bool isText(string worksheet)
+        public bool IsText(string worksheet)
         {
             return false;
         }
@@ -588,10 +589,15 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public DateTime GetDateFromCell(string s)
+        public DateTime GetDateFromString(string s)
         {
             CorrectDateFormat(s, out DateTime dt);
             return dt;
+        }
+
+        public DateTime GetDateFromCell(IRange range)
+        {
+        return DateTime.Now;
         }
 
         private static bool IsRegular(List<DateTime> times)
