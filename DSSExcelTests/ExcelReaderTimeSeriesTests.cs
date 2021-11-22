@@ -240,7 +240,7 @@ namespace DSSExcelTests
         {
             ExcelReader r = new ExcelReader(TestUtility.SimpleRegularTSPath);
             r.GetTimeSeries("Sheet1");
-            Assert.AreEqual(r.isRegularTimeSeries("Sheet1"), true);
+            Assert.AreEqual(r.IsRegularTimeSeries("Sheet1"), true);
         }
 
         [TestMethod]
@@ -248,7 +248,7 @@ namespace DSSExcelTests
         {
             ExcelReader r = new ExcelReader(TestUtility.SimpleIrregularTSPath);
             r.GetTimeSeries("Sheet1");
-            Assert.AreEqual(r.isRegularTimeSeries("Sheet1"), false);
+            Assert.AreEqual(r.IsRegularTimeSeries("Sheet1"), false);
         }
 
     }
