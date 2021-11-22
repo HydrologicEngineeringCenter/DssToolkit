@@ -1,0 +1,29 @@
+name: .NET build
+
+on: [push, pull_request]
+    
+
+jobs: 
+    
+  build:
+    runs-on: windows-latest
+      
+    env:
+      DEVENV_PATH: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.exe
+      
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+             
+    - name: Install Nuget
+      uses: nuget/setup-nuget@v1
+        
+    - name: build release
+      shell: cmd
+      run: msbuild DSSExcelPlugin.sln  /p:Configuration=Debug /p:Platform="Any CPU"
+    
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet vstest /Platform:x64 DSSExcelTests\bin\Debug\DSSExcelPlugin.dll
