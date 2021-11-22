@@ -21,11 +21,10 @@ namespace DSSExcelTests
          DateTime t =r.GetDateFromCell(rng);
          DateTime t2 = r.GetDateFromCell(rng2);
 
-         Console.WriteLine(rng.Value);
-      Console.WriteLine(rng.Text);
+         Assert.AreEqual(t, new DateTime(2020, 7, 14, 6, 1, 0));
+         Assert.AreEqual(t2, new DateTime(2020, 7, 14, 6, 1, 15));
 
-      //d.Add(GetDateFromString(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
 
-    }
+      }
   }
 }
