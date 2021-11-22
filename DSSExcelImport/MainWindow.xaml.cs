@@ -273,23 +273,23 @@ namespace DSSExcel
         }
         private bool TrySelectingDssFileName()
         {
-          if (DssFileName.Equals(""))
-          {
-            SaveFileDialog openFileDialog = new SaveFileDialog();
-            openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
-            openFileDialog.OverwritePrompt = false;
-            if (openFileDialog.ShowDialog() == true)
-              DssFileName = openFileDialog.FileName;
-            else
-              return false;
-          }
-        return true;
+            if (DssFileName.Equals(""))
+            {
+                SaveFileDialog openFileDialog = new SaveFileDialog();
+                openFileDialog.Filter = "DSS Files (*.dss)|*.dss";
+                openFileDialog.OverwritePrompt = false;
+                if (openFileDialog.ShowDialog() == true)
+                    DssFileName = openFileDialog.FileName;
+                else
+                    return false;
+            }
+            return true;
         }
 
-    private void WriteRecords(IEnumerable<TimeSeries> records)
+        private void WriteRecords(IEnumerable<TimeSeries> records)
         {
-        if (!TrySelectingDssFileName())
-          return;
+            if (!TrySelectingDssFileName())
+                return;
 
             using (DssWriter w = new DssWriter(DssFileName))
             {
@@ -304,10 +304,10 @@ namespace DSSExcel
 
         private void WriteRecord(object record)
         {
-        if (!TrySelectingDssFileName())
-          return;
+            if (!TrySelectingDssFileName())
+                return;
 
-      using (DssWriter w = new DssWriter(DssFileName))
+            using (DssWriter w = new DssWriter(DssFileName))
             {
                 if (record is TimeSeries)
                     w.Write(record as TimeSeries);

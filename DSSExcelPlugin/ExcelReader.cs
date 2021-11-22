@@ -201,11 +201,11 @@ namespace Hec.Dss.Excel
 
         private void GetTimeSeriesTimes(TimeSeries ts, string worksheet)
         {
-         var ws = workbook.Worksheets[worksheet];
+            var ws = workbook.Worksheets[worksheet];
             var d = new List<DateTime>();
             var offset = ActiveSheetInfo.HasIndex ? 1 : 0;
-         for (int i = ActiveSheetInfo.DataStartRowIndex; i < ActiveSheetInfo.SmallestColumnRowCount; i++)
-            d.Add(GetDateFromCell(ws.Cells[i, offset]));
+            for (int i = ActiveSheetInfo.DataStartRowIndex; i < ActiveSheetInfo.SmallestColumnRowCount; i++)
+                d.Add(GetDateFromCell(ws.Cells[i, offset]));
             ts.Times = d.ToArray();
         }
 
@@ -485,7 +485,7 @@ namespace Hec.Dss.Excel
         {
             if (!HasDate(worksheetName))
                 return false;
-         var ws = workbook.Worksheets[worksheetName];
+            var ws = workbook.Worksheets[worksheetName];
 
             var d = new List<DateTime>();
             var offset = ActiveSheetInfo.HasIndex ? 1 : 0;
@@ -599,8 +599,8 @@ namespace Hec.Dss.Excel
 
         public DateTime GetDateFromCell(IRange range)
         {
-         String s = range.Cells[0, 0].Text;
-         return GetDateFromString(s);
+             String s = range.Cells[0, 0].Text;
+             return GetDateFromString(s);
         }
 
         private static bool IsRegular(List<DateTime> times)

@@ -119,7 +119,7 @@ namespace DSSExcel
             ExcelView.ActiveWorksheet.Cells.Clear();
 
             int headerEntry = 0;
-         var range = ExcelView.ActiveWorkbook.Worksheets[0].Cells;
+            var range = ExcelView.ActiveWorkbook.Worksheets[0].Cells;
             range[headerEntry++, 0].Value = "A";
             range[headerEntry++, 0].Value = "B";
             range[headerEntry++, 0].Value = "C";
@@ -133,12 +133,12 @@ namespace DSSExcel
             int rowStart = headerEntry + 1;
             for (int i = 0; i < dateTimeRange.RowCount; i++)
             {
-            var dest = range[i + rowStart, 0];
-            var src = dateTimeRange.Cells[i, 0];
-            dest.Value = src.Value;
+                var dest = range[i + rowStart, 0];
+                var src = dateTimeRange.Cells[i, 0];
+                dest.Value = src.Value;
 
-            dest.NumberFormat = "ddMMMyyyy HH:mm:ss";
-         }
+                dest.NumberFormat = "ddMMMyyyy HH:mm:ss";
+            }
 
             
             int colStart = 1;
