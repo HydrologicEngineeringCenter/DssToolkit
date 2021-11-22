@@ -42,7 +42,9 @@
     <Reference Include="Hec.Dss, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hec.Dss.1.0.26.16\lib\net472\Hec.Dss.dll</HintPath>
     </Reference>
-    <Reference Include="SpreadsheetGear2017.Core, Version=8.4.3.102, Culture=neutral, PublicKeyToken=39c186f5904944ec" />
+    <Reference Include="SpreadsheetGear2017.Core">
+      <HintPath>..\..\..\utils\SpreadsheetGear\SpreadsheetGear 2017 for .NET\DotNet40\Bin\SpreadsheetGear2017.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

@@ -47,7 +47,7 @@ namespace Hec.Dss.Excel
         public TimeSeries GetTimeSeries(string worksheet)
         {
             ActiveSheetInfo = SetActiveSheetInfo(worksheet);
-            if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
+            if (!IsIrregularTimeSeries(worksheet) && !IsRegularTimeSeries(worksheet))
                 return new TimeSeries();
 
             TimeSeries ts = new TimeSeries();
@@ -61,7 +61,7 @@ namespace Hec.Dss.Excel
         public IEnumerable<TimeSeries> GetMultipleTimeSeries(string worksheet)
         {
             ActiveSheetInfo = SetActiveSheetInfo(worksheet);
-            if (!isIrregularTimeSeries(worksheet) && !isRegularTimeSeries(worksheet))
+            if (!IsIrregularTimeSeries(worksheet) && !IsRegularTimeSeries(worksheet))
                 return new List<TimeSeries>();
             var l = new List<TimeSeries>();
             for (int i = ActiveSheetInfo.ValueStartColumnIndex; i < ActiveSheetInfo.ColumnCount; i++)
@@ -201,12 +201,14 @@ namespace Hec.Dss.Excel
 
         private void GetTimeSeriesTimes(TimeSeries ts, string worksheet)
         {
+            var ws = workbook.Worksheets[worksheet];
             var d = new List<DateTime>();
             var offset = ActiveSheetInfo.HasIndex ? 1 : 0;
             for (int i = ActiveSheetInfo.DataStartRowIndex; i < ActiveSheetInfo.SmallestColumnRowCount; i++)
-                d.Add(GetDateFromCell(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
+                d.Add(GetDateFromCell(ws.Cells[i, offset]));
             ts.Times = d.ToArray();
         }
+
 
         public PairedData GetPairedData(string worksheet)
         {
@@ -456,19 +458,19 @@ namespace Hec.Dss.Excel
         public RecordType CheckType(string worksheet)
         {
             ActiveSheetInfo = SetActiveSheetInfo(worksheet);
-            if (isRegularTimeSeries(worksheet))
+            if (IsRegularTimeSeries(worksheet))
                 return RecordType.RegularTimeSeries;
-            else if (isIrregularTimeSeries(worksheet))
+            else if (IsIrregularTimeSeries(worksheet))
                 return RecordType.IrregularTimeSeries;
             else if (isPairedData(worksheet))
                 return RecordType.PairedData;
-            else if (isGrid(worksheet))
+            else if (IsGrid(worksheet))
                 return RecordType.Grid;
-            else if (isTin(worksheet))
+            else if (IsTin(worksheet))
                 return RecordType.Tin;
-            else if (isLocationInfo(worksheet))
+            else if (IsLocationInfo(worksheet))
                 return RecordType.LocationInfo;
-            else if (isText(worksheet))
+            else if (IsText(worksheet))
                 return RecordType.Text;
             else
                 return RecordType.Unknown;
@@ -479,15 +481,16 @@ namespace Hec.Dss.Excel
             return CheckType(workbook.Worksheets[worksheetIndex].Name);
         }
 
-        public bool isRegularTimeSeries(string worksheet)
+        public bool IsRegularTimeSeries(string worksheetName)
         {
-            if (!HasDate(worksheet))
+            if (!HasDate(worksheetName))
                 return false;
+            var ws = workbook.Worksheets[worksheetName];
 
             var d = new List<DateTime>();
             var offset = ActiveSheetInfo.HasIndex ? 1 : 0;
             for (int i = ActiveSheetInfo.DataStartRowIndex; i < ActiveSheetInfo.SmallestColumnRowCount; i++)
-                d.Add(GetDateFromCell(CellToString(workbook.Worksheets[worksheet].Cells[i, offset])));
+                d.Add(GetDateFromCell(ws.Cells[i, offset]));
             if (IsRegular(d))
                 return true;
             return false;
@@ -498,12 +501,12 @@ namespace Hec.Dss.Excel
             return (IValues)workbook.Worksheets[worksheet];
         }
 
-        public bool isIrregularTimeSeries(string worksheet)
+        public bool IsIrregularTimeSeries(string worksheet)
         {
             if (!HasDate(worksheet))
                 return false;
 
-            return !isRegularTimeSeries(worksheet);
+            return !IsRegularTimeSeries(worksheet);
         }
 
         public bool isPairedData(string worksheet)
@@ -524,22 +527,22 @@ namespace Hec.Dss.Excel
             return true;
         }
 
-        public bool isGrid(string worksheet)
+        public bool IsGrid(string worksheet)
         {
             return false;
         }
 
-        public bool isTin(string worksheet)
+        public bool IsTin(string worksheet)
         {
             return false;
         }
 
-        public bool isLocationInfo(string worksheet)
+        public bool IsLocationInfo(string worksheet)
         {
             return false;
         }
 
-        public bool isText(string worksheet)
+        public bool IsText(string worksheet)
         {
             return false;
         }
@@ -588,10 +591,16 @@ namespace Hec.Dss.Excel
             }
         }
 
-        public DateTime GetDateFromCell(string s)
+        private DateTime GetDateFromString(string s)
         {
-            CorrectDateFormat(s, out DateTime dt);
+            TryParseExcelDateString(s, out DateTime dt);
             return dt;
+        }
+
+        public DateTime GetDateFromCell(IRange range)
+        {
+             String s = range.Cells[0, 0].Text;
+             return GetDateFromString(s);
         }
 
         private static bool IsRegular(List<DateTime> times)
@@ -684,7 +693,7 @@ namespace Hec.Dss.Excel
             var r = new List<DateTime>();
             for (int i = 0; i < dateTimes.RowCount; i++)
             {
-                CorrectDateFormat(CellToString(dateTimes[i, 0]), out DateTime tmp);
+                TryParseExcelDateString(CellToString(dateTimes[i, 0]), out DateTime tmp);
                 r.Add(tmp);
             }
             return r.ToArray();
@@ -742,7 +751,7 @@ namespace Hec.Dss.Excel
             if (!IsValidCell(date))
                 return false;
 
-            CorrectDateFormat(date[0, 0].Text, out DateTime d);
+            TryParseExcelDateString(date[0, 0].Text, out DateTime d);
             return d == new DateTime() ? false : DateTime.TryParse(d.ToString(), out _);
         }
 
@@ -754,8 +763,9 @@ namespace Hec.Dss.Excel
             return true;
         }
 
-        private static void CorrectDateFormat(string s, out DateTime d)
+      private static bool TryParseExcelDateString(string s, out DateTime d)
         {
+         var rval = false;
             if (s.Contains("2400") || s.Contains("24:00") || s.Contains("24:00:00"))
             {
                 string tmp;
@@ -763,17 +773,18 @@ namespace Hec.Dss.Excel
                 tmp = tmp.Replace("24:00", "00:00");
                 tmp = tmp.Replace("24:00:00", "00:00:00");
                 if (!DateTime.TryParse(tmp, out d))
-                    IsDifferentDateFromat(tmp, out d);
+                    rval = TryParseAdditionalDateTimeFormats(tmp, out d);
                 d = d.AddDays(1);
             }
             else
             {
                 if (!DateTime.TryParse(s, out d))
-                    IsDifferentDateFromat(s, out d);
+                    rval = TryParseAdditionalDateTimeFormats(s, out d);
             }
+         return rval;
         }
 
-        private static bool IsDifferentDateFromat(string s, out DateTime d)
+        private static bool TryParseAdditionalDateTimeFormats(string s, out DateTime d)
         {
             string[] formats =
             {
