@@ -47,7 +47,7 @@ namespace Hec.Dss.Excel
         public TimeSeries GetTimeSeries(string worksheet)
         {
             ActiveSheetInfo = SetActiveSheetInfo(worksheet);
-            if (!isIrregularTimeSeries(worksheet) && !IsRegularTimeSeries(worksheet))
+            if (!IsIrregularTimeSeries(worksheet) && !IsRegularTimeSeries(worksheet))
                 return new TimeSeries();
 
             TimeSeries ts = new TimeSeries();
@@ -61,7 +61,7 @@ namespace Hec.Dss.Excel
         public IEnumerable<TimeSeries> GetMultipleTimeSeries(string worksheet)
         {
             ActiveSheetInfo = SetActiveSheetInfo(worksheet);
-            if (!isIrregularTimeSeries(worksheet) && !IsRegularTimeSeries(worksheet))
+            if (!IsIrregularTimeSeries(worksheet) && !IsRegularTimeSeries(worksheet))
                 return new List<TimeSeries>();
             var l = new List<TimeSeries>();
             for (int i = ActiveSheetInfo.ValueStartColumnIndex; i < ActiveSheetInfo.ColumnCount; i++)
@@ -460,7 +460,7 @@ namespace Hec.Dss.Excel
             ActiveSheetInfo = SetActiveSheetInfo(worksheet);
             if (IsRegularTimeSeries(worksheet))
                 return RecordType.RegularTimeSeries;
-            else if (isIrregularTimeSeries(worksheet))
+            else if (IsIrregularTimeSeries(worksheet))
                 return RecordType.IrregularTimeSeries;
             else if (isPairedData(worksheet))
                 return RecordType.PairedData;
@@ -501,7 +501,7 @@ namespace Hec.Dss.Excel
             return (IValues)workbook.Worksheets[worksheet];
         }
 
-        public bool isIrregularTimeSeries(string worksheet)
+        public bool IsIrregularTimeSeries(string worksheet)
         {
             if (!HasDate(worksheet))
                 return false;
