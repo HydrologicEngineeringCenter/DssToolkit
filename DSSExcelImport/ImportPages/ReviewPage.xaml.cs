@@ -113,27 +113,32 @@ namespace DSSExcel
                 ShowPairedDataPreview(range1, range2);
         }
 
-        private void ShowTimeSeriesPreview(IRange dateTimes, IRange values)
+        private void ShowTimeSeriesPreview(IRange dateTimeRange, IRange values)
         {
             ExcelView.ActiveWorkbookSet.GetLock();
             ExcelView.ActiveWorksheet.Cells.Clear();
 
             int headerEntry = 0;
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[headerEntry++, 0].Value = "A";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[headerEntry++, 0].Value = "B";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[headerEntry++, 0].Value = "C";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[headerEntry++, 0].Value = "D";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[headerEntry++, 0].Value = "E";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[headerEntry++, 0].Value = "F";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[headerEntry++, 0].Value = "Unit";
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[headerEntry++, 0].Value = "Data Type";
+         var range = ExcelView.ActiveWorkbook.Worksheets[0].Cells;
+            range[headerEntry++, 0].Value = "A";
+            range[headerEntry++, 0].Value = "B";
+            range[headerEntry++, 0].Value = "C";
+            range[headerEntry++, 0].Value = "D";
+            range[headerEntry++, 0].Value = "E";
+            range[headerEntry++, 0].Value = "F";
+            range[headerEntry++, 0].Value = "Unit";
+            range[headerEntry++, 0].Value = "Data Type";
 
-            ExcelView.ActiveWorkbook.Worksheets[0].Cells[headerEntry, 0].Value = "Date/Time";
+            range[headerEntry, 0].Value = "Date/Time";
             int rowStart = headerEntry + 1;
-            for (int i = 0; i < dateTimes.RowCount; i++)
+            for (int i = 0; i < dateTimeRange.RowCount; i++)
             {
-                ExcelView.ActiveWorkbook.Worksheets[0].Cells[i + rowStart, 0].Value = CellToString(dateTimes.Cells[i, 0]);
-            }
+            var dest = range[i + rowStart, 0];
+            var src = dateTimeRange.Cells[i, 0];
+            dest.Value = src.Value;
+
+            dest.NumberFormat = "ddMMMyyyy HH:mm:ss";
+         }
 
             
             int colStart = 1;
