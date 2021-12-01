@@ -766,12 +766,12 @@ namespace Hec.Dss.Excel
       private static bool TryParseExcelDateString(string s, out DateTime d)
         {
          var rval = false;
-            if (s.Contains("2400") || s.Contains("24:00") || s.Contains("24:00:00"))
+            if (s.Contains(" 2400") || s.Contains(" 24:00") || s.Contains(" 24:00:00"))
             {
                 string tmp;
-                tmp = s.Replace("2400", "0000");
-                tmp = tmp.Replace("24:00", "00:00");
-                tmp = tmp.Replace("24:00:00", "00:00:00");
+                tmp = s.Replace(" 2400", " 0000");
+                tmp = tmp.Replace(" 24:00", " 00:00");
+                tmp = tmp.Replace(" 24:00:00", " 00:00:00");
                 if (!DateTime.TryParse(tmp, out d))
                     rval = TryParseAdditionalDateTimeFormats(tmp, out d);
                 d = d.AddDays(1);
