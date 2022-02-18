@@ -607,20 +607,15 @@ namespace Hec.Dss.Excel
         {
             if (times.Count <= 1) { return false; }
             var temp = times;
-            var td = temp[1] - temp[0];
-            for (int i = 0; i < temp.Count; i++)
+            var td = temp[1] - temp[0]; // Get time difference.
+
+            // Check if time difference is the same throughout list
+            for (int i = 1; i < temp.Count - 1; i++)
             {
-                if (i == 0)
+                if (temp[i + 1] - temp[i] == td) 
                     continue;
-                else if (i == temp.Count - 1)
-                    break;
                 else
-                {
-                    if (temp[i + 1] - temp[i] == td) // check if time difference is the same throughout list
-                        continue;
-                    else
-                        return false;
-                }
+                    return false;
             }
             return true;
         }
