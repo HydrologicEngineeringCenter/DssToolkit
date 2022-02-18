@@ -605,6 +605,7 @@ namespace Hec.Dss.Excel
 
         private static bool IsRegular(List<DateTime> times)
         {
+            if (times.Count <= 1) { return false; }
             var temp = times;
             var td = temp[1] - temp[0];
             for (int i = 0; i < temp.Count; i++)
