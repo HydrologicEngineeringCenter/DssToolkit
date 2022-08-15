@@ -10,6 +10,12 @@ namespace DSSExcelTests
     [TestClass]
     public class ExcelWriterPairedDataTests
     {
+
+      public ExcelWriterPairedDataTests()
+      {
+         if( !Directory.Exists(TestUtility.OutputPath))
+            Directory.CreateDirectory(TestUtility.OutputPath); 
+      }
         [TestMethod]
         public void InstantiateExcelWriterWithExistingFile()
         {
@@ -73,11 +79,12 @@ namespace DSSExcelTests
         [TestMethod]
         public void AddSheetTest()
         {
-            var filename = TestUtility.OutputPath + "add-sheet.xlsx";
-            var sheetname = "Sheet2";
-            File.Delete(filename);
+          var filename = TestUtility.OutputPath + "add-sheet.xlsx";
+            
+           File.Delete(filename);
 
-            TimeSeries ts1 = TestUtility.CreateTimeSeries(10);
+         var sheetname = "Sheet2";
+         TimeSeries ts1 = TestUtility.CreateTimeSeries(10);
             ExcelWriter w = new ExcelWriter(filename);
             w.AddSheet(sheetname);
             w.Write(ts1, sheetname);
