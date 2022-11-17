@@ -64,7 +64,17 @@ namespace DSSExcel
         {
             DatePage.Visibility = Visibility.Collapsed;
             TimeSeriesValuePage.Visibility = Visibility.Visible;
-        }
+      DatePage.ExcelView.GetLock();
+      try
+      {
+        // set the background  for selected dates
+        DatePage.ExcelView.RangeSelection.Interior.Color = SpreadsheetGear.Colors.Khaki;
+      }
+      finally
+      {
+        DatePage.ExcelView.ReleaseLock();
+      }
+    }
 
         private bool CheckDates(IRange dates)
         {
