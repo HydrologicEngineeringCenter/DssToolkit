@@ -6,16 +6,26 @@
              xmlns:local="clr-namespace:DSSExcel"
              xmlns:Controls="clr-namespace:SpreadsheetGear.Windows.Controls;assembly=SpreadsheetGear2017.Windows.WPF" x:Class="DSSExcel.DateSelectPage"
              mc:Ignorable="d" MinWidth="550" MinHeight="350" Height="Auto" Width="Auto">
-    <Grid Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="35"/>
-        </Grid.RowDefinitions>
-        <Controls:WorkbookView x:Name="ExcelView" Margin="0,67,0,10" RangeSelectionBorderBrush="#D013D400" ActiveTabChanged="ExcelView_ActiveTabChanged"/>
-        <Button x:Name="DateSelectNextButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="DateSelectNextButton_Click" Grid.Row="1" RenderTransformOrigin="0.467,1"/>
-        <Button x:Name="DateSelectBackButton" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="DateSelectBackButton_Click" Grid.Row="1"/>
-        <TextBlock Margin="10,10,10,0" TextWrapping="Wrap" Text="Select Date/Time Range:" Height="26" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
-        <Controls:FormulaBar Margin="0,41,0,0" VerticalAlignment="Top" Height="26"/>
+  <Grid Background="White">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto"/>
+      <RowDefinition Height="auto"/>
+    <RowDefinition Height="auto"/>
+      <RowDefinition/>
+      <RowDefinition Height="35"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <TextBlock Grid.Row="0" Margin="10,10,10,0" TextWrapping="Wrap" Text="Select Date/Time Range:" Height="26" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
+    <TextBlock Grid.Row="1" Margin="10,10,10,0" TextWrapping="Wrap" Text="select rows in a single column. The date and time must be in the same column" Height="26" VerticalAlignment="Top"  />
+    
+    <!--<Controls:FormulaBar Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10,0,0" VerticalAlignment="Top" Height="26"/>-->
+    <Controls:WorkbookView Grid.Row="3" Grid.ColumnSpan="2" x:Name="ExcelView" Margin="0,10,0,10" RangeSelectionBorderBrush="#D013D400" ActiveTabChanged="ExcelView_ActiveTabChanged"/>
+    <Button Grid.Row="4" Grid.Column="1" x:Name="DateSelectNextButton"  Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="DateSelectNextButton_Click"  RenderTransformOrigin="0.467,1"/>
+    <Button Grid.Row="4" x:Name="DateSelectBackButton" Content="Back" HorizontalAlignment="Left" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="DateSelectBackButton_Click" />
 
-    </Grid>
+
+  </Grid>
 </UserControl>
