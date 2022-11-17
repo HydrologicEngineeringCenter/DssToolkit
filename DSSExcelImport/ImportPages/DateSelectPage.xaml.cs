@@ -40,7 +40,14 @@ namespace DSSExcel
 
         private void DateSelectNextButton_Click(object sender, RoutedEventArgs e)
         {
-            this.NextClick?.Invoke(this, e);
+      Console.WriteLine("");
+      if (Dates.ColumnCount != 1)
+      {
+        MessageBox.Show("The selection for Date/Time should only have one column of data.", "Date/Time Selection Error",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        return;
+      }
+      this.NextClick?.Invoke(this, e);
         }
 
         private void DateSelectBackButton_Click(object sender, RoutedEventArgs e)

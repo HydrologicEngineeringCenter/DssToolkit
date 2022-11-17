@@ -68,12 +68,6 @@ namespace DSSExcel
 
         private bool CheckDates(IRange dates)
         {
-            if (dates.ColumnCount != 1)
-            {
-                MessageBox.Show("The selection for Date/Time should only have one column of data.", "Date/Time Selection Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
 
             DatePage.ExcelView.ActiveWorkbookSet.GetLock();
 
