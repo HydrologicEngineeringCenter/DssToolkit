@@ -34,44 +34,8 @@ namespace DSSExcel
             this.BackClick?.Invoke(this, e);
         }
 
-        private void ShowTimeSeriesPaths(IRange values)
-        {
-            GenerateTimeSeriesPaths(values.ColumnCount);
-        }
 
-        private void GenerateTimeSeriesPaths(int count)
-        {
-            ts_paths.Clear();
-            for (int i = 0; i < count; i++)
-            {
-                DssPath path = new DssPath();
-                path.Apart = "a" + RandomString(3);
-                path.Bpart = "b" + RandomString(3);
-                path.Cpart = "c" + RandomString(3);
-                path.Dpart = "";
-                path.Epart = "";
-                path.Fpart = "TimeSeries";
-                ts_paths.Add(path);
-            }
-        }
-
-        private void ShowPairedDataPath()
-        {
-            GeneratePairedDataPath();
-        }
-
-        private void GeneratePairedDataPath()
-        {
-            pd_path = new DssPath();
-            pd_path.Apart = "a" + RandomString(3);
-            pd_path.Bpart = "b" + RandomString(3);
-            pd_path.Cpart = "c" + RandomString(3);
-            pd_path.Dpart = "";
-            pd_path.Epart = "e" + RandomString(3);
-            pd_path.Fpart = "PairedData";
-        }
-
-        public void SetupReviewPage(RecordType recordType, IRange range1, IRange range2)
+    public void SetupReviewPage(RecordType recordType, IRange range1, IRange range2)
         {
             IsReadOnly(false);
             if (recordType is RecordType.IrregularTimeSeries || recordType is RecordType.RegularTimeSeries)
@@ -188,13 +152,6 @@ namespace DSSExcel
             }
             ExcelView.ActiveWorkbookSet.ReleaseLock();
 
-        }
-
-        public void ResetPaths()
-        {
-            ts_paths.Clear();
-            pd_path = new DssPath();
-            PreviousPage = null;
         }
 
         private void ExcelView_ShowError(object sender, SpreadsheetGear.Windows.Controls.ShowErrorEventArgs e)

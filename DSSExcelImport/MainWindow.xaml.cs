@@ -129,7 +129,7 @@ namespace DSSExcel
 
     private void TimeSeriesValuePage_NextClick(object sender, RoutedEventArgs e)
     {
-      if (!CheckTimeSeriesValues(TimeSeriesValuePage.Values) || !CheckDates(DatePage.Dates))
+      if (!ValidTimeSeriesValues(TimeSeriesValuePage.Values) || !CheckDates(DatePage.Dates))
         return;
 
       ReviewPage.PreviousPage = TimeSeriesValuePage;
@@ -142,7 +142,7 @@ namespace DSSExcel
       ReviewPage.Visibility = Visibility.Visible;
     }
 
-    private bool CheckTimeSeriesValues(IRange values)
+    private bool ValidTimeSeriesValues(IRange values)
     {
       TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
       if (!ExcelReader.IsValuesRange(values))
