@@ -37,7 +37,6 @@ namespace DSSExcel
 
     public void SetupReviewPage(RecordType recordType, IRange range1, IRange range2)
         {
-            IsReadOnly(false);
             if (recordType is RecordType.IrregularTimeSeries || recordType is RecordType.RegularTimeSeries)
             {
                 currentRecordType = RecordType.RegularTimeSeries;
@@ -52,22 +51,6 @@ namespace DSSExcel
             ExcelView.ActiveWorkbookSet.ReleaseLock();
         }
 
-        private void IsReadOnly(bool option)
-        {
-            if (option)
-            {
-                ExcelView.ActiveWorkbookSet.GetLock();
-                ExcelView.ActiveWorksheet.ProtectContents = true;
-                ExcelView.ActiveWorkbookSet.ReleaseLock();
-            }
-            else
-            {
-                ExcelView.ActiveWorkbookSet.GetLock();
-                ExcelView.ActiveWorksheet.ProtectContents = false;
-                ExcelView.ActiveWorkbookSet.ReleaseLock();
-            }
-            
-        }
 
         private void SetupRecordPreview(RecordType recordType, IRange range1, IRange range2)
         {
