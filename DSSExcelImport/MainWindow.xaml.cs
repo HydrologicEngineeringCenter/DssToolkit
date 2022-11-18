@@ -67,7 +67,7 @@ namespace DSSExcel
       }
     }
 
-    private bool CheckDates(IRange dates)
+    private bool ValidDates(IRange dates)
     {
 
       DatePage.ExcelView.ActiveWorkbookSet.GetLock();
@@ -129,7 +129,7 @@ namespace DSSExcel
 
     private void TimeSeriesValuePage_NextClick(object sender, RoutedEventArgs e)
     {
-      if (!ValidTimeSeriesValues(TimeSeriesValuePage.Values) || !CheckDates(DatePage.Dates))
+      if (!CheckTimeSeriesValues(TimeSeriesValuePage.Values) || !ValidDates(DatePage.Dates))
         return;
 
       ReviewPage.PreviousPage = TimeSeriesValuePage;
@@ -142,7 +142,7 @@ namespace DSSExcel
       ReviewPage.Visibility = Visibility.Visible;
     }
 
-    private bool ValidTimeSeriesValues(IRange values)
+    private bool CheckTimeSeriesValues(IRange values)
     {
       TimeSeriesValuePage.ExcelView.ActiveWorkbookSet.GetLock();
       if (!ExcelReader.IsValuesRange(values))
