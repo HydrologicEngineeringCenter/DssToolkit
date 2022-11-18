@@ -60,30 +60,58 @@ namespace DSSExcel
         ShowPairedDataPreview(range1, range2);
     }
 
+    private static string[] EstimateCPart(IRange values)
+    {
+      List<string> rval = new List<string>();
+      for (int c = 0; c < values.ColumnCount; c++)
+      {
+        var s = "value " + (c + 1);
+        if (values.Row > 0)
+        {  // look at previous row for column names
+
+          IRange r = values.Cells[-1, c];
+          if (r != null)
+            s = values.Cells[-1, c].Value.ToString();
+        }
+         
+        rval.Add(s);
+      }
+
+      return rval.ToArray();
+    }
     private void ShowTimeSeriesPreview(IRange dateTimeRange, IRange values)
     {
       ExcelView.ActiveWorkbookSet.GetLock();
       try
       {
         ExcelView.ActiveWorksheet.Cells.Clear();
+        
+        var worksheet = ExcelView.ActiveWorkbook.Worksheets[0];
+        var range = worksheet.Cells;
+        string[] cParts = EstimateCPart(values);
 
-        var workBook = ExcelView.ActiveWorkbook.Worksheets[0];
-        int headerEntry = 0;
-        var range = workBook.Cells;
-        range[headerEntry++, 0].Value = "A";
-        range[headerEntry++, 0].Value = "B";
-        range[headerEntry++, 0].Value = "C";
-        range[headerEntry++, 0].Value = "D";
-        range[headerEntry++, 0].Value = "E";
-        range[headerEntry++, 0].Value = "F";
-        range[headerEntry++, 0].Value = "Unit";
-        range[headerEntry++, 0].Value = "Data Type";
+        range[0, 0].Value = "A";
+        range[1, 0].Value = "B";
+        for (int i = 0; i < cParts.Length; i++)
+        {
+          range[1, i + 1].Value = values.Worksheet.Workbook.Name;
+        }
+        range[2, 0].Value = "C";
+        for (int i = 0; i < cParts.Length; i++)
+        {
+          range[2, i + 1].Value = cParts[i];
+        }
+        range[3, 0].Value = "D";
+        range[4, 0].Value = "E";
+        range[5, 0].Value = "F";
+        range[6, 0].Value = "Unit";
+        range[7, 0].Value = "Data Type";
 
-        range[headerEntry, 0].Value = "Date/Time";
-        int rowStart = headerEntry + 1;
+        range[8, 0].Value = "Date/Time";
+        int rowIndex = 9;
         for (int i = 0; i < dateTimeRange.RowCount; i++)
         {
-          var dest = range[i + rowStart, 0];
+          var dest = range[i + rowIndex, 0];
           var src = dateTimeRange.Cells[i, 0];
           dest.Value = src.Value;
 
@@ -94,10 +122,10 @@ namespace DSSExcel
         int colStart = 1;
         for (int i = 0; i < values.ColumnCount; i++)
         {
-          workBook.Cells[headerEntry, i + colStart].Value = "Value " + (i + 1).ToString();
+          worksheet.Cells[8, i + colStart].Value = cParts[i];
           for (int j = 0; j < values.RowCount; j++)
           {
-            workBook.Cells[j + rowStart, i + colStart].Value = CellToString(values.Cells[j, i]);
+            worksheet.Cells[j + rowIndex, i + colStart].Value =  CellToString(values.Cells[j, i]);
           }
         }
       }
