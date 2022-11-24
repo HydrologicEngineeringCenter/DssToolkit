@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace DssExcel
 {
 
-  public class DssExcelViewModel:INotifyPropertyChanged
+  public class DssExcelViewModel : INotifyPropertyChanged
   {
     private string[] importTypeNames = { "Time Series Data", "Paried Data" };
     private string[] importTypeDescription = { "Import time series records by selecting data ranges in an excel workbook\n"
@@ -17,13 +19,13 @@ namespace DssExcel
                                    "Paired Data is two columns of data, eg. {x,y} where x=independent values, y= dependent values\n"
                                    +"Your paried data may also have multiple dependent values {x,y1,y2,...} " };
 
+
     public DssExcelViewModel()
     {
       ImportTypes = new List<string>();
       ImportTypes.AddRange(importTypeNames);
-      //SelectedImportType = importTypeNames[0];
     }
-    public string ExcelFileName { get; set; } 
+    public string ExcelFileName { get; set; }
 
     public string DssFileName { get; set; }
 
@@ -45,7 +47,7 @@ namespace DssExcel
       {
         if (SelectedImportIndex >= 0)
           return importTypeDescription[SelectedImportIndex];
-        return "hi";
+        return "";
       }
     }
 

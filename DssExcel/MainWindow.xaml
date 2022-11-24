@@ -5,8 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DssExcel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-  <DockPanel>
-    <ContentControl x:Name="mainPanel" />
-  </DockPanel>    
+        Title="Importing from Excel to DSS" Height="450" Width="800">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="35" />
+      <RowDefinition Height="35" />
+    </Grid.RowDefinitions>
+    <ContentControl Grid.Row="0" x:Name="mainPanel" />
+    <Button Grid.Row="1"   Command="{Binding }"  x:Name="BackButton"  Content="Back" HorizontalAlignment="Left" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="BackButton_Click"  />
+    <Button Grid.Row="1"   Command="{Binding }"  x:Name="NextButton"  Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="NextButton_Click"  />
+
+    <local:StatusControl  Grid.Row="2" x:Name="statusControl" Height="auto" VerticalAlignment="Bottom"   />
+  </Grid>    
 </Window>

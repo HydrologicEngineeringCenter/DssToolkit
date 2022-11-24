@@ -82,11 +82,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DssExcelViewModel.cs" />
+    <Compile Include="NavigationViewModel.cs" />
     <Compile Include="SelectDateRange.xaml.cs">
       <DependentUpon>SelectDateRange.xaml</DependentUpon>
     </Compile>
     <Compile Include="SelectDataTypeView.xaml.cs">
       <DependentUpon>SelectDataTypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StatusControl.xaml.cs">
+      <DependentUpon>StatusControl.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -105,6 +109,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="SelectDataTypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StatusControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

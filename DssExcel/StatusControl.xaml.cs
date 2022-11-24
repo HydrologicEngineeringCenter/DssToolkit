@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace DssExcel
 {
   /// <summary>
-  /// Interaction logic for SelectDataType.xaml
+  /// Interaction logic for StatusControl.xaml
   /// </summary>
-  public partial class SelectDateRange : UserControl
+  public partial class StatusControl : UserControl
   {
-    public SelectDateRange(DssExcelViewModel vm)
+    public StatusControl()
     {
       InitializeComponent();
-      this.DataContext = vm;
     }
   }
 }

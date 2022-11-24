@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DssExcel"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" Name="selectDataTypeView" >
     <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="auto"/>
@@ -17,16 +17,10 @@
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*"/>
     </Grid.ColumnDefinitions>
-    <TextBlock Grid.Row="0" Margin="10,10,10,0" TextWrapping="Wrap" Text="Select the type of data you want to import:" Height="26" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
+    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="10,10,10,0" TextWrapping="Wrap" Text="Select the type of data you want to import:" Height="26" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
 
     <ListBox Grid.Row ="1" ItemsSource="{Binding ImportTypes}" SelectedIndex="{Binding SelectedImportIndex}" ></ListBox>
     <TextBlock Grid.Row="2" Text="{Binding SelectedImportTypeDescription}" />
-    <Button Grid.Row="3" Grid.Column="1" x:Name="NextButton"  Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27"  />
-    <StatusBar  Grid.Row="4"  >
-      Excel: <TextBox IsReadOnly="True" Width="auto" Text="{Binding ExcelFileName}"/>
-      DSS:
-      <TextBox IsReadOnly="True" Width="auto" Text="{Binding DssFileName}"/>
-    </StatusBar>
 
   </Grid>
 </UserControl>

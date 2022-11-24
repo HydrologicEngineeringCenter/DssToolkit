@@ -24,7 +24,7 @@ namespace DssExcel
       string[] args = Environment.GetCommandLineArgs();
       if (args.Length != 3)
       {
-        MessageBox.Show("No agrguments provided.  Usage:  DssExcel.exe file.xls file.dss");
+        MessageBox.Show("Wrong number of agrguments provided.  Usage:  DssExcel.exe file.xls file.dss");
         Close();
       }
       else
@@ -32,7 +32,30 @@ namespace DssExcel
         vm = new DssExcelViewModel();
         vm.ExcelFileName = args[1];
         vm.DssFileName = args[2];
+        
+        statusControl.DataContext= vm;
+        mainPanel.Content = new SelectDataTypeView(vm);
 
+        
+      }
+    }
+
+    private void NextButton_Click(object sender, RoutedEventArgs e)
+    {
+      if( mainPanel.Content is SelectDataTypeView   )
+      {
+        mainPanel.Content = new SelectDateRange(vm);
+      }
+      else
+      {
+        mainPanel.Content = null;
+      }
+    }
+
+    private void BackButton_Click(object sender, RoutedEventArgs e)
+    {
+      if (mainPanel.Content is SelectDateRange)
+      {
         mainPanel.Content = new SelectDataTypeView(vm);
       }
     }
