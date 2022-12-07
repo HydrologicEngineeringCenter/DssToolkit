@@ -11,6 +11,12 @@ namespace DssExcel
   {
     public ObservableCollection<ImportOptionVM> ImportTypes { get; set; }
 
+    private ImportOptionVM _selectedOptionVM;
+    public ImportOptionVM SelectedImportType {
+      get => _selectedOptionVM;
+      set { _selectedOptionVM = value; OnPropertyChanged(); }
+    }
+
     public ImportTypeVM()
     {
       ImportTypes = new ObservableCollection<ImportOptionVM>();
