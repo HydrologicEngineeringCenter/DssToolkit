@@ -17,7 +17,8 @@ namespace DssExcel
 {
   public partial class MainWindow : Window
   {
-    DssExcelViewModel vm;
+    ImportTypeViewModel vm;
+    Dictionary<ImportState,UserControl> controlDictionary = new Dictionary<ImportState,UserControl>();
     public MainWindow()
     {
       InitializeComponent();
@@ -29,22 +30,28 @@ namespace DssExcel
       }
       else
       {
-        vm = new DssExcelViewModel();
+        vm = new ImportTypeViewModel();
         vm.ExcelFileName = args[1];
         vm.DssFileName = args[2];
-        
+        vm.ExcelReader = new ExcelReader(vm.ExcelFileName); 
         statusControl.DataContext= vm;
         mainPanel.Content = new SelectDataTypeView(vm);
 
+        controlDictionary.Add(ImportState.SelectTimeSeries, new SelectDataTypeView(vm));
         
       }
     }
 
     private void NextButton_Click(object sender, RoutedEventArgs e)
     {
-      if( mainPanel.Content is SelectDataTypeView   )
+      
+      if (vm.ImportState == ImportState.SelectTimeSeries)
       {
-        mainPanel.Content = new SelectDateRange(vm);
+
+        if (mainPanel.Content is SelectDataTypeView)
+        {
+          mainPanel.Content = new SelectDateRange(vm);
+        }
       }
       else
       {

@@ -19,8 +19,21 @@
     </Grid.ColumnDefinitions>
     <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="10,10,10,0" TextWrapping="Wrap" Text="Select the type of data you want to import:" Height="26" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
 
-    <ListBox Grid.Row ="1" ItemsSource="{Binding ImportTypes}" SelectedIndex="{Binding SelectedImportIndex}" ></ListBox>
-    <TextBlock Grid.Row="2" Text="{Binding SelectedImportTypeDescription}" />
+    <ListBox
+      x:Name="ImportTypesList"
+      Grid.Row ="1"
+      ItemsSource="{Binding ImportTypes}"
+      SelectedIndex="{Binding SelectedImportIndex}">
+      <ListBox.ItemTemplate>
+        <DataTemplate DataType="{x:Type local:ImportOptionVM}">
+          <Border BorderThickness="2" BorderBrush="Green">
+            <TextBlock Text="{Binding Name}" Foreground="Red"/>
+          </Border>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+      
+    <TextBlock Grid.Row="2" Text="{Binding ElementName=ImportTypesList, Path=SelectedValue.Description}" />
 
   </Grid>
 </UserControl>

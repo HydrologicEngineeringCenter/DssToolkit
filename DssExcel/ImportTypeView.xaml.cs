@@ -15,20 +15,15 @@ using System.Windows.Shapes;
 
 namespace DssExcel
 {
-  public partial class SelectDateRange : UserControl
+  /// <summary>
+  /// Interaction logic for SelectDataType.xaml
+  /// </summary>
+  public partial class SelectDataTypeView : UserControl
   {
-    public SelectDateRange(ImportTypeViewModel vm)
+    public SelectDataTypeView(ImportTypeViewModel vm)
     {
       InitializeComponent();
-      this.DataContext = vm;
-      this.ExcelView.ActiveWorkbook = vm.ExcelReader.Workbook;
-      
-    }
-
-    DateTime[] DateTimes { get; }
-    private void ExcelView_ActiveTabChanged(object sender, SpreadsheetGear.Windows.Controls.ActiveTabChangedEventArgs e)
-    {
-
+      DataContext = vm;
     }
   }
 }

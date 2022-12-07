@@ -16,14 +16,20 @@ using System.Windows.Shapes;
 namespace DssExcel
 {
   /// <summary>
-  /// Interaction logic for SelectDataType.xaml
+  /// Interaction logic for ExcelRangeSelector.xaml
   /// </summary>
-  public partial class SelectDataTypeView : UserControl
+  public partial class ExcelRangeSelector : UserControl
   {
-    public SelectDataTypeView(DssExcelViewModel vm)
+    private ExcelReader excelReader1 = null;
+    public ExcelRangeSelector(ExcelReader excelReader)
     {
       InitializeComponent();
-      DataContext = vm;
+      excelReader1 = excelReader; 
+    }
+
+    private void ExcelView_RangeSelectionChanged(object sender, SpreadsheetGear.Windows.Controls.RangeSelectionChangedEventArgs e)
+    {
+      //e.RangeSelection
     }
   }
 }
