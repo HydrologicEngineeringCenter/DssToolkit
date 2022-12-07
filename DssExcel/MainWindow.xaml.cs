@@ -17,7 +17,7 @@ namespace DssExcel
 {
   public partial class MainWindow : Window
   {
-    MainViewModel vm;
+    MainViewModel mvm;
     public MainWindow()
     {
       InitializeComponent();
@@ -29,32 +29,32 @@ namespace DssExcel
       }
       else
       {
-        vm = new MainViewModel();
-        vm.ExcelFileName = args[1];
-        vm.DssFileName = args[2];
-        vm.ExcelReader = new ExcelReader(vm.ExcelFileName); 
-        statusControl.DataContext= vm;
+        mvm = new MainViewModel();
+        mvm.ExcelFileName = args[1];
+        mvm.DssFileName = args[2];
+        mvm.ExcelReader = new ExcelReader(mvm.ExcelFileName); 
+        statusControl.DataContext= mvm;
         mainPanel.Content = new ImportTypeView(new ImportTypeVM());
-        BackButton.IsEnabled= false;
-
+        Enabling();
       }
     }
 
     private void NextButton_Click(object sender, RoutedEventArgs e)
     {
       
-      if (vm.ImportState == ImportState.SelectTimeSeries)
+      if (mvm.ImportState == ImportState.SelectTimeSeries)
       {
 
         if (mainPanel.Content is ImportTypeView)
         {
-          mainPanel.Content = new SelectDateRange(vm);
+          mainPanel.Content = new SelectDateRange(mvm);
         }
       }
       else
       {
         mainPanel.Content = null;
       }
+      Enabling();
     }
 
     private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -62,7 +62,14 @@ namespace DssExcel
       if (mainPanel.Content is SelectDateRange)
       {
         mainPanel.Content = new ImportTypeView(new ImportTypeVM());
+      
       }
+      Enabling();
+    }
+
+    private void Enabling()
+    {
+      BackButton.IsEnabled = !(mainPanel.Content is ImportTypeView);
     }
   }
 }

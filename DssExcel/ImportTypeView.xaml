@@ -23,7 +23,9 @@
       x:Name="ImportTypesList"
       Grid.Row ="1"
       ItemsSource="{Binding ImportTypes}"
-      SelectedIndex="{Binding SelectedImportIndex}">
+      IsSynchronizedWithCurrentItem="True">
+      <!--SelectedIndex="0">-->
+      <!--SelectedIndex="{Binding SelectedImportIndex}">-->
       <ListBox.ItemTemplate>
         <DataTemplate DataType="{x:Type local:ImportOptionVM}">
           <Border BorderThickness="2" BorderBrush="Green">

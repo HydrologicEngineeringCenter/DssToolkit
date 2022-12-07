@@ -31,6 +31,8 @@ namespace DssExcel
     }
     public string ExcelFileName { get; set; }
 
+    public ImportType ImportType { get; set;}
+
     public string DssFileName { get; set; }
 
     internal ImportState ImportState {  get; set; }
