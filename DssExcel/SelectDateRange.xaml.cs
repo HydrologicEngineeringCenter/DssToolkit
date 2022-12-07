@@ -17,7 +17,7 @@ namespace DssExcel
 {
   public partial class SelectDateRange : UserControl
   {
-    public SelectDateRange(ImportTypeViewModel vm)
+    public SelectDateRange(MainViewModel vm)
     {
       InitializeComponent();
       this.DataContext = vm;

@@ -1,31 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace DssExcel
 {
-  internal enum ImportState {SelectTimeSeries,SelectPairedData, TimeSeriesSelectDates, TimeSeriesSelectValues, 
-                              PairedDataSelectX, PariedDataSelectY };
-
-
-  public enum ImportType
+  public class ImportTypeVM:BaseVM
   {
-    TimeSeries,
-    PairedData,
-  }
+    public ObservableCollection<ImportOptionVM> ImportTypes { get; set; }
 
-
-  public class ImportTypeViewModel : BaseVM
-  {
-
-    public ImportTypeViewModel()
+    public ImportTypeVM()
     {
       ImportTypes = new ObservableCollection<ImportOptionVM>();
 
@@ -43,22 +29,9 @@ namespace DssExcel
         Name = "Paired Data",
         Description = "Paired Data is two columns of data, eg. {x,y} where x=independent values, y= dependent values\n"
                                    + "Your paried data may also have multiple dependent values {x,y1,y2,...} ",
-        Type= ImportType.PairedData,
+        Type = ImportType.PairedData,
       });
 
-      
     }
-    public string ExcelFileName { get; set; }
-
-    public string DssFileName { get; set; }
-
-    public ObservableCollection<ImportOptionVM> ImportTypes { get; set; }
-
-    internal ImportState ImportState {  get; set; }
-    
-
-    internal ExcelReader ExcelReader { get; set; }
   }
-
-
 }

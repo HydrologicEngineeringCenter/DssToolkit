@@ -18,12 +18,14 @@ namespace DssExcel
   /// <summary>
   /// Interaction logic for SelectDataType.xaml
   /// </summary>
-  public partial class SelectDataTypeView : UserControl
+  public partial class ImportTypeView : UserControl
   {
-    public SelectDataTypeView(ImportTypeViewModel vm)
+    public ImportTypeView(ImportTypeVM vm)
     {
       InitializeComponent();
       DataContext = vm;
+
+      //ImportTypesList.SelectedIndex=0;
     }
   }
 }

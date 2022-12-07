@@ -93,7 +93,8 @@
     </Compile>
     <Compile Include="ExcelReader.cs" />
     <Compile Include="ImportOptionVM.cs" />
-    <Compile Include="ImportTypeViewModel.cs" />
+    <Compile Include="ImportTypeVM.cs" />
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="SelectDateRange.xaml.cs">
       <DependentUpon>SelectDateRange.xaml</DependentUpon>
     </Compile>
