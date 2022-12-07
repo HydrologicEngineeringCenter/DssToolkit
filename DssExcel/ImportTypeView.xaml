@@ -23,9 +23,8 @@
       x:Name="ImportTypesList"
       Grid.Row ="1"
       ItemsSource="{Binding ImportTypes}"
-      SelectedItem="{Binding SelectedImportType, Mode=TwoWay}"
-      IsSynchronizedWithCurrentItem="True">
-     
+      SelectedItem="{Binding SelectedImportType, Mode=TwoWay}">
+      <!--IsSynchronizedWithCurrentItem="True">-->
       <!--SelectedIndex="0">-->
       <!--SelectedIndex="{Binding SelectedImportIndex}">-->
       <ListBox.ItemTemplate>

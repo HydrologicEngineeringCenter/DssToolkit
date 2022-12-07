@@ -24,14 +24,18 @@ namespace DssExcel
 
   public class MainViewModel : BaseVM
   {
+    public ImportTypeVM ImportTypeVM;
 
     public MainViewModel()
     {
-      
+      ImportTypeVM = new ImportTypeVM();
     }
     public string ExcelFileName { get; set; }
 
-    public ImportType ImportType { get; set;}
+    public ImportType ImportType
+    {
+      get { return ImportTypeVM.SelectedImportType.Type;}
+    }
 
     public string DssFileName { get; set; }
 

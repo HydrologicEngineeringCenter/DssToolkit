@@ -88,15 +88,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseVM.cs" />
-    <Compile Include="ExcelRangeSelector.xaml.cs">
-      <DependentUpon>ExcelRangeSelector.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="NavagationItem.cs" />
+    <Compile Include="RangeSelectionVM.cs" />
     <Compile Include="ExcelReader.cs" />
     <Compile Include="ImportOptionVM.cs" />
     <Compile Include="ImportTypeVM.cs" />
     <Compile Include="MainViewModel.cs" />
-    <Compile Include="SelectDateRange.xaml.cs">
-      <DependentUpon>SelectDateRange.xaml</DependentUpon>
+    <Compile Include="RangeSelectionView.xaml.cs">
+      <DependentUpon>RangeSelectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ImportTypeView.xaml.cs">
       <DependentUpon>ImportTypeView.xaml</DependentUpon>
@@ -104,10 +103,9 @@
     <Compile Include="StatusControl.xaml.cs">
       <DependentUpon>StatusControl.xaml</DependentUpon>
     </Compile>
-    <Page Include="ExcelRangeSelector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="TimeSeriesReviewView.xaml.cs">
+      <DependentUpon>TimeSeriesReviewView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -120,7 +118,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SelectDateRange.xaml">
+    <Page Include="RangeSelectionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -129,6 +127,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="StatusControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TimeSeriesReviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

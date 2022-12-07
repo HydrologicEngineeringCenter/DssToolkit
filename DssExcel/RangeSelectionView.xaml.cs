@@ -15,9 +15,9 @@ using System.Windows.Shapes;
 
 namespace DssExcel
 {
-  public partial class SelectDateRange : UserControl
+  public partial class RangeSelectionView : UserControl
   {
-    public SelectDateRange(MainViewModel vm)
+    public RangeSelectionView(RangeSelectionVM vm)
     {
       InitializeComponent();
       this.DataContext = vm;

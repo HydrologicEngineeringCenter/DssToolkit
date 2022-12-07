@@ -38,6 +38,7 @@ namespace DssExcel
         Type = ImportType.PairedData,
       });
 
+      SelectedImportType = ImportTypes[0];
     }
   }
 }

@@ -16,20 +16,13 @@ using System.Windows.Shapes;
 namespace DssExcel
 {
   /// <summary>
-  /// Interaction logic for ExcelRangeSelector.xaml
+  /// Interaction logic for TimeSeriesReviewView.xaml
   /// </summary>
-  public partial class ExcelRangeSelector : UserControl
+  public partial class TimeSeriesReviewView : UserControl
   {
-    private ExcelReader excelReader1 = null;
-    public ExcelRangeSelector(ExcelReader excelReader)
+    public TimeSeriesReviewView()
     {
       InitializeComponent();
-      excelReader1 = excelReader; 
-    }
-
-    private void ExcelView_RangeSelectionChanged(object sender, SpreadsheetGear.Windows.Controls.RangeSelectionChangedEventArgs e)
-    {
-      //e.RangeSelection
     }
   }
 }
