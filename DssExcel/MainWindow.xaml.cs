@@ -40,9 +40,7 @@ namespace DssExcel
         CreatePairedDataNavagation();
 
         NextButton_Click(this, new RoutedEventArgs());
-        mainPanel.Content = new ImportTypeView(mvm.ImportTypeVM);
         
-        Enabling();
       }
     }
 
@@ -85,12 +83,10 @@ namespace DssExcel
 
     private void NextButton_Click(object sender, RoutedEventArgs e)
     {
-      
 
       if (mvm.ImportType == ImportType.TimeSeries)
       {
-        uiIndex++;
-        NavagationItem n = timeSeriesControls[uiIndex];
+        NavagationItem n = timeSeriesControls[++uiIndex];
         mainPanel.Content = n.UserControl;
         BackButton.IsEnabled = n.BackEnabled;
         NextButton.IsEnabled = n.NextEnabled;
@@ -103,22 +99,19 @@ namespace DssExcel
       {
         mainPanel.Content = null;
       }
-      Enabling();
     }
 
     private void BackButton_Click(object sender, RoutedEventArgs e)
     {
-      if (mainPanel.Content is RangeSelectionView)
+      if (mvm.ImportType == ImportType.TimeSeries)
       {
-        mainPanel.Content = new ImportTypeView(mvm.ImportTypeVM);
-      
+        NavagationItem n = timeSeriesControls[--uiIndex];
+        mainPanel.Content = n.UserControl;
+        BackButton.IsEnabled = n.BackEnabled;
+        NextButton.IsEnabled = n.NextEnabled;
       }
-      Enabling();
-    }
 
-    private void Enabling()
-    {
-      BackButton.IsEnabled = !(mainPanel.Content is ImportTypeView);
     }
+     
   }
 }
