@@ -60,7 +60,7 @@ namespace DssExcel
       values = new double[rangeSelection.RowCount,rangeSelection.ColumnCount];
       for (int columnIndex = 0; columnIndex < rangeSelection.ColumnCount; columnIndex++)
       {
-        for (int rowIndex = 0; rowIndex < values.Length; rowIndex++)
+        for (int rowIndex = 0; rowIndex < rangeSelection.RowCount; rowIndex++)
         {
           var cell = rangeSelection[rowIndex, columnIndex];
           if (cell.Value == null || cell.Text.Trim() == "")
