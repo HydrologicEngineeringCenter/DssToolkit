@@ -12,24 +12,61 @@ namespace DssExcel
     public MainWindow()
     {
       InitializeComponent();
+
+      GetFileNames(out string excelFileName, out string dssFileName);
+
+      model = new MainViewModel();
+      model.ExcelFileName = excelFileName;
+      model.DssFileName = dssFileName;
+      model.ExcelReader = new ExcelReader(model.ExcelFileName);
+      statusControl.DataContext = model;
+      CreateTimeSeriesNavagation();
+      CreatePairedDataNavagation();
+
+      NextButton_Click(this, new RoutedEventArgs());
+
+    }
+
+    private void GetFileNames(out string excelFileName, out string dssFileName)
+    {
+      excelFileName = "";
+      dssFileName = "";
       string[] args = Environment.GetCommandLineArgs();
-      if (args.Length != 3)
+      if (args.Length == 3)
       {
+        excelFileName = args[1];
+        dssFileName = args[2];
+      }
+        else if (args.Length == 1)
+      {// no args, prompt for filenames
+        var dialog = new Microsoft.Win32.OpenFileDialog();
+        dialog.Title = "Select Excel file";
+        dialog.DefaultExt = ".xls";  
+        dialog.Filter = "Excel Files (.xls)|*.xls";  
+        var dlgResult = dialog.ShowDialog();
+        if (dlgResult.HasValue && dlgResult.Value )
+        {
+         excelFileName = dialog.FileName;
+          dialog.Title = "Select DSS file";
+          dialog.DefaultExt = ".dss"; 
+          dialog.Filter = "DSS Files (.dss)|*.dss"; 
+          dlgResult = dialog.ShowDialog();
+          if (dlgResult.HasValue && dlgResult.Value)
+          {
+            dssFileName = dialog.FileName;
+          }
+        }
+        else
+        {
+          Close();
+        }
+      }
+      else if (args.Length != 3)
+      {
+        excelFileName = "";
+        dssFileName = "";
         MessageBox.Show("Wrong number of agrguments provided.  Usage:  DssExcel.exe file.xls file.dss");
         Close();
-      }
-      else
-      {
-        model = new MainViewModel();
-        model.ExcelFileName = args[1];
-        model.DssFileName = args[2];
-        model.ExcelReader = new ExcelReader(model.ExcelFileName);
-        statusControl.DataContext = model;
-        CreateTimeSeriesNavagation();
-        CreatePairedDataNavagation();
-
-        NextButton_Click(this, new RoutedEventArgs());
-        
       }
     }
 
