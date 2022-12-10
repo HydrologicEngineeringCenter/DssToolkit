@@ -29,8 +29,8 @@
       <!--SelectedIndex="{Binding SelectedImportIndex}">-->
       <ListBox.ItemTemplate>
         <DataTemplate DataType="{x:Type local:ImportOptionVM}">
-          <Border BorderThickness="2" BorderBrush="Green">
-            <TextBlock Text="{Binding Name}" Foreground="Red"/>
+          <Border BorderThickness="2" >
+            <TextBlock Text="{Binding Name}" Foreground="Black"/>
           </Border>
         </DataTemplate>
       </ListBox.ItemTemplate>

@@ -11,10 +11,6 @@ using System.Windows.Input;
 
 namespace DssExcel
 {
-  internal enum ImportState {SelectTimeSeries,SelectPairedData, TimeSeriesSelectDates, TimeSeriesSelectValues, 
-                              PairedDataSelectX, PariedDataSelectY };
-
-
   public enum ImportType
   {
     TimeSeries,
@@ -37,11 +33,16 @@ namespace DssExcel
       get { return ImportTypeVM.SelectedImportType.Type;}
     }
 
+    public DateTime[] DateTimes { get; set; } 
+
+    public double[] XValues { get; set; }
+    public double[,] YValues { get; set; }
+    public double[,] TimeSeriesValues { get; set; }
+    public string[] TimeSeriesNames { get; set; }
+
     public string DssFileName { get; set; }
 
-    internal ImportState ImportState {  get; set; }
     
-
     internal ExcelReader ExcelReader { get; set; }
   }
 

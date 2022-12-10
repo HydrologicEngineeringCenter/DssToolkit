@@ -89,6 +89,10 @@
     </ApplicationDefinition>
     <Compile Include="BaseVM.cs" />
     <Compile Include="NavagationItem.cs" />
+    <Compile Include="RangeSelectionPairedDataY.cs" />
+    <Compile Include="RangeSelectionPairedDataX.cs" />
+    <Compile Include="RangeSelectionTimeSeriesValues.cs" />
+    <Compile Include="RangeSelectionDatesVM.cs" />
     <Compile Include="RangeSelectionVM.cs" />
     <Compile Include="ExcelReader.cs" />
     <Compile Include="ImportOptionVM.cs" />

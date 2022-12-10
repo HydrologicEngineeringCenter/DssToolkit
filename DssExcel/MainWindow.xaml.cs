@@ -6,7 +6,7 @@ namespace DssExcel
 {
   public partial class MainWindow : Window
   {
-    MainViewModel mvm;
+    MainViewModel model;
     List<NavagationItem> timeSeriesControls = new List<NavagationItem>();
     int uiIndex = -1;
     public MainWindow()
@@ -20,11 +20,11 @@ namespace DssExcel
       }
       else
       {
-        mvm = new MainViewModel();
-        mvm.ExcelFileName = args[1];
-        mvm.DssFileName = args[2];
-        mvm.ExcelReader = new ExcelReader(mvm.ExcelFileName);
-        statusControl.DataContext = mvm;
+        model = new MainViewModel();
+        model.ExcelFileName = args[1];
+        model.DssFileName = args[2];
+        model.ExcelReader = new ExcelReader(model.ExcelFileName);
+        statusControl.DataContext = model;
         CreateTimeSeriesNavagation();
         CreatePairedDataNavagation();
 
@@ -42,28 +42,34 @@ namespace DssExcel
     {
       timeSeriesControls.Add(new NavagationItem
       {
-        UserControl = new ImportTypeView(mvm.ImportTypeVM),
+        ViewModel = null,
+        UserControl = new ImportTypeView(model.ImportTypeVM),
         BackEnabled = false,
         NextEnabled = true,
       });
 
+      RangeSelectionVM vm = new RangeSelectionDatesVM(model);
       timeSeriesControls.Add(new NavagationItem
       {
-        UserControl = new RangeSelectionView(new RangeSelectionVM(RangeSelectionType.TimeSeriesDateTimeColumn, mvm.ExcelReader)),
+        ViewModel = vm,
+        UserControl = new RangeSelectionView(vm),
         BackEnabled = true,
         NextEnabled = true,
       });
 
+      vm = new RangeSelectionTimeSeriesValues(model);
       timeSeriesControls.Add(new NavagationItem
       {
-        UserControl = new RangeSelectionView(new RangeSelectionVM(RangeSelectionType.TimeSeriesMultiColumn, mvm.ExcelReader)),
+        ViewModel= vm,
+        UserControl = new RangeSelectionView(vm),
         BackEnabled = true,
         NextEnabled = true,
       });
 
-
+      
       timeSeriesControls.Add(new NavagationItem
       {
+        ViewModel = null,
         UserControl = new TimeSeriesReviewView(),
         BackEnabled = true,
         NextEnabled = false,
@@ -73,26 +79,44 @@ namespace DssExcel
     private void NextButton_Click(object sender, RoutedEventArgs e)
     {
 
-      if (mvm.ImportType == ImportType.TimeSeries)
+      model.ExcelReader.Workbook.WorkbookSet.GetLock();
+      try
       {
-        NavagationItem n = timeSeriesControls[++uiIndex];
-        mainPanel.Content = n.UserControl;
-        BackButton.IsEnabled = n.BackEnabled;
-        NextButton.IsEnabled = n.NextEnabled;
+        if (model.ImportType == ImportType.TimeSeries)
+        {
+          if (uiIndex >= 0) // initial uiIndex =-1
+          {
+            NavagationItem na = timeSeriesControls[uiIndex];
+            var vm = na.ViewModel;
+            if (vm != null && !vm.Validate(out string msg))
+            {
+              MessageBox.Show(msg);
+              return;
+            }
+          }
+
+          NavagationItem n = timeSeriesControls[++uiIndex];
+          mainPanel.Content = n.UserControl;
+          BackButton.IsEnabled = n.BackEnabled;
+          NextButton.IsEnabled = n.NextEnabled;
+        }
+        else if (model.ImportType == ImportType.PairedData)
+        {
+          mainPanel.Content = null; // TO DO...
+        }
+        else
+        {
+          mainPanel.Content = null;
+        }
       }
-      else if(mvm.ImportType == ImportType.PairedData)
-      {
-        mainPanel.Content = null; // TO DO...
-      }
-      else
-      {
-        mainPanel.Content = null;
+      finally{
+        model.ExcelReader.Workbook.WorkbookSet.ReleaseLock();
       }
     }
 
     private void BackButton_Click(object sender, RoutedEventArgs e)
     {
-      if (mvm.ImportType == ImportType.TimeSeries)
+      if (model.ImportType == ImportType.TimeSeries)
       {
         NavagationItem n = timeSeriesControls[--uiIndex];
         mainPanel.Content = n.UserControl;

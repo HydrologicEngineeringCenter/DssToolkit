@@ -9,6 +9,7 @@ namespace DssExcel
 {
   public  class NavagationItem
   {
+    public RangeSelectionVM ViewModel { get; set; }
     public UserControl UserControl { get; set; }
     public bool BackEnabled { get; set; }
     public bool NextEnabled { get; set; }
