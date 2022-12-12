@@ -24,6 +24,7 @@ namespace DssExcel
       }
 
       mainViewModel.TimeSeriesValues = values;
+      mainViewModel.TimeSeriesNames = ExcelReader.RangeTitles(RangeSelection);
       return true;
 
     }

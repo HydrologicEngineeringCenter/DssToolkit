@@ -57,7 +57,31 @@ namespace DssExcel
      return true;
     }
 
-  
+    /// <summary>
+    /// Returns a title for each row in the selected range. 
+    /// </summary>
+    /// <param name="selection"></param>
+    /// <returns></returns>
+    internal string[] RangeTitles(IRange selection)
+    {
+      List<string> rval = new List<string>();
+      for (int c = 0; c < selection.ColumnCount; c++)
+      {
+        var s = "value " + (c + 1);
+        if (selection.Row > 0)
+        {  // look at previous row for column names
+
+          IRange r = selection.Cells[-1, c];
+          if (r != null)
+            s = selection.Cells[-1, c].Value.ToString();
+        }
+
+        rval.Add(s);
+      }
+
+      return rval.ToArray();
+    }
+
     internal static bool TryGetValueArray2D(IRange rangeSelection, out double[,] values, out string errorMessage)
     {
       errorMessage = "";
