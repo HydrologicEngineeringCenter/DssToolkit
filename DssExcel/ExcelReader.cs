@@ -17,10 +17,14 @@ namespace DssExcel
       Workbook = SpreadsheetGear.Factory.GetWorkbook(fileName);
     }
 
+    public static string RangeToString(IRange cell)
+    {
+      return cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
+    }
     public static bool TryGetDateArray( IRange selection, out DateTime[] dates, out string errorMessage)
     {
       
-      if( selection.ColumnCount !=1)
+      if(selection==null || selection.ColumnCount !=1)
       {
         errorMessage = "Please select dates in a single column.";
         dates = null;
@@ -34,7 +38,7 @@ namespace DssExcel
         var txt = cell.Text.Trim();
         if (cell.Value == null || string.IsNullOrEmpty(txt))
         {
-          errorMessage = "Found a empty cell, but expected a Date/Time: " + cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
+          errorMessage = "Found a empty cell, but expected a Date/Time: " + RangeToString(cell);
           return false;
         }
         if (TryParseExcelDateString(txt, out DateTime dt)){
@@ -42,7 +46,7 @@ namespace DssExcel
         }
         else
         {
-          errorMessage= "Error reading a date: "+ cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
+          errorMessage= "Error reading a date: " + RangeToString(cell);
           return false;
         }
 
@@ -56,6 +60,11 @@ namespace DssExcel
     {
       errorMessage = "";
       values = null;
+      if( rangeSelection==null)
+      {
+        errorMessage = "Please select values ";
+        return false;
+      }
 
       values = new double[rangeSelection.RowCount,rangeSelection.ColumnCount];
       for (int columnIndex = 0; columnIndex < rangeSelection.ColumnCount; columnIndex++)
@@ -65,12 +74,12 @@ namespace DssExcel
           var cell = rangeSelection[rowIndex, columnIndex];
           if (cell.Value == null || cell.Text.Trim() == "")
           {
-            errorMessage = "Found a empty cell, but expected a value: " + cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
+            errorMessage = "Found a empty cell, but expected a value: " + RangeToString(cell);
             return false;
           }
           if (!double.TryParse(cell.Text, out double d))
           {
-            errorMessage = "Could not convert this value to a number: " + cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
+            errorMessage = "Could not convert this value to a number: " + RangeToString(cell);
             return false;
           }
 
@@ -85,7 +94,7 @@ namespace DssExcel
     {
       errorMessage = "";
       values = null;
-      if (rangeSelection.ColumnCount != 1)
+      if (rangeSelection == null|| rangeSelection.ColumnCount != 1)
       {
         errorMessage = "The selection must be one column. There are " + rangeSelection.ColumnCount + " columns selected";
         return false;
@@ -98,12 +107,12 @@ namespace DssExcel
         var cell = rangeSelection[i, 0];
         if (cell.Value == null || cell.Text.Trim()=="")
         {
-          errorMessage = "Found a empty cell, but expected a value: " + cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
+          errorMessage = "Found a empty cell, but expected a value: " + RangeToString(cell);
           return false;
         }
         if(! double.TryParse(cell.Text, out double d))
         {
-          errorMessage = "Could not convert this value to a number: " + cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
+          errorMessage = "Could not convert this value to a number: " + RangeToString(cell);
           return false;
         }
         

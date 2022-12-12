@@ -42,6 +42,13 @@ namespace DssExcel
 
     public string DssFileName { get; set; }
 
+    string dateRangeText1 = "";
+    public string DateRangeText { get =>dateRangeText1;
+      set { dateRangeText1 = value; OnPropertyChanged(); }
+    }
+    string valueRangeText1 = "";
+    public string ValueRangeText { get => valueRangeText1;
+      set { valueRangeText1 = value; OnPropertyChanged(); } }
     
     internal ExcelReader ExcelReader { get; set; }
   }

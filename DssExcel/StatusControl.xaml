@@ -16,8 +16,9 @@
       <TextBox IsReadOnly="True" Width="auto" Text="{Binding ExcelFileName}"/>
       DSS:
       <TextBox IsReadOnly="True" Width="auto" Text="{Binding DssFileName}"/>
-      View:
-      <TextBox IsReadOnly="True" Width="auto" Text="{Binding CurrentViewName}"/>
+      Selections:
+      <TextBox IsReadOnly="True" Width="auto" Text="{Binding DateRangeText}"/>
+      <TextBox IsReadOnly="True" Width="auto" Text="{Binding ValueRangeText}"/>
     </StatusBar>
 
   </Grid>
