@@ -19,6 +19,8 @@ namespace DssExcel
 
     public static string RangeToString(IRange cell)
     {
+      if (cell == null)
+        return "";
       return cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
     }
     public static bool TryGetDateArray( IRange selection, out DateTime[] dates, out string errorMessage)
