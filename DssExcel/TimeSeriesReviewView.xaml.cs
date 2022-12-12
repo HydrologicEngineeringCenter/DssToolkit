@@ -20,9 +20,22 @@ namespace DssExcel
   /// </summary>
   public partial class TimeSeriesReviewView : UserControl
   {
-    public TimeSeriesReviewView()
+    MainViewModel vm;
+    public TimeSeriesReviewView(MainViewModel vm)
     {
       InitializeComponent();
+      this.IsVisibleChanged += TimeSeriesReviewView_IsVisibleChanged;
+      this.vm = vm;
+    }
+
+    private void TimeSeriesReviewView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+      var etsc = new ExcelTimeSeriesCollectionVM(ExcelView.ActiveWorksheet);
+      var locations = new string[vm.TimeSeriesNames.Length];
+      for (int i = 0; i < vm.TimeSeriesNames.Length; i++)
+        locations[i] = System.IO.Path.GetFileNameWithoutExtension(vm.ExcelFileName);
+
+      etsc.Read(vm.DateTimes, vm.TimeSeriesValues, vm.TimeSeriesNames, locations);
     }
   }
 }

@@ -107,7 +107,7 @@ namespace DssExcel
       timeSeriesControls.Add(new NavagationItem
       {
         ViewModel = null,
-        UserControl = new TimeSeriesReviewView(),
+        UserControl = new TimeSeriesReviewView(model),
         BackEnabled = true,
         NextEnabled = false,
       });
