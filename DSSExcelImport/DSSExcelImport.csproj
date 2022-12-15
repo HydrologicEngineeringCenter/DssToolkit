@@ -165,12 +165,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DSSExcelPlugin\Hec.Dss.Excel.csproj">
-      <Project>{e20ea78b-0cc7-4bff-9038-97a5e2182180}</Project>
-      <Name>Hec.Dss.Excel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="excel_logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

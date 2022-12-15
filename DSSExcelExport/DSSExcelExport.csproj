@@ -77,12 +77,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DSSExcelPlugin\Hec.Dss.Excel.csproj">
-      <Project>{E20EA78B-0CC7-4BFF-9038-97A5E2182180}</Project>
-      <Name>Hec.Dss.Excel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="excel_logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
