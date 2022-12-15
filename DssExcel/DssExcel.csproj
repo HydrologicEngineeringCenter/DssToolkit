@@ -91,7 +91,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseVM.cs" />
-    <Compile Include="ExcelDss.cs" />
+    <Compile Include="ExcelExtensions.cs" />
+    <Compile Include="ExcelTimeSeries.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="NavagationItem.cs" />
     <Compile Include="RangeSelectionPairedDataY.cs" />

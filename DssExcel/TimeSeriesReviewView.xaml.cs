@@ -34,7 +34,7 @@ namespace DssExcel
       for (int i = 0; i < vm.TimeSeriesNames.Length; i++)
         locations[i] = System.IO.Path.GetFileNameWithoutExtension(vm.ExcelFileName);
 
-      ExcelDss.WriteTimeSeriesToExcel(ExcelView.ActiveWorksheet,vm.DateTimes, vm.TimeSeriesValues, vm.TimeSeriesNames, locations);
+      ExcelTimeSeries.Write(ExcelView.ActiveWorksheet,vm.DateTimes, vm.TimeSeriesValues, vm.TimeSeriesNames, locations);
     }
   }
 }

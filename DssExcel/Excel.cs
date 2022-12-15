@@ -23,6 +23,12 @@ namespace DssExcel
         return "";
       return cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
     }
+    public static string CellString(IRange cell)
+    {
+      if( EmptyCell(cell))
+        return "";
+      return cell.Value.ToString();
+    }
     public static bool TryGetDateArray( IRange selection, out DateTime[] dates, out string errorMessage)
     {
       
@@ -91,12 +97,16 @@ namespace DssExcel
     /// <returns></returns>
     internal static bool IsMatchDown(IRange range, string[] values)
     {
-      bool rval = false;
       for (int i = 0; i < values.Length; i++)
       {
-        if (range[i, 0].Value.ToString() != values[i]) { rval = false; break; }
+        var val = range[i, 0].Value.ToString();
+        if (val != values[i]) 
+        {
+          Logging.WriteError("Expected cell contents '" + values[i] + "'. Found: '" + val + "'");
+          return false; 
+        }
       }
-      return rval;
+      return true;
     }
     /// <summary>
     /// Returns a title for each row in the selection. 
@@ -156,7 +166,24 @@ namespace DssExcel
       return true;
     }
 
+    internal static string[] ReadAcross(IWorksheet worksheet, IRange range)
+    {
+      int maxColumns = range.CurrentRegion.ColumnCount;
+      List<String> result = new List<String>();
+      for (int i = 0; i < maxColumns; i++)
+      {
+        if (EmptyCell(range[0, i]))
+          break;
+        result.Add(range[0,i].Value.ToString());
+      }
 
+      return result.ToArray();
+    }
+
+    private static bool EmptyCell(IRange cell)
+    {
+      return cell.Value == null || cell.Text.Trim() == "";
+    }
     internal static bool TryGetValueArray(IRange rangeSelection, out double[] values, out string errorMessage)
     {
       errorMessage = "";
@@ -172,7 +199,7 @@ namespace DssExcel
       for (int i = 0; i < values.Length; i++)
       {
         var cell = rangeSelection[i, 0];
-        if (cell.Value == null || cell.Text.Trim()=="")
+        if (EmptyCell(cell))
         {
           errorMessage = "Found a empty cell, but expected a value: " + RangeToString(cell);
           return false;
