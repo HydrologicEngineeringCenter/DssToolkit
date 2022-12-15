@@ -28,7 +28,7 @@ namespace DssExcel
       set { _description = value; OnPropertyChanged(); }
     }
 
-    internal ExcelReader ExcelReader { get => mainViewModel.ExcelReader; }
+    internal Excel ExcelReader { get => mainViewModel.ExcelReader; }
 
     IRange currentSelection;
     public IRange RangeSelection { get =>currentSelection; 

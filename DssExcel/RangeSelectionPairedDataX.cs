@@ -23,7 +23,7 @@ namespace DssExcel
         return false;
       }
 
-      if (ExcelReader.TryGetValueArray(RangeSelection, out double[] values, out errorMessage))
+      if (Excel.TryGetValueArray(RangeSelection, out double[] values, out errorMessage))
       {
         mainViewModel.XValues = values;
         return true;

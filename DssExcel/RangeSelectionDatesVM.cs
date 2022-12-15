@@ -17,9 +17,9 @@ namespace DssExcel
     public override bool Validate(out string errorMessage)
     {
       errorMessage = "";
-      mainViewModel.DateRangeText = "Dates: "+ExcelReader.RangeToString(RangeSelection);
+      mainViewModel.DateRangeText = "Dates: "+Excel.RangeToString(RangeSelection);
       
-      if( ExcelReader.TryGetDateArray(RangeSelection,out DateTime[] dates,out errorMessage))
+      if( Excel.TryGetDateArray(RangeSelection,out DateTime[] dates,out errorMessage))
       {
         mainViewModel.DateTimes = dates;
         return true;

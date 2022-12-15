@@ -17,8 +17,8 @@ namespace DssExcel
     public override bool Validate(out string errorMessage)
     {
 
-      mainViewModel.ValueRangeText="values: " +ExcelReader.RangeToString(RangeSelection);
-      if( !ExcelReader.TryGetValueArray2D(RangeSelection, out double[,] values, out errorMessage))
+      mainViewModel.ValueRangeText="values: " +Excel.RangeToString(RangeSelection);
+      if( !Excel.TryGetValueArray2D(RangeSelection, out double[,] values, out errorMessage))
       {
         return false;
       }

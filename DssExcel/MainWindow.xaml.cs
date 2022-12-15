@@ -18,7 +18,7 @@ namespace DssExcel
       model = new MainViewModel();
       model.ExcelFileName = excelFileName;
       model.DssFileName = dssFileName;
-      model.ExcelReader = new ExcelReader(model.ExcelFileName);
+      model.ExcelReader = new Excel(model.ExcelFileName);
       statusControl.DataContext = model;
       CreateTimeSeriesNavagation();
       CreatePairedDataNavagation();

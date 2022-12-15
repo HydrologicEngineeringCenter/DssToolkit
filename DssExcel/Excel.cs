@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DssExcel
 {
-  public class ExcelReader
+  public class Excel
   {
     string fileName;
     public IWorkbook Workbook { get; set; }
-    public ExcelReader(string fileName)
+    public Excel(string fileName)
     {
       this.fileName = fileName;
       Workbook = SpreadsheetGear.Factory.GetWorkbook(fileName);
@@ -57,8 +57,49 @@ namespace DssExcel
      return true;
     }
 
+    internal static void WriteArrayDown(IRange range, string[] data)
+    {
+      for (int i=0;i<data.Length; i++)
+      {
+        range[i,0].Value= data[i];
+      }
+    }
+
+    internal static void WriteArrayAcross(IRange range, string[] data)
+    {
+      for (int i = 0; i < data.Length; i++)
+      {
+        range[0,i].Value = data[i];
+      }
+    }
+
+    internal static void WriteSequenceDown(IRange range, int start, int count, int increment=1)
+    {
+      int value = start;
+      for (int i = 0; i < count; i++)
+      {
+        range[i, 0].Value = value;
+        value += increment;
+      }
+    }
+
     /// <summary>
-    /// Returns a title for each row in the selected range. 
+    /// Returns true if the values match the range (moving down a column)
+    /// </summary>
+    /// <param name="range"></param>
+    /// <param name="values"></param>
+    /// <returns></returns>
+    internal static bool IsMatchDown(IRange range, string[] values)
+    {
+      bool rval = false;
+      for (int i = 0; i < values.Length; i++)
+      {
+        if (range[i, 0].Value.ToString() != values[i]) { rval = false; break; }
+      }
+      return rval;
+    }
+    /// <summary>
+    /// Returns a title for each row in the selection. 
     /// </summary>
     /// <param name="selection"></param>
     /// <returns></returns>

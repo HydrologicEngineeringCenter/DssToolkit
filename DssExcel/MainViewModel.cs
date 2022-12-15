@@ -50,7 +50,7 @@ namespace DssExcel
     public string ValueRangeText { get => valueRangeText1;
       set { valueRangeText1 = value; OnPropertyChanged(); } }
     
-    internal ExcelReader ExcelReader { get; set; }
+    internal Excel ExcelReader { get; set; }
   }
 
 

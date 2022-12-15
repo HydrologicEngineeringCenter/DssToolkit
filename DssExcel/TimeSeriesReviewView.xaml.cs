@@ -30,12 +30,11 @@ namespace DssExcel
 
     private void TimeSeriesReviewView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-      var etsc = new ExcelTimeSeriesCollectionVM(ExcelView.ActiveWorksheet);
       var locations = new string[vm.TimeSeriesNames.Length];
       for (int i = 0; i < vm.TimeSeriesNames.Length; i++)
         locations[i] = System.IO.Path.GetFileNameWithoutExtension(vm.ExcelFileName);
 
-      etsc.Read(vm.DateTimes, vm.TimeSeriesValues, vm.TimeSeriesNames, locations);
+      ExcelDss.WriteTimeSeriesToExcel(ExcelView.ActiveWorksheet,vm.DateTimes, vm.TimeSeriesValues, vm.TimeSeriesNames, locations);
     }
   }
 }
