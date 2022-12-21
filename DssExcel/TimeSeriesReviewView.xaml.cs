@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpreadsheetGear;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,13 +29,29 @@ namespace DssExcel
       this.vm = vm;
     }
 
+    public IWorksheet WorkSheet
+    {
+      get { return ExcelView.ActiveWorksheet; }
+    }
+
     private void TimeSeriesReviewView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-      var locations = new string[vm.TimeSeriesNames.Length];
-      for (int i = 0; i < vm.TimeSeriesNames.Length; i++)
-        locations[i] = System.IO.Path.GetFileNameWithoutExtension(vm.ExcelFileName);
+      try
+      {
+        var locations = new string[vm.TimeSeriesNames.Length];
+        var versionTags = new string[vm.TimeSeriesNames.Length];
+        for (int i = 0; i < vm.TimeSeriesNames.Length; i++)
+        {
+          locations[i] = System.IO.Path.GetFileNameWithoutExtension(vm.ExcelFileName);
+          versionTags[i] = "xls-import";
+        }
 
-      ExcelTimeSeries.Write(ExcelView.ActiveWorksheet,vm.DateTimes, vm.TimeSeriesValues, vm.TimeSeriesNames, locations);
+        ExcelTimeSeries.Write(ExcelView.ActiveWorksheet, vm.DateTimes, vm.TimeSeriesValues, 
+          vm.TimeSeriesNames, locations,versionTags);
+      }catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
     }
   }
 }

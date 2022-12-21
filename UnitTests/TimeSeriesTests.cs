@@ -18,9 +18,8 @@ namespace UnitTests
       Assert.AreEqual(4206, ts.Count);
       Assert.AreEqual("CFS", ts.Units);
       Assert.AreEqual("INST-VAL", ts.DataType);
-
-
-
     }
+
+
   }
 }

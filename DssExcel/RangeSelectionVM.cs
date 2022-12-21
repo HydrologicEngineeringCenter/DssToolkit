@@ -1,19 +1,14 @@
 ﻿using SpreadsheetGear;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DssExcel
 {
-  public abstract class RangeSelectionVM:BaseVM
+  public abstract class RangeSelectionVM: ValidationVM
   {
     public RangeSelectionVM(MainViewModel vm)
     {
       mainViewModel = vm;
     }
-    public abstract bool Validate(out string errorMessage);
+    
 
     public MainViewModel mainViewModel;
     string _title;

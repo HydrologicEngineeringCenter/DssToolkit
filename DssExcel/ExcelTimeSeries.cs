@@ -59,7 +59,7 @@ namespace DssExcel
     /// <param name="SeriesTitles">titles for series (used in DSS C part)</param>
     /// <param name="locationNames">names for the series locations (used in DSS B part)</param>
     public static void Write(IWorksheet worksheet, DateTime[] dateTimes, double[,] values,
-                            string[] SeriesTitles, string[] locationNames)
+                            string[] SeriesTitles, string[] locationNames, string[] versionTags)
     {
       Hec.Dss.TimeSeries ts = new Hec.Dss.TimeSeries();
       ts.Times=dateTimes;
@@ -77,16 +77,17 @@ namespace DssExcel
           ePart = "interval:";
         else
           ePart = "block-size:";
-        Excel.WriteArrayDown(range[0,1], new string[] { "watershed:", "location:", "parameter:", ePart, "version:" });
-        Excel.WriteArrayAcross(range[2, 2], locationNames);
-        Excel.WriteArrayAcross(range[3, 2], SeriesTitles);
+        Excel.WriteArrayDown(range[0,1], new string[] { "watershed:", "location:", "parameter:", ePart, "version:","units (cfs,feet,...):","  type(PER-AVER,PER-CUM,INST-VAL,INST-CUM):" });
+        Excel.WriteArrayAcross(range[indexOfLocation.r, indexOfLocation.c],locationNames);
+        Excel.WriteArrayAcross(range[indexOfParameter.r, indexOfParameter.c], SeriesTitles);
+        Excel.WriteArrayAcross(range[indexOfVersion.r, indexOfVersion.c], versionTags);
 
         string[] intervals= new string[SeriesTitles.Length];
         for (int i = 0; i < intervals.Length; i++)
         {
           intervals[i]= TimeWindow.GetInterval(ts); 
         }
-        Excel.WriteArrayAcross(range[3, 2], intervals);
+        Excel.WriteArrayAcross(range[indexOfInterval.r, indexOfInterval.c], intervals);
         Excel.WriteSequenceDown(range[7,0],1,dateTimes.Length);
 
         int rowOffset = indexDates.r;
@@ -126,11 +127,13 @@ namespace DssExcel
       return tsList;
     }
 
-    private static TimeSeries[] Read(IWorksheet worksheet)
+    public static TimeSeries[] Read(IWorksheet worksheet)
     {
       var cells =worksheet.Range;
       if (!Excel.IsMatchDown(cells, firstColumn))
         return null;
+
+      //Excel.ReadStringsDown(worksheet,index)
 
       var usedRange = worksheet.GetUsedRange(true);
 
@@ -142,7 +145,7 @@ namespace DssExcel
         throw new Exception(errorMessage);
       }
       // find how many series by reading first value for each series.
-      string[] firstRow = Excel.ReadAcross(worksheet, cells[indexValues.r, indexValues.c]);
+      string[] firstRow = Excel.ReadStringsAcross(worksheet, cells[indexValues.r, indexValues.c],true);
 
 
       var rval = new List<TimeSeries>(firstRow.Length);
@@ -158,11 +161,25 @@ namespace DssExcel
         ts.Values = values;
         ts.Units = Excel.CellString(cells[indexOfUnits.r, indexOfUnits.c + i]);
         ts.DataType = Excel.CellString(cells[indexOfType.r, indexOfType.c + i]);
+        ts.Path = GetDssPath(cells[indexOfWatershed.r, indexOfWatershed.c + i]);
         rval.Add(ts);
       }
 
 
       return rval.ToArray();
+    }
+
+    private static DssPath GetDssPath(IRange range)
+    {
+      var a = Excel.CellString(range[0, 0]);
+      var b = Excel.CellString(range[1, 0]);
+      var c = Excel.CellString(range[2, 0]);
+      var d = "";
+      var e = Excel.CellString(range[3, 0]);
+      var f = Excel.CellString(range[4, 0]);
+      DssPath p = new DssPath(a, b, c, d, e, f);
+
+      return p;
     }
   }
 }

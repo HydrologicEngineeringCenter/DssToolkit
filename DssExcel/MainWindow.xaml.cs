@@ -103,14 +103,17 @@ namespace DssExcel
         NextEnabled = true,
       });
 
-      
-      timeSeriesControls.Add(new NavagationItem
-      {
-        ViewModel = null,
-        UserControl = new TimeSeriesReviewView(model),
-        BackEnabled = true,
-        NextEnabled = false,
-      });
+    
+      var reviewControl = new TimeSeriesReviewView(model);
+      var reviewVM = new TimeSeriesReviewVM(reviewControl.WorkSheet, model.DssFileName);
+    timeSeriesControls.Add(new NavagationItem
+    {
+      ViewModel = reviewVM,
+      UserControl = reviewControl,
+      BackEnabled = true,
+      NextEnabled = true,
+      FinalStep = true,
+    }); 
     }
 
     private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -128,6 +131,11 @@ namespace DssExcel
             if (vm != null && !vm.Validate(out string msg))
             {
               MessageBox.Show(msg);
+              return;
+            }
+            if (na.FinalStep)
+            {
+              Close();
               return;
             }
           }

@@ -110,6 +110,7 @@ namespace DssExcel
     }
     /// <summary>
     /// Returns a title for each row in the selection. 
+    /// Looks at row above selection for 'names'
     /// </summary>
     /// <param name="selection"></param>
     /// <returns></returns>
@@ -166,15 +167,46 @@ namespace DssExcel
       return true;
     }
 
-    internal static string[] ReadAcross(IWorksheet worksheet, IRange range)
+    /// <summary>
+    /// Reads up to rowLmit strings in the first column of the range.
+    /// </summary>
+    /// <param name="worksheet"></param>
+    /// <param name="range"></param>
+    /// <param name="rowLimit"></param>
+    /// <returns></returns>
+    internal static string[] ReadStringsDown(IWorksheet worksheet, IRange range,int rowLimit=int.MaxValue, bool stopOnEmptyCell=false)
+    {
+      int maxRows = range.CurrentRegion.RowCount;
+      maxRows = Math.Min(maxRows, rowLimit);
+      List<String> result = new List<String>();
+      for (int i = 0; i < maxRows; i++)
+      {
+        if (EmptyCell(range[i, 0]))
+          break;
+        result.Add(range[i,0].Value.ToString());
+      }
+
+      return result.ToArray();
+    }
+    internal static string[] ReadStringsAcross(IWorksheet worksheet, IRange range, bool stopOnEmptyCell)
     {
       int maxColumns = range.CurrentRegion.ColumnCount;
       List<String> result = new List<String>();
       for (int i = 0; i < maxColumns; i++)
       {
         if (EmptyCell(range[0, i]))
-          break;
-        result.Add(range[0,i].Value.ToString());
+        {
+          if (stopOnEmptyCell)
+            break;
+          else
+          {
+            result.Add("");
+          }
+        }
+        else
+        {
+          result.Add(range[0, i].Value.ToString());
+        }
       }
 
       return result.ToArray();
@@ -230,7 +262,10 @@ namespace DssExcel
       }
       else
       {
-        if (!DateTime.TryParse(s, out d))
+        rval = DateTime.TryParse(s, out d);
+        if (rval)
+          return true;
+        else
           rval = TryParseAdditionalDateTimeFormats(s, out d);
       }
       return rval;

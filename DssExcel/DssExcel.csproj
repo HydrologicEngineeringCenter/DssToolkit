@@ -91,6 +91,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseVM.cs" />
+    <Compile Include="ValidationVM.cs" />
     <Compile Include="ExcelExtensions.cs" />
     <Compile Include="ExcelTimeSeries.cs" />
     <Compile Include="Logging.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="TimeSeriesReviewView.xaml.cs">
       <DependentUpon>TimeSeriesReviewView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TimeSeriesReviewVM.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
