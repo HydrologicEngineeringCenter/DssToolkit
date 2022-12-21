@@ -95,7 +95,7 @@
     <Compile Include="ExcelExtensions.cs" />
     <Compile Include="ExcelTimeSeries.cs" />
     <Compile Include="Logging.cs" />
-    <Compile Include="NavagationItem.cs" />
+    <Compile Include="NavigationItem.cs" />
     <Compile Include="RangeSelectionPairedDataY.cs" />
     <Compile Include="RangeSelectionPairedDataX.cs" />
     <Compile Include="RangeSelectionTimeSeriesValues.cs" />

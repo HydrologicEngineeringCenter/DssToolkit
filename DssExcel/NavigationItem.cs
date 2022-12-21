@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace DssExcel
 {
-  public  class NavagationItem
+  public  class NavigationItem
   {
     public bool FinalStep { get; set; }
 
@@ -16,7 +16,7 @@ namespace DssExcel
     public bool BackEnabled { get; set; }
     public bool NextEnabled { get; set; }
 
-    public NavagationItem()
+    public NavigationItem()
     {
       FinalStep = false;
     }
