@@ -25,16 +25,11 @@ namespace DssExcel
     public TimeSeriesReviewView(MainViewModel vm)
     {
       InitializeComponent();
-      this.IsVisibleChanged += TimeSeriesReviewView_IsVisibleChanged;
+      this.Loaded += TimeSeriesReviewView_Loaded;
       this.vm = vm;
     }
 
-    public IWorksheet WorkSheet
-    {
-      get { return ExcelView.ActiveWorksheet; }
-    }
-
-    private void TimeSeriesReviewView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void TimeSeriesReviewView_Loaded(object sender, RoutedEventArgs e)
     {
       try
       {
@@ -46,12 +41,18 @@ namespace DssExcel
           versionTags[i] = "xls-import";
         }
 
-        ExcelTimeSeries.Write(ExcelView.ActiveWorksheet, vm.DateTimes, vm.TimeSeriesValues, 
-          vm.TimeSeriesNames, locations,versionTags);
-      }catch (Exception ex)
+        ExcelTimeSeries.Write(ExcelView.ActiveWorksheet, vm.DateTimes, vm.TimeSeriesValues,
+          vm.TimeSeriesNames, locations, versionTags);
+      }
+      catch (Exception ex)
       {
         MessageBox.Show(ex.Message);
       }
+    }
+
+    public IWorksheet WorkSheet
+    {
+      get { return ExcelView.ActiveWorksheet; }
     }
   }
 }
