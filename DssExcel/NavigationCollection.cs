@@ -60,6 +60,15 @@ namespace DssExcel
         BackEnabled = true,
         NextEnabled = true,
       });
+      pairedDataNavigation.Add(new NavigationItem
+      {
+        ViewModel = vm,
+        UserControl = new PairedDataReviewView(model),
+        BackEnabled = true,
+        NextEnabled = true,
+        FinalStep= true
+      });
+
 
 
 

@@ -91,6 +91,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseVM.cs" />
+    <Compile Include="ExcelPairedData.cs" />
     <Compile Include="NavigationCollection.cs" />
     <Compile Include="PairedDataReviewView.xaml.cs">
       <DependentUpon>PairedDataReviewView.xaml</DependentUpon>

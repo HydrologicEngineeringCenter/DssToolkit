@@ -70,8 +70,35 @@ namespace DssExcel
         range[i,0].Value= data[i];
       }
     }
+    internal static void WriteArrayDown(IRange range, DateTime[] data)
+    {
+      for (int i = 0; i < data.Length; i++)
+      {
+        var cell = range[i,0];
+        cell.Value = data[i];
+        cell.NumberFormat = "ddMMMyyyy HH:mm:ss";
+      }
+    }
 
-    internal static void WriteArrayAcross(IRange range, string[] data)
+    internal static void WriteMatrix(IRange range, double[,] values)
+    {
+      for (int col = 0; col < values.GetLength(1); col++)
+      {
+        for (int rowIndex = 0; rowIndex < values.GetLength(0); rowIndex++)
+        {
+          range[rowIndex , col ].Value = values[rowIndex, col];
+        }
+      }
+    }
+
+    internal static void WriteArrayDown(IRange range, double[] data)
+    {
+      for (int i = 0; i < data.Length; i++)
+      {
+        range[i, 0].Value = data[i];
+      }
+    }
+      internal static void WriteArrayAcross(IRange range, string[] data)
     {
       for (int i = 0; i < data.Length; i++)
       {

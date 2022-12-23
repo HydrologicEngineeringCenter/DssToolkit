@@ -10,7 +10,8 @@ namespace DssExcel
 {
   /// <summary>
   /// ExcelTimeSeries has methods for reading and writing time series data to excel using the 
-  /// format below.  Multiple sereis are supported by adding additional colums D, E, etc.
+  /// format below.  Multiple series are supported by adding additional colums D, E, etc.
+  /// The row labeled D is intentionally skipped
   /// 
   /// +-------+-----------------+-------------+
   /// |   A   |        B        |      C      |
@@ -88,27 +89,11 @@ namespace DssExcel
           intervals[i]= TimeWindow.GetInterval(ts); 
         }
         Excel.WriteArrayAcross(range[indexOfInterval.r, indexOfInterval.c], intervals);
-        Excel.WriteSequenceDown(range[7,0],1,dateTimes.Length);
+        Excel.WriteSequenceDown(range[indexDates.r, 0],1,dateTimes.Length);
 
-        int rowOffset = indexDates.r;
-        for (int i = 0; i < dateTimes.Length; i++)
-        {
-          
-          var dest = range[i+ rowOffset, 1];
-          dest.Value = dateTimes[i];
-          dest.NumberFormat = "ddMMMyyyy HH:mm:ss";
-        }
+        Excel.WriteArrayDown(range[indexDates.r,indexDates.c],dateTimes);
 
-
-        int colStart = indexValues.c;
-        for (int col = 0; col < values.GetLength(1); col++)
-        {
-          worksheet.Cells[indexValues.r, col + colStart].Value = SeriesTitles[col];
-          for (int rowIndex = 0; rowIndex < values.GetLength(0); rowIndex++)
-          {
-            worksheet.Cells[rowIndex + rowOffset, col + colStart].Value = values[rowIndex, col];
-          }
-        }
+        Excel.WriteMatrix(range[indexValues.r,indexValues.c],values);
         worksheet.Cells["A:A"].Columns.AutoFit();
         worksheet.Cells["B:B"].Columns.AutoFit();
       }
@@ -132,8 +117,6 @@ namespace DssExcel
       var cells =worksheet.Range;
       if (!Excel.IsMatchDown(cells, firstColumn))
         return null;
-
-      //Excel.ReadStringsDown(worksheet,index)
 
       var usedRange = worksheet.GetUsedRange(true);
 
