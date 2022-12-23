@@ -91,6 +91,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseVM.cs" />
+    <Compile Include="NavigationCollection.cs" />
+    <Compile Include="PairedDataReviewView.xaml.cs">
+      <DependentUpon>PairedDataReviewView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ValidationVM.cs" />
     <Compile Include="ExcelExtensions.cs" />
     <Compile Include="ExcelTimeSeries.cs" />
@@ -141,6 +145,10 @@
     <Page Include="StatusControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PairedDataReviewView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="TimeSeriesReviewView.xaml">
       <SubType>Designer</SubType>

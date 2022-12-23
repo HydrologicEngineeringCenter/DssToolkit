@@ -20,18 +20,13 @@ namespace DssExcel
 
   public class MainViewModel : BaseVM
   {
-    public ImportTypeVM ImportTypeVM;
+    public ImportTypeVM ImportTypeVM { get; set; }
 
-    public MainViewModel()
+    public MainViewModel(ImportTypeVM importTypeVM)
     {
-      ImportTypeVM = new ImportTypeVM();
+      this.ImportTypeVM = importTypeVM;
     }
     public string ExcelFileName { get; set; }
-
-    public ImportType ImportType
-    {
-      get { return ImportTypeVM.SelectedImportType.Type;}
-    }
 
     public DateTime[] DateTimes { get; set; } 
 
