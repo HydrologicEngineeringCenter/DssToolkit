@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hec.Dss;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -46,6 +47,31 @@ namespace DssExcel
       set { valueRangeText1 = value; OnPropertyChanged(); } }
     
     internal Excel ExcelReader { get; set; }
+
+    private double[] GetColumn(double[,] matrix,int columnIndex)
+    {
+      var rval = new double[matrix.GetLength(0)];
+      for (int i = 0; i < matrix.GetLength(0); i++)
+      {
+        rval[i] = matrix[i, columnIndex];
+      }
+      return rval;
+    }
+    public TimeSeries[] GetTimeSeries()
+    {
+      var rval = new List<TimeSeries>();
+      for (int i = 0; i < TimeSeriesNames.Length; i++)
+      {
+        var ts = new TimeSeries();
+        ts.Path = new DssPath(A:"",B:System.IO.Path.GetFileNameWithoutExtension(ExcelFileName), C:TimeSeriesNames[i],D:"",E:"", F:"xls-import");
+        ts.Times = DateTimes;
+        ts.Values = GetColumn(TimeSeriesValues,i);
+        rval.Add(ts);
+      }
+
+      return rval.ToArray();
+    }
+
   }
 
 

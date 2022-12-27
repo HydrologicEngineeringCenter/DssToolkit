@@ -1,11 +1,12 @@
 ﻿using System;
+using Hec.Dss;
 using SpreadsheetGear;
 
 namespace DssExcel
 {
   /**
    * ExcelPairedData has methods for reading and writing paired-data to/from excel using the 
-  format below.  
+  format below.    (The first row (path) is optional)
 +--------+---------------------------------------------------------------------------------+
 |  Path  | /paired-data-multi-column/RIVERDALE/FREQ-FLOW/MAX ANALYTICAL//1969-01 H33(MAX)/ |
 +--------+---------------------------------------------------------------------------------+
@@ -27,7 +28,7 @@ namespace DssExcel
 +--------+------------------------------------------------------------------+
  
    */
-  internal class ExcelPairedData
+  public class ExcelPairedData
   {
     private static string[] firstColumn = { "Path", "Labels", "Units", "Type" };
     private static (int r, int c) indexOfPath = (0, 1);
@@ -38,28 +39,70 @@ namespace DssExcel
     private static (int r, int c) indexOfX = (4, 1);
     private static (int r, int c) indexOfY = (4, 2);
 
-    public static void Write(IWorksheet worksheet, string path, double[] Xvalues, double[,] Yvalues,
-                      string xUnits, string yUnits, string xType, string yType, string[] curveLabels)
+    public static PairedData Read(string excelFileName, string sheetName = "Sheet1")
     {
+      var workbook = SpreadsheetGear.Factory.GetWorkbook(excelFileName);
+      var sheet = workbook.Worksheets[sheetName];
+      PairedData pd = Read(sheet);
+
+      return pd;
+
+    }
+
+    private static PairedData Read(IWorksheet worksheet)
+    {
+      PairedData rval = new PairedData();
       worksheet.WorkbookSet.GetLock();
       try
       {
         var range = worksheet.Cells;
-        range.Clear();
-        Excel.WriteArrayDown(range[0,0], firstColumn);
-        range[indexOfPath.r, indexOfPath.c].Value = path;
-        Excel.WriteArrayAcross(range[indexOfLabels.r, indexOfLabels.c], curveLabels);
-        Excel.WriteArrayAcross(range[indexOfUnits.r, indexOfUnits.c], new string[] { xType, yUnits });
-        Excel.WriteArrayAcross(range[indexOfType.r, indexOfType.c], new string[] { xType, yType });
-        Excel.WriteSequenceDown(range[indexOfData.r, indexOfData.c], 1, Xvalues.Length);
-        Excel.WriteArrayDown(range[indexOfX.r, indexOfX.c], Xvalues);
-        Excel.WriteMatrix(range[indexOfY.r, indexOfY.c],Yvalues);
+          if (!Excel.IsMatchDown(range, firstColumn))
+            return rval;
+
+          rval.Path = new DssPath(ReadPath(range));
+
+
 
       }
       finally
       {
         worksheet.WorkbookSet.ReleaseLock();
       }
+      return rval;
     }
+
+    private static string ReadPath(IRange range)
+    {
+      if(Excel.CellString(range).ToLower() == "path")
+      {
+        return Excel.CellString(range[indexOfPath.r, indexOfPath.c]);
+      }
+      return "";
+    }
+
+    public static void Write(IWorksheet worksheet, string path, double[] Xvalues, double[,] Yvalues,
+                    string xUnits, string yUnits, string xType, string yType, string[] curveLabels)
+    {
+      worksheet.WorkbookSet.GetLock();
+      try
+      {
+        var range = worksheet.Cells;
+        range.Clear();
+        Excel.WriteArrayDown(range[0, 0], firstColumn);
+        range[indexOfPath.r, indexOfPath.c].Value = path;
+        Excel.WriteArrayAcross(range[indexOfLabels.r, indexOfLabels.c], curveLabels);
+        Excel.WriteArrayAcross(range[indexOfUnits.r, indexOfUnits.c], new string[] { xType, yUnits });
+        Excel.WriteArrayAcross(range[indexOfType.r, indexOfType.c], new string[] { xType, yType });
+        Excel.WriteSequenceDown(range[indexOfData.r, indexOfData.c], 1, Xvalues.Length);
+        Excel.WriteArrayDown(range[indexOfX.r, indexOfX.c], Xvalues);
+        Excel.WriteMatrix(range[indexOfY.r, indexOfY.c], Yvalues);
+
+      }
+      finally
+      {
+        worksheet.WorkbookSet.ReleaseLock();
+      }
+    } 
   }
+  
 }

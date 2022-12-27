@@ -47,25 +47,13 @@ namespace DssExcel
     private static (int r, int c) indexOfType = (6, 2);
     private static (int r, int c) indexDates = ( 7, 1);
     private static (int r, int c) indexValues = ( 7, 2);
-    
-    
 
-    /// <summary>
-    /// Writes a time series data from primitives  into a worksheet.
-    /// The worksheet is formatted in DSSVue compatable format
-    /// </summary>
-    /// <param name="worksheet">destination for time series data</param>
-    /// <param name="dateTimes"></param>
-    /// <param name="values"></param>
-    /// <param name="SeriesTitles">titles for series (used in DSS C part)</param>
-    /// <param name="locationNames">names for the series locations (used in DSS B part)</param>
-    public static void Write(IWorksheet worksheet, DateTime[] dateTimes, double[,] values,
-                            string[] SeriesTitles, string[] locationNames, string[] versionTags)
+
+
+    public static void Write(IWorksheet worksheet, TimeSeries[] series)
     {
-      Hec.Dss.TimeSeries ts = new Hec.Dss.TimeSeries();
-      ts.Times=dateTimes;
-      if (dateTimes.Length != values.GetLength(0))
-        throw new Exception("The list of datetime is a different length than the list of values");
+      if( series.Length == 0 )
+        throw new Exception("There are no series to write to excel.");
 
       worksheet.WorkbookSet.GetLock();
       try
@@ -73,27 +61,30 @@ namespace DssExcel
         var range = worksheet.Cells;
         range.Clear();
         Excel.WriteArrayDown(range, firstColumn);
+        var ts = series[0];
         string ePart = "";
-        if (ts.IsRegular(dateTimes))
+        if (ts.IsRegular(ts.Times))
           ePart = "interval:";
         else
           ePart = "block-size:";
-        Excel.WriteArrayDown(range[0,1], new string[] { "watershed:", "location:", "parameter:", ePart, "version:","units (cfs,feet,...):","  type(PER-AVER,PER-CUM,INST-VAL,INST-CUM):" });
-        Excel.WriteArrayAcross(range[indexOfLocation.r, indexOfLocation.c],locationNames);
-        Excel.WriteArrayAcross(range[indexOfParameter.r, indexOfParameter.c], SeriesTitles);
-        Excel.WriteArrayAcross(range[indexOfVersion.r, indexOfVersion.c], versionTags);
+        Excel.WriteArrayDown(range[0, 1], new string[] { "group:", "location:", "parameter:", ePart, "version:", "units (cfs,feet,...):", "  type(PER-AVER,PER-CUM,INST-VAL,INST-CUM):" });
+        Excel.WriteSequenceDown(range[indexDates.r, 0], 1, ts.Times.Length);
+        Excel.WriteArrayDown(range[indexDates.r, indexDates.c], ts.Times);
 
-        string[] intervals= new string[SeriesTitles.Length];
-        for (int i = 0; i < intervals.Length; i++)
+        for (int i = 0; i < series.Length; i++)
         {
-          intervals[i]= TimeWindow.GetInterval(ts); 
+          ts = series[i];
+          range[indexOfWatershed.r, indexOfWatershed.c + i].Value = ts.Path.Apart;
+          range[indexOfLocation.r, indexOfLocation.c + i].Value = ts.Path.Bpart;
+          range[indexOfParameter.r, indexOfParameter.c + i].Value = ts.Path.Cpart;
+          range[indexOfInterval.r, indexOfInterval.c + i].Value = TimeWindow.GetInterval(ts);
+          range[indexOfVersion.r, indexOfVersion.c + i].Value = ts.Path.Fpart;
+          range[indexOfUnits.r, indexOfUnits.c + i].Value = ts.Units;
+          range[indexOfType.r, indexOfType.c + i].Value = ts.DataType;
+
+          Excel.WriteArrayDown(range[indexValues.r, indexValues.c + i], ts.Values);
         }
-        Excel.WriteArrayAcross(range[indexOfInterval.r, indexOfInterval.c], intervals);
-        Excel.WriteSequenceDown(range[indexDates.r, 0],1,dateTimes.Length);
-
-        Excel.WriteArrayDown(range[indexDates.r,indexDates.c],dateTimes);
-
-        Excel.WriteMatrix(range[indexValues.r,indexValues.c],values);
+        
         worksheet.Cells["A:A"].Columns.AutoFit();
         worksheet.Cells["B:B"].Columns.AutoFit();
       }
@@ -101,6 +92,7 @@ namespace DssExcel
       {
         worksheet.WorkbookSet.ReleaseLock();
       }
+
     }
 
     public static TimeSeries[] Read(string excelFileName, string sheetName = "sheet1")

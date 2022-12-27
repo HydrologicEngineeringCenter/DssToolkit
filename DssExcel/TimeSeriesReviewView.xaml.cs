@@ -22,16 +22,8 @@ namespace DssExcel
     {
       try
       {
-        var locations = new string[vm.TimeSeriesNames.Length];
-        var versionTags = new string[vm.TimeSeriesNames.Length];
-        for (int i = 0; i < vm.TimeSeriesNames.Length; i++)
-        {
-          locations[i] = System.IO.Path.GetFileNameWithoutExtension(vm.ExcelFileName);
-          versionTags[i] = "xls-import";
-        }
-
-        ExcelTimeSeries.Write(ExcelView.ActiveWorksheet, vm.DateTimes, vm.TimeSeriesValues,
-          vm.TimeSeriesNames, locations, versionTags);
+        var series = vm.GetTimeSeries();
+        ExcelTimeSeries.Write(ExcelView.ActiveWorksheet, series);
       }
       catch (Exception ex)
       {

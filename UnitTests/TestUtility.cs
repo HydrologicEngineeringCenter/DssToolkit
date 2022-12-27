@@ -10,11 +10,11 @@ namespace UnitTests
 {
     public class TestUtility
     {
-        public static string BasePath = @"..\..\..\test-files\";
-        public static string OutputPath = @"..\..\test-files\output\";
-        public static string SimpleIrregularTSPath = BasePath + "small-ir-ts.xlsx";
-        public static string SimpleRegularTSPath = BasePath + "small-r-ts.xlsx";
-        public static string SimplePDPath = BasePath + "small-pd.xlsx";
+        internal static string BasePath = @"..\..\..\test-files\";
+        static string OutputPath = @"..\..\test-files\output\";
+        static string SimpleIrregularTSPath = BasePath + "small-ir-ts.xlsx";
+        static string SimpleRegularTSPath = BasePath + "small-r-ts.xlsx";
+        static string SimplePDPath = BasePath + "small-pd.xlsx";
 
         public static TimeSeries CreateTimeSeries(int numberOfVals, bool regular = true)
         {
