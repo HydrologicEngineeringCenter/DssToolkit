@@ -38,7 +38,7 @@ namespace DssExcel
   {
 
     private static string[] firstColumn = { "A", "B", "C", "E", "F", "Units", "Type" };
-    private static (int r, int c) indexOfWatershed = (0, 2);
+    private static (int r, int c) indexOfGroup = (0, 2);
     private static (int r, int c) indexOfLocation = (1, 2);
     private static (int r, int c) indexOfParameter = (2, 2);
     private static (int r, int c) indexOfInterval = (3, 2);
@@ -74,7 +74,7 @@ namespace DssExcel
         for (int i = 0; i < series.Length; i++)
         {
           ts = series[i];
-          range[indexOfWatershed.r, indexOfWatershed.c + i].Value = ts.Path.Apart;
+          range[indexOfGroup.r, indexOfGroup.c + i].Value = ts.Path.Apart;
           range[indexOfLocation.r, indexOfLocation.c + i].Value = ts.Path.Bpart;
           range[indexOfParameter.r, indexOfParameter.c + i].Value = ts.Path.Cpart;
           range[indexOfInterval.r, indexOfInterval.c + i].Value = TimeWindow.GetInterval(ts);
@@ -134,9 +134,9 @@ namespace DssExcel
         TimeSeries ts = new TimeSeries();
         ts.Times = dates;
         ts.Values = values;
-        ts.Units = Excel.CellString(cells[indexOfUnits.r, indexOfUnits.c + i]);
-        ts.DataType = Excel.CellString(cells[indexOfType.r, indexOfType.c + i]);
-        ts.Path = GetDssPath(cells[indexOfWatershed.r, indexOfWatershed.c + i]);
+        ts.Units = Excel.GetString(cells[indexOfUnits.r, indexOfUnits.c + i]);
+        ts.DataType = Excel.GetString(cells[indexOfType.r, indexOfType.c + i]);
+        ts.Path = GetDssPath(cells[indexOfGroup.r, indexOfGroup.c + i]);
         rval.Add(ts);
       }
 
@@ -146,12 +146,12 @@ namespace DssExcel
 
     private static DssPath GetDssPath(IRange range)
     {
-      var a = Excel.CellString(range[0, 0]);
-      var b = Excel.CellString(range[1, 0]);
-      var c = Excel.CellString(range[2, 0]);
+      var a = Excel.GetString(range[0, 0]);
+      var b = Excel.GetString(range[1, 0]);
+      var c = Excel.GetString(range[2, 0]);
       var d = "";
-      var e = Excel.CellString(range[3, 0]);
-      var f = Excel.CellString(range[4, 0]);
+      var e = Excel.GetString(range[3, 0]);
+      var f = Excel.GetString(range[4, 0]);
       DssPath p = new DssPath(a, b, c, d, e, f);
 
       return p;

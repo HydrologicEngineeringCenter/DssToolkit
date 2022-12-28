@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DssExcel
 {
+  public enum ExcelDirection { Down, Across};
   public class Excel
   {
     string fileName;
@@ -16,14 +17,30 @@ namespace DssExcel
       this.fileName = fileName;
       Workbook = SpreadsheetGear.Factory.GetWorkbook(fileName);
     }
+    public static bool TryReadingDouble(IRange r, out double d)
+    {
+      d = default(double);
+      if (r == null)
+        return false;
+      object o = r.Value;
+      
+      
+      if (r.ValueType == SpreadsheetGear.ValueType.Number)
+      {
+        d = (double)r.Value;
+      }
+      else if( r.ValueType == SpreadsheetGear.ValueType.Text)
+        return Double.TryParse( r.Text, out d);
 
+      return true;
+    }
     public static string RangeToString(IRange cell)
     {
       if (cell == null)
         return "";
       return cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
     }
-    public static string CellString(IRange cell)
+    public static string GetString(IRange cell)
     {
       if( EmptyCell(cell))
         return "";
@@ -179,12 +196,12 @@ namespace DssExcel
           var cell = rangeSelection[rowIndex, columnIndex];
           if (cell.Value == null || cell.Text.Trim() == "")
           {
-            errorMessage = "Found a empty cell, but expected a value: " + RangeToString(cell);
+            errorMessage = ErrorMessageEmpty(cell);
             return false;
           }
-          if (!double.TryParse(cell.Text, out double d))
+          if (!TryReadingDouble(cell, out double d))
           {
-            errorMessage = "Could not convert this value to a number: " + RangeToString(cell);
+            errorMessage = ErrorMessageParsingNumber(cell);
             return false;
           }
 
@@ -260,18 +277,65 @@ namespace DssExcel
         var cell = rangeSelection[i, 0];
         if (EmptyCell(cell))
         {
-          errorMessage = "Found a empty cell, but expected a value: " + RangeToString(cell);
+          errorMessage = ErrorMessageEmpty(cell);
           return false;
         }
-        if(! double.TryParse(cell.Text, out double d))
+        if(!TryReadingDouble(cell,out double d))
         {
-          errorMessage = "Could not convert this value to a number: " + RangeToString(cell);
+          errorMessage = ErrorMessageParsingNumber(cell);
           return false;
         }
         
         values[i] = d;
       }
       return true;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="range"></param>
+    /// <param name="values">pre allocated array to load from the range</param>
+    /// <param name="errorMessage"></param>
+    /// <returns></returns>
+    internal static bool TryGetValues(IRange range, ExcelDirection direction, double[] values, out string errorMessage)
+    {
+      errorMessage = "";
+
+      for (int i = 0; i < values.Length; i++)
+      {
+        IRange cell;
+        if (direction == ExcelDirection.Down)
+          cell = range[i, 0];
+        else if (direction == ExcelDirection.Across)
+          cell = range[0, i];
+        else
+          throw new NotImplementedException(direction.ToString());
+
+        if (EmptyCell(cell))
+        {
+          errorMessage = ErrorMessageEmpty(cell);
+          return false;
+        }
+        if (!TryReadingDouble(cell,out double d))
+        {
+          errorMessage = ErrorMessageParsingNumber(cell);
+          return false;
+        }
+
+        values[i] = d;
+      }
+      return true;
+    }
+
+    private static string ErrorMessageEmpty(IRange cell)
+    {
+      return "Found a empty cell, but expected a value: " + RangeToString(cell);
+    }
+
+    private static string ErrorMessageParsingNumber(IRange cell)
+    {
+      return "Could not convert '" + cell.Text + "'  to a number: " + RangeToString(cell);
     }
 
     private static bool TryParseExcelDateString(string s, out DateTime d)

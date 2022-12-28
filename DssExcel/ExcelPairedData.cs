@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Hec.Dss;
 using SpreadsheetGear;
 
@@ -6,7 +7,7 @@ namespace DssExcel
 {
   /**
    * ExcelPairedData has methods for reading and writing paired-data to/from excel using the 
-  format below.    (The first row (path) is optional)
+  format below.    
 +--------+---------------------------------------------------------------------------------+
 |  Path  | /paired-data-multi-column/RIVERDALE/FREQ-FLOW/MAX ANALYTICAL//1969-01 H33(MAX)/ |
 +--------+---------------------------------------------------------------------------------+
@@ -36,8 +37,8 @@ namespace DssExcel
     private static (int r, int c) indexOfUnits = (2, 1);
     private static (int r, int c) indexOfType = (3, 1);
     private static (int r, int c) indexOfData = (4, 0);
-    private static (int r, int c) indexOfX = (4, 1);
-    private static (int r, int c) indexOfY = (4, 2);
+    private static (int r, int c) indexOfOrdinates = (4, 1);
+    private static (int r, int c) indexOfValues = (4, 2);
 
     public static PairedData Read(string excelFileName, string sheetName = "Sheet1")
     {
@@ -56,13 +57,34 @@ namespace DssExcel
       try
       {
         var range = worksheet.Cells;
-          if (!Excel.IsMatchDown(range, firstColumn))
-            return rval;
+        if (!Excel.IsMatchDown(range, firstColumn))
+          return rval;
 
-          rval.Path = new DssPath(ReadPath(range));
+        rval.Path = new DssPath(ReadPath(range));
+        rval.Labels = ReadLabels(worksheet, range);
+        rval.UnitsIndependent = Excel.GetString(range[indexOfUnits.r, indexOfUnits.c]);
+        rval.UnitsDependent = Excel.GetString(range[indexOfUnits.r, indexOfUnits.c+1]);
+        rval.TypeIndependent = Excel.GetString(range[indexOfType.r, indexOfType.c]);
+        rval.TypeDependent = Excel.GetString(range[indexOfType.r, indexOfType.c+1]);
 
-
-
+        var usedRange = worksheet.GetUsedRange(true);
+        int numberOfCurves = usedRange.ColumnCount - 2;
+        int curveLength = usedRange.RowCount - indexOfData.r ;
+        rval.Ordinates = new double[curveLength];
+        rval.Values = new List<double[]>();
+        if(!Excel.TryGetValues(range[indexOfOrdinates.r, indexOfOrdinates.c],ExcelDirection.Down, rval.Ordinates, out string errorMessage))
+        {
+          throw new Exception(errorMessage);
+        }
+        for (int rowIndex = 0; rowIndex < curveLength; rowIndex++)
+        {
+          double[] row = new double[numberOfCurves];
+          if (!Excel.TryGetValues(range[indexOfValues.r+rowIndex, indexOfValues.c], ExcelDirection.Across, row, out errorMessage))
+          {
+            throw new Exception(errorMessage);
+          }
+          rval.Values.Add(row);
+        }
       }
       finally
       {
@@ -71,11 +93,23 @@ namespace DssExcel
       return rval;
     }
 
+    private static List<string> ReadLabels(IWorksheet worksheet, IRange range)
+    {
+      var usedRange = worksheet.GetUsedRange(true);
+      var labels = new List<string>();
+      for (int i = 0; i < usedRange.ColumnCount - 1; i++)
+      {
+        labels.Add(Excel.GetString(range[indexOfLabels.r, indexOfLabels.c + i]));
+      }
+
+      return labels;
+    }
+
     private static string ReadPath(IRange range)
     {
-      if(Excel.CellString(range).ToLower() == "path")
+      if(Excel.GetString(range[indexOfPath.r, 0]).ToLower() == "path")
       {
-        return Excel.CellString(range[indexOfPath.r, indexOfPath.c]);
+        return Excel.GetString(range[indexOfPath.r, indexOfPath.c]);
       }
       return "";
     }
@@ -94,8 +128,8 @@ namespace DssExcel
         Excel.WriteArrayAcross(range[indexOfUnits.r, indexOfUnits.c], new string[] { xType, yUnits });
         Excel.WriteArrayAcross(range[indexOfType.r, indexOfType.c], new string[] { xType, yType });
         Excel.WriteSequenceDown(range[indexOfData.r, indexOfData.c], 1, Xvalues.Length);
-        Excel.WriteArrayDown(range[indexOfX.r, indexOfX.c], Xvalues);
-        Excel.WriteMatrix(range[indexOfY.r, indexOfY.c], Yvalues);
+        Excel.WriteArrayDown(range[indexOfOrdinates.r, indexOfOrdinates.c], Xvalues);
+        Excel.WriteMatrix(range[indexOfValues.r, indexOfValues.c], Yvalues);
 
       }
       finally
