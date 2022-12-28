@@ -1,4 +1,5 @@
 ﻿using SpreadsheetGear;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -19,7 +20,15 @@ namespace DssExcel
 
     private void PairedDataReviewView_Loaded(object sender, RoutedEventArgs e)
     {
-      
+      try
+      {
+        var pd = vm.GetPairedData();
+        ExcelPairedData.Write(ExcelView.ActiveWorksheet, pd);
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
     }
 
 

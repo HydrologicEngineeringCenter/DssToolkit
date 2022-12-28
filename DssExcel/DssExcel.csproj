@@ -96,6 +96,7 @@
     <Compile Include="PairedDataReviewView.xaml.cs">
       <DependentUpon>PairedDataReviewView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PairedDataReviewVM.cs" />
     <Compile Include="ValidationVM.cs" />
     <Compile Include="ExcelExtensions.cs" />
     <Compile Include="ExcelTimeSeries.cs" />

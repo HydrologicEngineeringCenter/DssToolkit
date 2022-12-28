@@ -17,14 +17,14 @@ namespace DssExcel
     public override bool Validate(out string errorMessage)
     {
 
-      mainViewModel.ValueRangeText="values: " +Excel.RangeToString(RangeSelection);
+      mainViewModel.SecondRangeText="values: " +Excel.RangeToString(RangeSelection);
       if( !Excel.TryGetValueArray2D(RangeSelection, out double[,] values, out errorMessage))
       {
         return false;
       }
 
       mainViewModel.TimeSeriesValues = values;
-      mainViewModel.TimeSeriesNames = ExcelReader.RangeTitles(RangeSelection);
+      mainViewModel.TimeSeriesNames = Excel.RangeTitles(RangeSelection);
       return true;
 
     }

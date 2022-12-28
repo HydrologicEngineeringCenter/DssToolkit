@@ -60,10 +60,13 @@ namespace DssExcel
         BackEnabled = true,
         NextEnabled = true,
       });
+
+      var pdReview = new PairedDataReviewView(model);
+      var reviewVM = new PairedDataReviewVM(pdReview.WorkSheet, model.DssFileName);
       pairedDataNavigation.Add(new NavigationItem
       {
-        ViewModel = vm,
-        UserControl = new PairedDataReviewView(model),
+        ViewModel = reviewVM,
+        UserControl = pdReview,
         BackEnabled = true,
         NextEnabled = true,
         FinalStep= true

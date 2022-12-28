@@ -97,6 +97,19 @@ namespace DssExcel
       }
     }
 
+    internal static void WriteMatrix(IRange range, List<double[]> values)
+    {
+      if (values.Count == 0 || values[0].Length == 0)
+        return;
+
+      for (int col = 0; col < values[0].Length; col++)
+      {
+        for (int rowIndex = 0; rowIndex < values.Count; rowIndex++)
+        {
+          range[rowIndex, col].Value = values[rowIndex][col];
+        }
+      }
+    }
     internal static void WriteMatrix(IRange range, double[,] values)
     {
       for (int col = 0; col < values.GetLength(1); col++)
@@ -152,18 +165,24 @@ namespace DssExcel
       }
       return true;
     }
+
+    internal static string RangeTitle(IRange selection, string defaultPrefix = "value")
+    {
+      return RangeTitles(selection, defaultPrefix)[0];
+    }
+
     /// <summary>
     /// Returns a title for each row in the selection. 
     /// Looks at row above selection for 'names'
     /// </summary>
     /// <param name="selection"></param>
     /// <returns></returns>
-    internal string[] RangeTitles(IRange selection)
+    internal static string[] RangeTitles(IRange selection, string defaultPrefix="value")
     {
       List<string> rval = new List<string>();
       for (int c = 0; c < selection.ColumnCount; c++)
       {
-        var s = "value " + (c + 1);
+        var s = defaultPrefix+" " + (c + 1);
         if (selection.Row > 0)
         {  // look at previous row for column names
 

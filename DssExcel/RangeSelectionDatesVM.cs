@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DssExcel
 {
@@ -17,7 +13,7 @@ namespace DssExcel
     public override bool Validate(out string errorMessage)
     {
       errorMessage = "";
-      mainViewModel.DateRangeText = "Dates: "+Excel.RangeToString(RangeSelection);
+      mainViewModel.FirstRangeText = "Dates: "+Excel.RangeToString(RangeSelection);
       
       if( Excel.TryGetDateArray(RangeSelection,out DateTime[] dates,out errorMessage))
       {

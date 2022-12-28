@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DssExcel
+﻿namespace DssExcel
 {
   internal class RangeSelectionPairedDataY : RangeSelectionVM
   {
@@ -16,6 +10,9 @@ namespace DssExcel
 
     public override bool Validate(out string errorMessage)
     {
+
+      mainViewModel.SecondRangeText = "Y: " + Excel.RangeToString(RangeSelection);
+      mainViewModel.YValuesLabel = Excel.RangeTitle(RangeSelection, "Y");
       if (Excel.TryGetValueArray2D(RangeSelection, out double[,] values, out errorMessage))
       {
         mainViewModel.YValues = values;

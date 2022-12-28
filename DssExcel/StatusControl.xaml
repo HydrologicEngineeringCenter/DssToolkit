@@ -17,8 +17,8 @@
       DSS:
       <TextBox IsReadOnly="True" Width="auto" Text="{Binding DssFileName}"/>
       Selections:
-      <TextBox IsReadOnly="True" Width="auto" Text="{Binding DateRangeText}"/>
-      <TextBox IsReadOnly="True" Width="auto" Text="{Binding ValueRangeText}"/>
+      <TextBox IsReadOnly="True" Width="auto" Text="{Binding FirstRangeText}"/>
+      <TextBox IsReadOnly="True" Width="auto" Text="{Binding SecondRangeText}"/>
     </StatusBar>
 
   </Grid>

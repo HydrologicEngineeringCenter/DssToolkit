@@ -50,7 +50,7 @@ namespace DssExcel
 
     }
 
-    private static PairedData Read(IWorksheet worksheet)
+    public static PairedData Read(IWorksheet worksheet)
     {
       PairedData rval = new PairedData();
       worksheet.WorkbookSet.GetLock();
@@ -114,6 +114,28 @@ namespace DssExcel
       return "";
     }
 
+    public static void Write(IWorksheet worksheet, PairedData pd)
+    {
+      worksheet.WorkbookSet.GetLock();
+      try
+      {
+        var range = worksheet.Cells;
+        range.Clear();
+        Excel.WriteArrayDown(range[0, 0], firstColumn);
+        range[indexOfPath.r, indexOfPath.c].Value = pd.Path.FullPath;
+        Excel.WriteArrayAcross(range[indexOfLabels.r, indexOfLabels.c], pd.Labels.ToArray());
+        Excel.WriteArrayAcross(range[indexOfUnits.r, indexOfUnits.c], new string[] { pd.UnitsIndependent, pd.UnitsDependent });
+        Excel.WriteArrayAcross(range[indexOfType.r, indexOfType.c], new string[] { pd.TypeIndependent, pd.TypeDependent });
+        Excel.WriteSequenceDown(range[indexOfData.r, indexOfData.c], 1, pd.Ordinates.Length);
+        Excel.WriteArrayDown(range[indexOfOrdinates.r, indexOfOrdinates.c], pd.Ordinates);
+        Excel.WriteMatrix(range[indexOfValues.r, indexOfValues.c], pd.Values);
+
+      }
+      finally
+      {
+        worksheet.WorkbookSet.ReleaseLock();
+      }
+    }
     public static void Write(IWorksheet worksheet, string path, double[] Xvalues, double[,] Yvalues,
                     string xUnits, string yUnits, string xType, string yType, string[] curveLabels)
     {
@@ -136,7 +158,8 @@ namespace DssExcel
       {
         worksheet.WorkbookSet.ReleaseLock();
       }
-    } 
+    }
+
   }
   
 }
