@@ -1,5 +1,6 @@
 ﻿using DssExcel;
 using Hec.Dss;
+using Hec.Excel;
 using System;
 using System.Collections.Generic;
 using System.IO;

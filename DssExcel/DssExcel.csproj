@@ -91,15 +91,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseVM.cs" />
-    <Compile Include="ExcelPairedData.cs" />
     <Compile Include="NavigationCollection.cs" />
     <Compile Include="PairedDataReviewView.xaml.cs">
       <DependentUpon>PairedDataReviewView.xaml</DependentUpon>
     </Compile>
     <Compile Include="PairedDataReviewVM.cs" />
     <Compile Include="ValidationVM.cs" />
-    <Compile Include="ExcelExtensions.cs" />
-    <Compile Include="ExcelTimeSeries.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="NavigationItem.cs" />
     <Compile Include="RangeSelectionPairedDataY.cs" />
@@ -107,7 +104,6 @@
     <Compile Include="RangeSelectionTimeSeriesValues.cs" />
     <Compile Include="RangeSelectionDatesVM.cs" />
     <Compile Include="RangeSelectionVM.cs" />
-    <Compile Include="Excel.cs" />
     <Compile Include="ImportOptionVM.cs" />
     <Compile Include="ImportTypeVM.cs" />
     <Compile Include="MainViewModel.cs" />
@@ -183,6 +179,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hec.Excel\Hec.Excel.csproj">
+      <Project>{1a3f6627-0f7d-4377-a93e-6dcaae528814}</Project>
+      <Name>Hec.Excel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Hec.Dss.1.2.0\build\Hec.Dss.targets" Condition="Exists('..\packages\Hec.Dss.1.2.0\build\Hec.Dss.targets')" />

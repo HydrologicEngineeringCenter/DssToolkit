@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DssExcel
+namespace Hec.Excel
 {
   public enum ExcelDirection { Down, Across};
   public class Excel
@@ -197,7 +197,7 @@ namespace DssExcel
       return true;
     }
 
-    internal static string RangeTitle(IRange selection, string defaultPrefix = "value")
+    public static string RangeTitle(IRange selection, string defaultPrefix = "value")
     {
       return RangeTitles(selection, defaultPrefix)[0];
     }
@@ -208,7 +208,7 @@ namespace DssExcel
     /// </summary>
     /// <param name="selection"></param>
     /// <returns></returns>
-    internal static string[] RangeTitles(IRange selection, string defaultPrefix="value")
+    public static string[] RangeTitles(IRange selection, string defaultPrefix="value")
     {
       List<string> rval = new List<string>();
       for (int c = 0; c < selection.ColumnCount; c++)
@@ -228,7 +228,7 @@ namespace DssExcel
       return rval.ToArray();
     }
 
-    internal static bool TryGetValueArray2D(IRange rangeSelection, out double[,] values, out string errorMessage)
+    public static bool TryGetValueArray2D(IRange rangeSelection, out double[,] values, out string errorMessage)
     {
       errorMessage = "";
       values = null;
@@ -310,7 +310,7 @@ namespace DssExcel
     {
       return cell.Value == null || cell.Text.Trim() == "";
     }
-    internal static bool TryGetValueArray(IRange rangeSelection, out double[] values, out string errorMessage)
+    public static bool TryGetValueArray(IRange rangeSelection, out double[] values, out string errorMessage)
     {
       errorMessage = "";
       values = null;

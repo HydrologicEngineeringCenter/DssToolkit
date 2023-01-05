@@ -71,6 +71,10 @@
       <Project>{7fd12d90-135b-48ca-8e8b-b86d65eadb30}</Project>
       <Name>DssExcel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Hec.Excel\Hec.Excel.csproj">
+      <Project>{1A3F6627-0F7D-4377-A93E-6DCAAE528814}</Project>
+      <Name>Hec.Excel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

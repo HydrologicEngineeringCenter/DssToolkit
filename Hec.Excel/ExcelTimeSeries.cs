@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Hec.Dss;
 
-namespace DssExcel
+namespace Hec.Excel
 {
   /// <summary>
   /// ExcelTimeSeries has methods for reading and writing time series data to excel using the 

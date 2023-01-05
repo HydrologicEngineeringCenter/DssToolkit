@@ -2,6 +2,7 @@
 using System;
 using DssExcel;
 using Hec.Dss;
+using Hec.Excel;
 
 namespace UnitTests
 {

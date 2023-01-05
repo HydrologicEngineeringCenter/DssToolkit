@@ -1,6 +1,6 @@
 ﻿using SpreadsheetGear;
 
-namespace DssExcel
+namespace Hec.Excel
 {
   public static class ExcelExtensions
   {

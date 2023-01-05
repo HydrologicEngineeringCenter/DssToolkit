@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Hec.Dss;
 using SpreadsheetGear;
 
-namespace DssExcel
+namespace Hec.Excel
 {
   /**
    * ExcelPairedData has methods for reading and writing paired-data to/from excel using the 

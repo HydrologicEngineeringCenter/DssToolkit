@@ -1,4 +1,6 @@
-﻿namespace DssExcel
+﻿using Hec.Excel;
+
+namespace DssExcel
 {
   internal class RangeSelectionPairedDataX : RangeSelectionVM
   {

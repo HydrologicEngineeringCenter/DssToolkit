@@ -3,6 +3,7 @@ using System;
 using DssExcel;
 using Hec.Dss;
 using System.Collections.Generic;
+using Hec.Excel;
 
 namespace UnitTests
 {
