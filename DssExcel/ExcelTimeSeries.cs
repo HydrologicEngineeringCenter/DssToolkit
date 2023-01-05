@@ -63,7 +63,7 @@ namespace DssExcel
         Excel.WriteArrayDown(range, firstColumn);
         var ts = series[0];
         string ePart = "";
-        if (ts.IsRegular(ts.Times))
+        if (TimeSeries.IsRegular(ts.Times))
           ePart = "interval:";
         else
           ePart = "block-size:";

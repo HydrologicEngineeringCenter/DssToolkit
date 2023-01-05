@@ -16,26 +16,28 @@ namespace DssExcel
     public override bool Validate(out string errorMessage)
     {
       errorMessage = "";
-      try
+      using (DssWriter writer = new DssWriter(dssFileName1))
       {
-        worksheet1.WorkbookSet.GetLock();
+        try
+        {
+          worksheet1.WorkbookSet.GetLock();
 
-        PairedData pd = ExcelPairedData.Read(worksheet1);
-        // write to DSS
-        DssWriter writer = new DssWriter(dssFileName1);
-        writer.Write(pd);
+          PairedData pd = ExcelPairedData.Read(worksheet1);
+          // write to DSS
 
-      }
-      catch (Exception e)
-      {
-        errorMessage = e.Message;
-        return false;
-      }
-      finally
-      {
-        worksheet1.WorkbookSet.ReleaseLock();
-      }
+          writer.Write(pd);
 
+        }
+        catch (Exception e)
+        {
+          errorMessage = e.Message;
+          return false;
+        }
+        finally
+        {
+          worksheet1.WorkbookSet.ReleaseLock();
+        }
+      }
       return true;
     }
   }

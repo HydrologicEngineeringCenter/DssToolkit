@@ -40,6 +40,28 @@ namespace DssExcel
         return "";
       return cell.GetAddress(true, true, ReferenceStyle.A1, true, null);
     }
+    /// <summary>
+    /// https://github.com/usbr/Pisces/blob/master/TimeSeries.Excel/SpreadsheetGearExcel.cs#L313
+    /// </summary>
+    /// <param name="d"></param>
+    /// <param name="workbook"></param>
+    /// <returns></returns>
+    private static DateTime DoubleToDateTime(double d, IWorkbook workbook)
+    {
+      var t = new DateTime();
+
+      //January 1st, 1900 is 1.
+      if (d < 0)
+      {// hack.. negative number before jan 1,1900
+        DateTime j = new DateTime(1900, 1, 1);
+        t = j.AddDays(d - 1);
+      }
+      else
+      {
+        t = workbook.NumberToDateTime(d); // doesn't support negative values
+      }
+      return t;
+    }
     public static string GetString(IRange cell)
     {
       if( EmptyCell(cell))
@@ -60,19 +82,28 @@ namespace DssExcel
       dates = new DateTime[selection.RowCount];
       for(int i = 0; i < dates.Length; i++) {
         var cell = selection[i,0];
-        var txt = cell.Text.Trim();
-        if (cell.Value == null || string.IsNullOrEmpty(txt))
+        if (cell.ValueType == SpreadsheetGear.ValueType.Number)
         {
-          errorMessage = "Found a empty cell, but expected a Date/Time: " + RangeToString(cell);
-          return false;
-        }
-        if (TryParseExcelDateString(txt, out DateTime dt)){
-          dates[i] = dt;
+          var t = DoubleToDateTime((double)cell.Value, selection.Worksheet.Workbook);
+          dates[i] = t;
         }
         else
         {
-          errorMessage= "Error reading a date: " + RangeToString(cell);
-          return false;
+          var txt = cell.Text.Trim();
+          if (cell.Value == null || string.IsNullOrEmpty(txt))
+          {
+            errorMessage = "Found a empty cell, but expected a Date/Time: " + RangeToString(cell);
+            return false;
+          }
+          if (TryParseExcelDateString(txt, out DateTime dt))
+          {
+            dates[i] = dt;
+          }
+          else
+          {
+            errorMessage = "Error reading a date: " + RangeToString(cell);
+            return false;
+          }
         }
 
       }

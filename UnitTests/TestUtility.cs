@@ -1,4 +1,5 @@
-﻿using Hec.Dss;
+﻿using DssExcel;
+using Hec.Dss;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,18 @@ namespace UnitTests
     public class TestUtility
     {
         internal static string BasePath = @"..\..\..\test-files\";
+
+    static string FullPath(string fileName)
+    {
+      return Path.Combine(BasePath, fileName);
+    }
+
+    public static TimeSeries TimeSeriesFromExcel(string fileName)
+    {
+      var tsList = ExcelTimeSeries.Read(FullPath(fileName));
+      return tsList[0];
+
+    }
         //static string OutputPath = @"..\..\test-files\output\";
        // static string SimpleIrregularTSPath = BasePath + "small-ir-ts.xlsx";
       //  static string SimpleRegularTSPath = BasePath + "small-r-ts.xlsx";

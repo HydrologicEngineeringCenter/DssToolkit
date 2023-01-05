@@ -24,9 +24,9 @@ namespace UnitTests
       Assert.AreEqual(0, pd.Ordinates[0]);
       Assert.AreEqual(4.80000019073486, pd.Ordinates[1],0.0001);
       Assert.AreEqual(22.7000007629394, pd.Ordinates[pd.Ordinates.Length-1],0.0001);
-
+      Assert.AreEqual(1,pd.CurveCount);
       Assert.AreEqual(0, pd.Values[0][0]);
-      Assert.AreEqual(13600, pd.Values[pd.YCount-1][0]);
+      Assert.AreEqual(13600, pd.Values[pd.Ordinates.Length-1][0]);
 
     }
     [TestMethod]

@@ -74,7 +74,7 @@ namespace DssExcel
       rval.Path = new DssPath(A: "", B: System.IO.Path.GetFileNameWithoutExtension(DssFileName),
         C: XValuesLabel + "-" + YValuesLabel, D: "", E: "", F: "");
       rval.Ordinates = this.XValues;
-      rval.Values = new List<double[]>();
+      rval.Values = new List<double[]>(rval.Ordinates.Length);
       
       for (int i = 0;i < YValues.GetLength(0); i++)
       {
@@ -85,7 +85,7 @@ namespace DssExcel
           rval.Values.Add(row);
         }
       }
-
+      
       return rval;
     }
 

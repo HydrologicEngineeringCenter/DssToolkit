@@ -15,26 +15,30 @@ namespace DssExcel
     }
     public override bool Validate(out string errorMessage)
     {
-      errorMessage = "";
-      try
+      using (DssWriter writer = new DssWriter(dssFileName1))
       {
-        worksheet1.WorkbookSet.GetLock();
-        TimeSeries[] tsList = ExcelTimeSeries.Read(worksheet1);
-        // write to DSS
-        Hec.Dss.DssWriter writer = new DssWriter(dssFileName1);
-        foreach (var ts in tsList)
+        errorMessage = "";
+        try
         {
-          writer.Write(ts);
+          worksheet1.WorkbookSet.GetLock();
+          TimeSeries[] tsList = ExcelTimeSeries.Read(worksheet1);
+          // write to DSS
+
+          foreach (var ts in tsList)
+          {
+            writer.Write(ts);
+          }
+
         }
-        
-      }catch(Exception e )
-      {
-        errorMessage = e.Message;
-        return false;
-      }
-      finally
-      {
-        worksheet1.WorkbookSet.ReleaseLock();
+        catch (Exception e)
+        {
+          errorMessage = e.Message;
+          return false;
+        }
+        finally
+        {
+          worksheet1.WorkbookSet.ReleaseLock();
+        }
       }
 
       return true;
