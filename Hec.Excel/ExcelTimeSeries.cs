@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hec.Dss;
+using System.IO;
 
 namespace Hec.Excel
 {
@@ -49,6 +50,34 @@ namespace Hec.Excel
     private static (int r, int c) indexValues = ( 7, 2);
 
 
+    private static string GetInteval(TimeSeries ts)
+    {// TODO fix hec.dss to do this.
+      try
+      {
+        return TimeWindow.GetInterval(ts);
+      }catch (Exception)
+      {
+        return "IR-YEAR";
+      }
+
+    }
+    public static void Write(string excelFileName, TimeSeries series)
+    {
+      var xls = Factory.GetWorkbookSet();
+      IWorkbook workbook;
+      if (File.Exists(excelFileName))
+      {
+        workbook = xls.Workbooks.Open(excelFileName);
+      }
+      else
+      {
+        workbook = xls.Workbooks.Add();
+      }
+      
+      Write(workbook.Worksheets[0], new TimeSeries[] { series });
+     workbook.FullName = excelFileName;
+      workbook.Save();
+    }
 
     public static void Write(IWorksheet worksheet, TimeSeries[] series)
     {
@@ -77,7 +106,7 @@ namespace Hec.Excel
           range[indexOfGroup.r, indexOfGroup.c + i].Value = ts.Path.Apart;
           range[indexOfLocation.r, indexOfLocation.c + i].Value = ts.Path.Bpart;
           range[indexOfParameter.r, indexOfParameter.c + i].Value = ts.Path.Cpart;
-          range[indexOfInterval.r, indexOfInterval.c + i].Value = TimeWindow.GetInterval(ts);
+          range[indexOfInterval.r, indexOfInterval.c + i].Value = GetInteval(ts);
           range[indexOfVersion.r, indexOfVersion.c + i].Value = ts.Path.Fpart;
           range[indexOfUnits.r, indexOfUnits.c + i].Value = ts.Units;
           range[indexOfType.r, indexOfType.c + i].Value = ts.DataType;

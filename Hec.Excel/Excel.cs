@@ -187,10 +187,10 @@ namespace Hec.Excel
     {
       for (int i = 0; i < values.Length; i++)
       {
-        var val = range[i, 0].Value.ToString();
-        if (val != values[i]) 
+        var obj = range[i, 0].Value;
+        if(obj==null || obj.ToString() != values[i]) 
         {
-          Logging.WriteError("Expected cell contents '" + values[i] + "'. Found: '" + val + "'");
+          Logging.WriteError("Expected cell contents '" + values[i] + "'. Found: '" + obj + "'");
           return false; 
         }
       }

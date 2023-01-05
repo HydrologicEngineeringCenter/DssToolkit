@@ -4,6 +4,7 @@ using DssExcel;
 using Hec.Dss;
 using System.Collections.Generic;
 using Hec.Excel;
+using System.IO;
 
 namespace UnitTests
 {
@@ -64,10 +65,10 @@ namespace UnitTests
       CollectionAssert.AreEqual(expectedTimes, ts.Times);
       CollectionAssert.AreEqual(expectedValues, ts.Values);
 
-     
+
     }
 
-    private static DateTime[] CreateTimes(DateTime t1,int incrementInMinutes,int count)
+    private static DateTime[] CreateTimes(DateTime t1, int incrementInMinutes, int count)
     {
       var expectedTimes = new List<DateTime>();
       DateTime t = t1;
@@ -77,7 +78,7 @@ namespace UnitTests
         expectedTimes.Add(t);
         t = t.AddMinutes(incrementInMinutes);
       }
-      
+
       return expectedTimes.ToArray();
     }
     [TestMethod]
@@ -94,11 +95,11 @@ namespace UnitTests
       Assert.IsTrue(!TimeSeries.IsRegular(ts.Times));
 
       //Assert.AreEqual(new DateTime(1862,1,11),ts.Times[0]); // java export gave -1
-      Assert.AreEqual(new DateTime(1899,12,30),ts.Times[0]); // java export gave -1
+      Assert.AreEqual(new DateTime(1899, 12, 30), ts.Times[0]); // java export gave -1
       Assert.AreEqual(318000, ts.Values[0]);
 
-      Assert.AreEqual(new DateTime(2017,2,11), ts.Times[ts.Count - 1]);
-      Assert.AreEqual(85400, ts.Values[ts.Count-1]); 
+      Assert.AreEqual(new DateTime(2017, 2, 11), ts.Times[ts.Count - 1]);
+      Assert.AreEqual(85400, ts.Values[ts.Count - 1]);
 
     }
     [TestMethod]
@@ -120,5 +121,22 @@ namespace UnitTests
       CollectionAssert.AreEqual(expectedValues, ts.Values);
     }
 
+    /// <summary>
+    /// Export longer time series to excel
+    /// </summary>
+    [TestMethod]
+    public void LargeDataSet()
+    {
+      var ts = TestUtility.TimeSeriesFromDss("dsstest1.dss", "/regular-time-series-many-points/unknown/flow//15Minute//");
+
+      Assert.AreEqual(553486, ts.Count);
+      var excelFileName = TestUtility.GetSimpleTempFileName(".xlsx");
+      Console.WriteLine("saving to :"+excelFileName);
+      ExcelTimeSeries.Write(excelFileName, ts);
+
+      ts = ExcelTimeSeries.Read(excelFileName)[0];
+      Assert.AreEqual(553486, ts.Count);
+     // File.Delete(excelFileName);
+    }
   }
 }

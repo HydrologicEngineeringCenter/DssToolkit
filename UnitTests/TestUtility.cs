@@ -1,16 +1,12 @@
-﻿using DssExcel;
-using Hec.Dss;
+﻿using Hec.Dss;
 using Hec.Excel;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UnitTests
 {
-    public class TestUtility
+  public class TestUtility
     {
         internal static string BasePath = @"..\..\..\test-files\";
 
@@ -23,14 +19,37 @@ namespace UnitTests
     {
       var tsList = ExcelTimeSeries.Read(FullPath(fileName));
       return tsList[0];
-
     }
-        //static string OutputPath = @"..\..\test-files\output\";
-       // static string SimpleIrregularTSPath = BasePath + "small-ir-ts.xlsx";
-      //  static string SimpleRegularTSPath = BasePath + "small-r-ts.xlsx";
-       // static string SimplePDPath = BasePath + "small-pd.xlsx";
 
-        public static TimeSeries CreateTimeSeries(int numberOfVals, bool regular = true)
+    public static TimeSeries TimeSeriesFromDss(string fileName, string path)
+    {
+      using (DssReader r = new DssReader(FullPath( fileName)))
+      {
+        TimeSeries ts = r.GetTimeSeries(new DssPath(path));
+        return ts;
+      } 
+    }
+
+    public static string GetSimpleTempFileName(string extension)
+    {
+      string path = Path.GetTempPath();
+
+      var part1 = Guid.NewGuid().ToString("N").Substring(0, 8).ToLower();
+      var fn = Path.Combine(path, part1 + extension);
+
+      if (File.Exists(fn))
+        throw new Exception("File allready exists");
+
+      return fn;
+    }
+
+
+    //static string OutputPath = @"..\..\test-files\output\";
+    // static string SimpleIrregularTSPath = BasePath + "small-ir-ts.xlsx";
+    //  static string SimpleRegularTSPath = BasePath + "small-r-ts.xlsx";
+    // static string SimplePDPath = BasePath + "small-pd.xlsx";
+
+    public static TimeSeries CreateTimeSeries(int numberOfVals, bool regular = true)
         {
             List<double> vals = new List<double>();
             List<DateTime> dt = new List<DateTime>();
