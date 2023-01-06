@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Hec.Dss;
+using Hec.Excel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -17,7 +19,7 @@ namespace DssExcel
     {
       return "Wrong number of agrguments provided.  Usage:" +
              "\nDssExcel.exe -import-xls-to-dss-ui file.xls file.dss" +
-             "\nDssExcel.exe -export-dss-to-excel file.xls file.dss path1;path2";
+             "\nDssExcel.exe -export-dss-to-excel file.xls file.dss path1;path2;...";
     }
 
     void DssExcel_Startup(object sender, StartupEventArgs e)
@@ -38,11 +40,42 @@ namespace DssExcel
           mainWindow.Show();
           return;        }
       }
-      else if(e.Args[0] == "-export-dss-to-excel")
+      else if(e.Args[0] == "-export-dss-to-excel" && e.Args.Length >3)
       {
-
+        ExportDssToExcel(e.Args);
       }
       Close();
+    }
+
+    private void ExportDssToExcel(string[] args)
+    {
+      string excelFileName = args[1];
+      string dssFileName = args[2];
+      var paths = args[3].Split(';');
+
+      using (DssReader dss = new DssReader(dssFileName))
+      {
+        var tsList = new List<TimeSeries>();
+        var pdList = new List<PairedData>();
+        foreach (string path in paths)
+        {
+          DssPath p = new DssPath(path);
+          var type = dss.GetRecordType(p);
+          if (type is RecordType.RegularTimeSeries 
+            || type is RecordType.IrregularTimeSeries)
+          {
+            var ts = dss.GetTimeSeries(p);
+            tsList.Add(ts);
+          }
+          else if (type is RecordType.PairedData)
+          {
+            var pd = dss.GetPairedData(p.FullPath);
+            pdList.Add(pd);
+          }
+        }
+        ExcelTimeSeries.Write(excelFileName,tsList.ToArray());
+        ExcelPairedData.Write(excelFileName,pdList.ToArray());
+      }
     }
 
     private bool GetUIFileNames(out string excelFileName, out string dssFileName)
@@ -88,7 +121,7 @@ namespace DssExcel
 
     private void Close()
     {
-      System.Windows.Application.Current.Shutdown();
+      Current.Shutdown();
     }
   }
 }

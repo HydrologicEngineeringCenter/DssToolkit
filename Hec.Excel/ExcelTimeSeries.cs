@@ -61,7 +61,13 @@ namespace Hec.Excel
       }
 
     }
-    public static void Write(string excelFileName, TimeSeries series)
+    /// <summary>
+    /// Writes each time series to a separate sheet
+    /// </summary>
+    /// <param name="excelFileName"></param>
+    /// <param name="series"></param>
+    /// <param name="sheetNames"></param>
+    public static void Write(string excelFileName, TimeSeries[] series)
     {
       var xls = Factory.GetWorkbookSet();
       IWorkbook workbook;
@@ -73,12 +79,31 @@ namespace Hec.Excel
       {
         workbook = xls.Workbooks.Add();
       }
+      for (int i = 0; i < series.Length; i++)
+      {
+        IWorksheet sheet;
+        if ( workbook.Worksheets.Count < i + 1)
+        {
+          sheet = workbook.Worksheets.Add();
+        }
+        else
+        {
+          sheet = workbook.Worksheets[workbook.Worksheets.Count - 1];
+        }
+        Write(sheet,new TimeSeries[] { series[i] });
+      }
       
-      Write(workbook.Worksheets[0], new TimeSeries[] { series });
-     workbook.FullName = excelFileName;
+      workbook.FullName = excelFileName;
       workbook.Save();
     }
 
+    /// <summary>
+    /// Writes all time series in the series list to the same sheet
+    /// All series are assumed to have the same Times 
+    /// </summary>
+    /// <param name="worksheet"></param>
+    /// <param name="series"></param>
+    /// <exception cref="Exception"></exception>
     public static void Write(IWorksheet worksheet, TimeSeries[] series)
     {
       if( series.Length == 0 )

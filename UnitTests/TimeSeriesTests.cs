@@ -132,11 +132,11 @@ namespace UnitTests
       Assert.AreEqual(553486, ts.Count);
       var excelFileName = TestUtility.GetSimpleTempFileName(".xlsx");
       Console.WriteLine("saving to :"+excelFileName);
-      ExcelTimeSeries.Write(excelFileName, ts);
+      ExcelTimeSeries.Write(excelFileName,new TimeSeries[] { ts });
 
       ts = ExcelTimeSeries.Read(excelFileName)[0];
       Assert.AreEqual(553486, ts.Count);
-     // File.Delete(excelFileName);
+      File.Delete(excelFileName);
     }
   }
 }

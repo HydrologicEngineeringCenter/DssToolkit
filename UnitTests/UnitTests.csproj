@@ -58,7 +58,6 @@
   <ItemGroup>
     <Compile Include="TestUtility.cs" />
     <Compile Include="TimeSeriesTests.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PairedDataTests.cs" />
   </ItemGroup>
