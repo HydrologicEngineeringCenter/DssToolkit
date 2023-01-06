@@ -30,6 +30,12 @@ namespace UnitTests
       } 
     }
 
+    /// <summary>
+    /// gets a unique filename that can be created
+    /// </summary>
+    /// <param name="extension">file extension icluding dot</param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public static string GetSimpleTempFileName(string extension)
     {
       string path = Path.GetTempPath();

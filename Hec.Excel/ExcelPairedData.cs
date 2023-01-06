@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Hec.Dss;
 using SpreadsheetGear;
 
@@ -112,6 +113,43 @@ namespace Hec.Excel
         return Excel.GetString(range[indexOfPath.r, indexOfPath.c]);
       }
       return "";
+    }
+
+
+    /// <summary>
+    /// Writes each paired data to a separate sheet
+    /// </summary>
+    /// <param name="excelFileName">file to write to, will be created if needed</param>
+    /// <param name="paireDataList">array of PaireData</param>
+    public static void Write(string excelFileName,PairedData[] paireDataList)
+    {
+      var xls = Factory.GetWorkbookSet();
+      IWorkbook workbook;
+      if (File.Exists(excelFileName))
+      {
+        workbook = xls.Workbooks.Open(excelFileName);
+      }
+      else
+      {
+        workbook = xls.Workbooks.Add();
+      }
+
+      for (int i = 0; i < paireDataList.Length; i++)
+      {
+        IWorksheet sheet;
+        if (workbook.Worksheets.Count < i + 1)
+        {
+          sheet = workbook.Worksheets.Add();
+        }
+        else
+        {
+          sheet = workbook.Worksheets[workbook.Worksheets.Count - 1];
+        }
+        Write(sheet,  paireDataList[i] );
+      }
+
+      workbook.FullName = excelFileName;
+      workbook.Save();
     }
 
     public static void Write(IWorksheet worksheet, PairedData pd)
