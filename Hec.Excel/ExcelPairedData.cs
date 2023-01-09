@@ -176,7 +176,8 @@ namespace Hec.Excel
         worksheet.WorkbookSet.ReleaseLock();
       }
     }
-    public static void Write(IWorksheet worksheet, string path, double[] Xvalues, double[,] Yvalues,
+    [Obsolete]
+    private static void Write(IWorksheet worksheet, string path, double[] Xvalues, double[,] Yvalues,
                     string xUnits, string yUnits, string xType, string yType, string[] curveLabels)
     {
       worksheet.WorkbookSet.GetLock();
