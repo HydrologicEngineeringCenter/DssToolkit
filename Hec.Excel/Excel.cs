@@ -133,11 +133,11 @@ namespace Hec.Excel
       if (values.Count == 0 || values[0].Length == 0)
         return;
 
-      for (int col = 0; col < values[0].Length; col++)
+      for (int col = 0; col < values.Count; col++)
       {
-        for (int rowIndex = 0; rowIndex < values.Count; rowIndex++)
+        for (int rowIndex = 0; rowIndex < values[col].Length; rowIndex++)
         {
-          range[rowIndex, col].Value = values[rowIndex][col];
+          range[rowIndex, col].Value = values[col][rowIndex];
         }
       }
     }

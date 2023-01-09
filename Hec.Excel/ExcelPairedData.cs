@@ -73,18 +73,20 @@ namespace Hec.Excel
         int curveLength = usedRange.RowCount - indexOfData.r ;
         rval.Ordinates = new double[curveLength];
         rval.Values = new List<double[]>();
-        if(!Excel.TryGetValues(range[indexOfOrdinates.r, indexOfOrdinates.c],ExcelDirection.Down, rval.Ordinates, out string errorMessage))
+        if(!Excel.TryGetValues(range[indexOfOrdinates.r, indexOfOrdinates.c],
+                                     ExcelDirection.Down, rval.Ordinates, out string errorMessage))
         {
           throw new Exception(errorMessage);
         }
-        for (int rowIndex = 0; rowIndex < curveLength; rowIndex++)
+        for (int columnIndex = 0; columnIndex < numberOfCurves; columnIndex++)
         {
-          double[] row = new double[numberOfCurves];
-          if (!Excel.TryGetValues(range[indexOfValues.r+rowIndex, indexOfValues.c], ExcelDirection.Across, row, out errorMessage))
+          double[] column = new double[curveLength];
+          if (!Excel.TryGetValues(range[indexOfValues.r, indexOfValues.c + columnIndex], 
+                                       ExcelDirection.Down, column, out errorMessage))
           {
             throw new Exception(errorMessage);
           }
-          rval.Values.Add(row);
+          rval.Values.Add(column);
         }
       }
       finally
@@ -137,7 +139,7 @@ namespace Hec.Excel
       for (int i = 0; i < paireDataList.Length; i++)
       {
         IWorksheet sheet;
-        if (workbook.Worksheets.Count < i + 1)
+        if (workbook.Worksheets.Count <= i )
         {
           sheet = workbook.Worksheets.Add();
         }
