@@ -1,0 +1,26 @@
+﻿<Window x:Class="DssExcel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DssExcel"
+        mc:Ignorable="d"
+        Title="Importing from Excel to DSS" 
+        Height="400"
+        Width="800"
+        WindowState="Maximized"
+        >
+  <!--Width="{x:Static SystemParameters.PrimaryScreenWidth}"--> 
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="35" />
+      <RowDefinition Height="35" />
+    </Grid.RowDefinitions>
+    <ContentControl Grid.Row="0" x:Name="mainPanel" />
+    <Button Grid.Row="1"   Command="{Binding }"  x:Name="BackButton"  Content="Back" HorizontalAlignment="Left" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="BackButton_Click"  />
+    <Button Grid.Row="1"   Command="{Binding }"  x:Name="NextButton"  Content="Next" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Width="99" Height="27" Click="NextButton_Click"  />
+
+    <local:StatusControl  Grid.Row="2" x:Name="statusControl" Height="auto" VerticalAlignment="Bottom"   />
+  </Grid>    
+</Window>
