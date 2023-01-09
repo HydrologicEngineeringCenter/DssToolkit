@@ -4,18 +4,19 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1A3F6627-0F7D-4377-A93E-6DCAAE528814}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Hec.Excel</RootNamespace>
-    <AssemblyName>Hec.Excel</AssemblyName>
+    <ProjectGuid>{F83546EB-BCA3-4B11-9001-0E1B12990E76}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DSSExcelExport</RootNamespace>
+    <AssemblyName>DSSExcelExport</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,6 +26,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,16 +34,30 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>excel_logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=2.8.0.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.8.0\lib\net461\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="Hec.Dss, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-<<<<<<< HEAD:Hec.Excel/Hec.Excel.csproj
-      <HintPath>..\packages\Hec.Dss.1.2.1\lib\net472\Hec.Dss.dll</HintPath>
-=======
       <HintPath>..\packages\Hec.Dss.1.1.0\lib\net472\Hec.Dss.dll</HintPath>
->>>>>>> main:DSSExcelCLI/DSSExcelCLI.csproj
     </Reference>
     <Reference Include="SpreadsheetGear2017.Core">
       <HintPath>..\..\..\utils\SpreadsheetGear\SpreadsheetGear 2017 for .NET\DotNet40\Bin\SpreadsheetGear2017.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SpreadsheetGear2017.Drawing">
+      <HintPath>..\..\..\utils\SpreadsheetGear\SpreadsheetGear 2017 for .NET\DotNet40\Bin\SpreadsheetGear2017.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="SpreadsheetGear2017.Windows.Forms">
+      <HintPath>..\..\..\utils\SpreadsheetGear\SpreadsheetGear 2017 for .NET\DotNet40\Bin\SpreadsheetGear2017.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="SpreadsheetGear2017.Windows.Forms.Integration">
+      <HintPath>..\..\..\utils\SpreadsheetGear\SpreadsheetGear 2017 for .NET\DotNet40\Bin\SpreadsheetGear2017.Windows.Forms.Integration.dll</HintPath>
+    </Reference>
+    <Reference Include="SpreadsheetGear2017.Windows.WPF">
+      <HintPath>..\..\..\utils\SpreadsheetGear\SpreadsheetGear 2017 for .NET\DotNet40\Bin\SpreadsheetGear2017.Windows.WPF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,30 +69,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Excel.cs" />
-    <Compile Include="ExcelExtensions.cs" />
-    <Compile Include="ExcelPairedData.cs" />
-    <Compile Include="ExcelTimeSeries.cs" />
-    <Compile Include="Logging.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DSSExcelPlugin\Hec.Dss.Excel.csproj">
+      <Project>{E20EA78B-0CC7-4BFF-9038-97A5E2182180}</Project>
+      <Name>Hec.Dss.Excel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="excel_logo.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-<<<<<<< HEAD:Hec.Excel/Hec.Excel.csproj
-  <Import Project="..\packages\Hec.Dss.1.2.1\build\Hec.Dss.targets" Condition="Exists('..\packages\Hec.Dss.1.2.1\build\Hec.Dss.targets')" />
-=======
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <Import Project="..\packages\Hec.Dss.1.1.0\build\Hec.Dss.targets" Condition="Exists('..\packages\Hec.Dss.1.1.0\build\Hec.Dss.targets')" />
->>>>>>> main:DSSExcelCLI/DSSExcelCLI.csproj
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-<<<<<<< HEAD:Hec.Excel/Hec.Excel.csproj
-    <Error Condition="!Exists('..\packages\Hec.Dss.1.2.1\build\Hec.Dss.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Hec.Dss.1.2.1\build\Hec.Dss.targets'))" />
-=======
     <Error Condition="!Exists('..\packages\Hec.Dss.1.1.0\build\Hec.Dss.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Hec.Dss.1.1.0\build\Hec.Dss.targets'))" />
->>>>>>> main:DSSExcelCLI/DSSExcelCLI.csproj
   </Target>
 </Project>

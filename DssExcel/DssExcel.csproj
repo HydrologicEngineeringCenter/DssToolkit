@@ -39,10 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Hec.Dss, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hec.Dss.1.2.1\lib\net472\Hec.Dss.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+      <HintPath>..\packages\Hec.Dss.1.1.0\lib\net472\Hec.Dss.dll</HintPath>
     </Reference>
     <Reference Include="SpreadsheetGear2017.Core">
       <HintPath>..\..\..\utils\SpreadsheetGear\SpreadsheetGear 2017 for .NET\DotNet40\Bin\SpreadsheetGear2017.Core.dll</HintPath>
@@ -187,11 +184,23 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+<<<<<<< HEAD:DssExcel/DssExcel.csproj
   <Import Project="..\packages\Hec.Dss.1.2.1\build\Hec.Dss.targets" Condition="Exists('..\packages\Hec.Dss.1.2.1\build\Hec.Dss.targets')" />
+=======
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\Hec.Dss.1.1.0\build\Hec.Dss.targets" Condition="Exists('..\packages\Hec.Dss.1.1.0\build\Hec.Dss.targets')" />
+>>>>>>> main:DSSExcelImport/DSSExcelImport.csproj
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
+<<<<<<< HEAD:DssExcel/DssExcel.csproj
     <Error Condition="!Exists('..\packages\Hec.Dss.1.2.1\build\Hec.Dss.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Hec.Dss.1.2.1\build\Hec.Dss.targets'))" />
+=======
+    <Error Condition="!Exists('..\packages\Hec.Dss.1.1.0\build\Hec.Dss.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Hec.Dss.1.1.0\build\Hec.Dss.targets'))" />
+>>>>>>> main:DSSExcelImport/DSSExcelImport.csproj
   </Target>
 </Project>
