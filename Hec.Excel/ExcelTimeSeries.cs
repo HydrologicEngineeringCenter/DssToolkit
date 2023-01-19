@@ -50,17 +50,6 @@ namespace Hec.Excel
     private static (int r, int c) indexValues = ( 7, 2);
 
 
-    private static string GetInteval(TimeSeries ts)
-    {// TODO fix hec.dss to do this.
-      try
-      {
-        return TimeWindow.GetInterval(ts);
-      }catch (Exception)
-      {
-        return "IR-YEAR";
-      }
-
-    }
     /// <summary>
     /// Writes each time series to a separate sheet
     /// </summary>
@@ -131,7 +120,7 @@ namespace Hec.Excel
           range[indexOfGroup.r, indexOfGroup.c + i].Value = ts.Path.Apart;
           range[indexOfLocation.r, indexOfLocation.c + i].Value = ts.Path.Bpart;
           range[indexOfParameter.r, indexOfParameter.c + i].Value = ts.Path.Cpart;
-          range[indexOfInterval.r, indexOfInterval.c + i].Value = GetInteval(ts);
+          range[indexOfInterval.r, indexOfInterval.c + i].Value = TimeWindow.GetInterval(ts);
           range[indexOfVersion.r, indexOfVersion.c + i].Value = ts.Path.Fpart;
           range[indexOfUnits.r, indexOfUnits.c + i].Value = ts.Units;
           range[indexOfType.r, indexOfType.c + i].Value = ts.DataType;
