@@ -19,7 +19,7 @@ namespace DssExcel
     {
       return "Wrong number of agrguments provided.  Usage:" +
              "\nDssExcel.exe -import-xls-to-dss-ui file.xls file.dss" +
-             "\nDssExcel.exe -export-dss-to-excel file.xls file.dss path1;path2;...";
+             "\nDssExcel.exe -export-dss-to-excel file.dss file.xls path1;path2;...";
     }
 
     void DssExcel_Startup(object sender, StartupEventArgs e)
@@ -49,8 +49,8 @@ namespace DssExcel
 
     private void ExportDssToExcel(string[] args)
     {
-      string excelFileName = args[1];
-      string dssFileName = args[2];
+      string dssFileName = args[1];
+      string excelFileName = args[2];
       var paths = args[3].Split(';');
 
       using (DssReader dss = new DssReader(dssFileName))
