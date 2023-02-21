@@ -32,7 +32,7 @@ namespace DssExcel
         Close();
       }
 
-      if (e.Args[0] == "-import-xls-to-dss-ui")
+      if (e.Args.Length>=1 && e.Args[0] == "-import-xls-to-dss-ui")
       {
         if (GetUIFileNames(out string excelFileName, out string dssFileName))
         {
@@ -40,7 +40,7 @@ namespace DssExcel
           mainWindow.Show();
           return;        }
       }
-      else if(e.Args[0] == "-export-dss-to-excel" && e.Args.Length >3)
+      else if(e.Args.Length > 3 && e.Args[0] == "-export-dss-to-excel" )
       {
         ExportDssToExcel(e.Args);
       }
@@ -95,7 +95,7 @@ namespace DssExcel
         var dialog = new Microsoft.Win32.OpenFileDialog();
         dialog.Title = "Select Excel file";
         dialog.DefaultExt = ".xls";
-        dialog.Filter = "Excel Files (.xls)|*.xls";
+        dialog.Filter = "Excel Files (.xls)|*.xls;*.xlsx";
         var dlgResult = dialog.ShowDialog();
         if (dlgResult.HasValue && dlgResult.Value)
         {
