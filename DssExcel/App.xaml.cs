@@ -95,7 +95,7 @@ namespace DssExcel
         var dialog = new Microsoft.Win32.OpenFileDialog();
         dialog.Title = "Select Excel file";
         dialog.DefaultExt = ".xls";
-        dialog.Filter = "Excel Files (.xls)|*.xls;*.xlsx";
+        dialog.Filter = "Excel Files (*.xls;*.xlsx;*.csv)|*.xls;*.xlsx;*.csv";
         var dlgResult = dialog.ShowDialog();
         if (dlgResult.HasValue && dlgResult.Value)
         {

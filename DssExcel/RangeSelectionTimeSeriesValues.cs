@@ -19,7 +19,7 @@ namespace DssExcel
     {
 
       mainViewModel.SecondRangeText="values: " +Excel.RangeToString(RangeSelection);
-      if( !Excel.TryGetValueArray2D(RangeSelection, out double[,] values, out errorMessage))
+      if( !Excel.TryGetValueArray2D(RangeSelection, out double[,] values, out errorMessage, MainViewModel.MissingValue))
       {
         return false;
       }

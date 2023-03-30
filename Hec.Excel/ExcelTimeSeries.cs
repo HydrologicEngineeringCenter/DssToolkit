@@ -147,7 +147,7 @@ namespace Hec.Excel
       return tsList;
     }
 
-    public static TimeSeries[] Read(IWorksheet worksheet)
+    public static TimeSeries[] Read(IWorksheet worksheet, double valueForMissingData= -3.4028234663852886E+38)
     {
       var cells =worksheet.Range;
       if (!Excel.IsMatchDown(cells, firstColumn))
@@ -170,7 +170,7 @@ namespace Hec.Excel
       for (int i = 0; i < firstRow.Length; i++)
       {
         var valueCells = worksheet.Cells[indexValues.r, indexValues.c+i, usedRange.RowCount - 1, indexValues.c+i];
-        if(!Excel.TryGetValueArray(valueCells, out double[] values, out errorMessage))
+        if(!Excel.TryGetValueArray(valueCells, out double[] values, out errorMessage, valueForMissingData))
         {
           Logging.WriteError(errorMessage);
         }

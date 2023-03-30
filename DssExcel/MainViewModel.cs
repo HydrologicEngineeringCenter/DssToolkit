@@ -30,7 +30,7 @@ namespace DssExcel
     public string YValuesLabel { get; set; }
     public double[,] TimeSeriesValues { get; set; }
 
-
+    public const double MissingValue = -3.4028234663852886E+38;
     public string[] TimeSeriesNames { get; set; }
 
     public string DssFileName { get; set; }

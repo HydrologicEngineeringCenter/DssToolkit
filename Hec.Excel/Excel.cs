@@ -228,7 +228,7 @@ namespace Hec.Excel
       return rval.ToArray();
     }
 
-    public static bool TryGetValueArray2D(IRange rangeSelection, out double[,] values, out string errorMessage)
+    public static bool TryGetValueArray2D(IRange rangeSelection, out double[,] values, out string errorMessage, double? valueForMissingData = null)
     {
       errorMessage = "";
       values = null;
@@ -238,18 +238,25 @@ namespace Hec.Excel
         return false;
       }
 
-      values = new double[rangeSelection.RowCount,rangeSelection.ColumnCount];
+      values = new double[rangeSelection.RowCount, rangeSelection.ColumnCount];
       for (int columnIndex = 0; columnIndex < rangeSelection.ColumnCount; columnIndex++)
       {
         for (int rowIndex = 0; rowIndex < rangeSelection.RowCount; rowIndex++)
         {
           var cell = rangeSelection[rowIndex, columnIndex];
-          if (cell.Value == null || cell.Text.Trim() == "")
+          bool empty = EmptyCell(cell);
+
+          double d;
+          if (empty && valueForMissingData.HasValue)
+          {
+            d = valueForMissingData.Value;
+          }
+          else if (empty)
           {
             errorMessage = ErrorMessageEmpty(cell);
             return false;
           }
-          if (!TryReadingDouble(cell, out double d))
+          else if (!TryReadingDouble(cell, out d))
           {
             errorMessage = ErrorMessageParsingNumber(cell);
             return false;
@@ -310,7 +317,7 @@ namespace Hec.Excel
     {
       return cell.Value == null || cell.Text.Trim() == "";
     }
-    public static bool TryGetValueArray(IRange rangeSelection, out double[] values, out string errorMessage)
+    public static bool TryGetValueArray(IRange rangeSelection, out double[] values, out string errorMessage, double? valueForMissingData=null)
     {
       errorMessage = "";
       values = null;
@@ -321,21 +328,26 @@ namespace Hec.Excel
       }
 
       values = new double[rangeSelection.RowCount];
-      
       for (int i = 0; i < values.Length; i++)
       {
         var cell = rangeSelection[i, 0];
-        if (EmptyCell(cell))
+        bool empty = EmptyCell(cell);
+        double d;
+        if (empty && valueForMissingData.HasValue)
+        {
+          d = valueForMissingData.Value;
+        }
+        else if (empty)
         {
           errorMessage = ErrorMessageEmpty(cell);
           return false;
         }
-        if(!TryReadingDouble(cell,out double d))
+        else if (!TryReadingDouble(cell, out d))
         {
           errorMessage = ErrorMessageParsingNumber(cell);
           return false;
         }
-        
+
         values[i] = d;
       }
       return true;
