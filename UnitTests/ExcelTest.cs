@@ -29,5 +29,17 @@ namespace UnitTests
 
     }
 
+    [TestMethod]
+    public void DuplicateDatesInColumn()
+    {
+      Excel e = new Excel(Path.Combine(TestUtility.BasePath, "david_ries_test_data_duplicate_dates.xlsx"));
+      var selection = e.Workbook.ActiveSheet.EvaluateRange("A1:A361");
+      var status = Excel.TryGetDateArray(selection, out DateTime[] dates, out string errorMessage);
+      Console.WriteLine(errorMessage);
+      Assert.IsFalse(status);
+
+    }
+
+
   }
 }

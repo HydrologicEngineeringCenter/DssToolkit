@@ -105,6 +105,20 @@ namespace Hec.Excel
             return false;
           }
         }
+        //  insist that date/Time values increase moving down the row.
+        if(i > 0)
+        {
+          if( dates[i] == dates[i - 1])
+          {
+            errorMessage = "The Date-Time at: " + RangeToString(cell) + " is a duplicate from the row above";
+            return false;
+          }
+          if (dates[i] < dates[i - 1])
+          {
+            errorMessage = "The Date-Time at: " + RangeToString(cell) + "is out of order. Date-Times are expected to be in increasing order";
+            return false;
+          }
+        }
 
       }
     
