@@ -1,5 +1,5 @@
 set config="Debug"
-set VERSION=1.0.2-Beta
+set VERSION=1.0.6-Beta
 set ZIPFILE=dssplugin-DSSExcel.zip
 Xcopy DSSExcel\bin\%config% distribution\dotnet\DSSExcel /e /h /c /i /s /y
 
@@ -11,3 +11,4 @@ mvn deploy:deploy-file -DgroupId=mil.army.usace.hec -DartifactId=dssplugin-DSSEx
 
 
 cd ..
+
