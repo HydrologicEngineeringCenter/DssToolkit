@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TidesAndCurrents
+namespace NoaaTides
 {
   /// <summary>
   /// Interaction logic for MainWindow.xaml

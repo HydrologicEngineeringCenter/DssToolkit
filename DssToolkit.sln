@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hec.Excel", "Hec.Excel\Hec.Excel.csproj", "{1A3F6627-0F7D-4377-A93E-6DCAAE528814}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TidesAndCurrents", "TidesAndCurrents\TidesAndCurrents.csproj", "{CACE5B9D-D0ED-4505-8658-CBCFEBC25236}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoaaTides", "NoaaTides\NoaaTides.csproj", "{C2B08E24-8D28-492E-BB44-C63A23D5916D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{1A3F6627-0F7D-4377-A93E-6DCAAE528814}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A3F6627-0F7D-4377-A93E-6DCAAE528814}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A3F6627-0F7D-4377-A93E-6DCAAE528814}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CACE5B9D-D0ED-4505-8658-CBCFEBC25236}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CACE5B9D-D0ED-4505-8658-CBCFEBC25236}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CACE5B9D-D0ED-4505-8658-CBCFEBC25236}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CACE5B9D-D0ED-4505-8658-CBCFEBC25236}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B08E24-8D28-492E-BB44-C63A23D5916D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B08E24-8D28-492E-BB44-C63A23D5916D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B08E24-8D28-492E-BB44-C63A23D5916D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B08E24-8D28-492E-BB44-C63A23D5916D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,7 @@
-﻿<Application x:Class="TidesAndCurrents.App"
+﻿<Application x:Class="NoaaTides.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:TidesAndCurrents"
+             xmlns:local="clr-namespace:NoaaTides"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

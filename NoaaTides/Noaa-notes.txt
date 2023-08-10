@@ -1,0 +1,34 @@
+We have 3 API systems; each providing access to different information; and a "builder tool" to assist customers in creating usable API queries.
+
+CO-OPS API Builder
+APIApplicationData Retrieval	•	Navigate, build, and submit URLs to query station listings, observations, predictions and derived products using various CO-OPS APIs (Data API, Metadata API and Derived Product API)
+•	Output format: XML, JSON, dependant on selected API
+https://tidesandcurrents.noaa.gov/api-helper/url-generator.html
+
+
+
+CO-OPS Data API
+APIWebpage	•	Documentation helping users retrieve past and present observations and predictions from CO-OPS Stations
+•	Retrieves data from products unique to a specific station including water level, visibility, air temperature, predictions, datums, and more
+•	Output format: CSV, XML, JSON
+https://tidesandcurrents.noaa.gov/api/
+
+
+
+CO-OPS Metadata API (MDAPI)
+APIWebpage	•	Documentation helping users retrieve associated metadata from CO-OPS stations
+•	Retrieves data such as station location, datums, harmonic constituents, built-in sensors, tide predictions, flood levels and other station details
+•	Output format: XML, JSON
+https://tidesandcurrents.noaa.gov/mdapi/latest/
+
+
+
+CO-OPS Derived Product API (DPAPI)
+APIWebpage	•	Documentation helping users retrieve information about CO-OPS' derived products
+•	Products included are top ten water levels, yearly inundation statistics, extreme water levels, and sea level trends
+•	Output format: XML, JSON
+https://tidesandcurrents.noaa.gov/dpapi/latest/
+
+
+Depending on what you are attempting to do, you might find that you need queries from more than 1 API system.
+Such as using the MetaData API to provide a list of stations offering a specific type of data, then the Data API to retrieve data for stations from that list. 
