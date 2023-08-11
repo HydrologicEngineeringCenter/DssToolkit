@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -16,11 +18,8 @@ namespace NoaaTides
   /// </summary>
   internal class NoaaTidesTimeSeries
   {
-    /*
 
-     * 
-     * 
-     * -- p = preliminary
+    /*
      * -- v = verified
      */
     //https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=20230801&end_date=20230810&station=8772471&product=water_level&datum=NAVD&time_zone=lst&units=english&application=hec.usace.army.mil&format=json
@@ -38,6 +37,12 @@ namespace NoaaTides
       DataTable table = new DataTable();
       int maxDays = LookupMaxDays(product);
 
+      ReadMetaDataIntoDataTable(table, station);
+      string datum = "NAVD";
+      table.ExtendedProperties.Add("datum", datum);
+      if(product.Equals("water_level"))
+        table.ExtendedProperties.Add("units", "feet");
+
       while (t1 <= endDate)
       {
         DateTime t2 = t1.AddDays(30);
@@ -49,22 +54,57 @@ namespace NoaaTides
           + "&end_date=" + t2.ToString("yyyyMMdd")
           + "&station=" + station
           + "&product=" + product
-          + "&datum=NAVD&time_zone=lst&units=english&application=hec.usace.army.mil&format=csv";
+          + "&datum=" + datum
+          + "&time_zone=lst&units=english&application=hec.usace.army.mil&format=csv";
 
-        string content = await Web.GetPage(url); 
+        string content = await Web.GetPage(url);
         CsvFile csv = CsvFile.FromString(content);
-        if (table.Rows.Count == 0)
-        {
-          table = csv;
-        }
-        else {  // append rows.
-          table.Merge(csv);
-        }
+        table.Merge(csv);
         t1 = t2.AddDays(1);
+      }
+      // trim out extra columns
+      var columns = new string[]{ "Date Time", "Water Level","Quality"};
+      for (int i = table.Columns.Count-1; i >0; i--)
+      {
+        var name = table.Columns[i].ColumnName;
+        if (!columns.Contains(name))
+          table.Columns.Remove(name);
       }
 
       table.TableName = station;
       return table;
+    }
+
+    static object stationLockKey = new object();
+    static CsvFile stations;
+    /// <summary>
+    /// Reads meta data from stations.csv into the
+    /// the table's ExtendedProperties
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="id"></param>
+    private static void ReadMetaDataIntoDataTable(DataTable table, string id)
+    {
+      lock (stationLockKey)
+      {
+        if (stations == null)
+          stations = new CsvFile("stations.csv");
+      }
+
+      var rows = stations.Select("id=" + id);
+      if (rows.Length == 1)
+      {
+        var row = rows[0].ItemArray;
+        for (int i = 0; i < row.Length; i++)
+        {
+          table.ExtendedProperties.Add(stations.Columns[i].ColumnName, row[i]);
+        }
+        
+      }
+      else
+      {
+        Console.WriteLine("Warning: Meta data not found");
+      }
     }
 
     /// <summary>

@@ -17,8 +17,9 @@ using System.Xml.Schema;
 
 namespace TidesAndCurrents
 {
-  internal class NoaaCoopsClient
+  internal class NoaaMetaData
   {
+
     /// <summary>
     /// 
     /// </summary>
@@ -75,20 +76,24 @@ namespace TidesAndCurrents
 
     private static void AddRowToTable(DataTable table, Dictionary<string, string> props)
     {
-      foreach (var item in props)
-      {
-        if(table.Columns.IndexOf(item.Key) <0)
-        {
-          table.Columns.Add(item.Key, typeof(string));
-        }
-      }
       var row = table.NewRow();
       foreach (var item in props)
       {
-        row[item.Key] = item.Value;
+        if (table.Columns.IndexOf(item.Key) < 0)
+        {
+          table.Columns.Add(item.Key, typeof(string));
+        }
+
+        if (IsImportantProperty(item))
+            row[item.Key] = item.Value;
+        
       }
       table.Rows.Add(row);
+    }
 
+    private static bool IsImportantProperty(KeyValuePair<string, string> item)
+    {
+      return !(item.Value.Contains("https://") || item.Value.Contains(","));
     }
 
     static Dictionary<string,string> GetProperties(JsonElement e)

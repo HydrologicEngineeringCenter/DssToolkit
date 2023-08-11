@@ -9,15 +9,18 @@ namespace NoaaTides
 {
   internal class Program
   {
-    static async Task Main()
+    static async Task Main(string[] args)
     {
-      //}",True,False,False,False,8772471,"Freeport Harbor",28.935699,-95.294197,NWLON,"","{
-     var table = await NoaaTidesTimeSeries.ReadTimeSeries("8772471", "water_level", DateTime.Now.AddDays(-45), DateTime.Now.Date);
+      //var m = new NoaaMetaData();
+      //var stations = await m.GetStations();
+      //DataTableExporter.WriteToCsv(stations, @"C:\project\DssToolkit\NoaaTides\stations.csv");
+      
 
-      table.WriteXml(@"c:\temp\freeport.xml");
-     Console.WriteLine(table);
-            // NoaaCoopsClient client = new NoaaCoopsClient();
-            //var table = await client.GetStations();
-        }
+      var ts = await NoaaTidesTimeSeries.ReadTimeSeries("8772471", "water_level", DateTime.Now.AddDays(-45), DateTime.Now.Date);
+      DataTableExporter.WriteToCsv(ts, @"c:\temp\ts.txt");
+     Console.WriteLine(ts);
+
+
+     }
   }
 }

@@ -7,4 +7,14 @@
     <StartupObject>NoaaTides.Program</StartupObject>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Update="stations.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UI\" />
+  </ItemGroup>
+
 </Project>

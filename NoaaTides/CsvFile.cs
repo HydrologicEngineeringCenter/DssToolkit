@@ -19,7 +19,7 @@ namespace NoaaTides
 
     private void Parse(string[] lines)
     {
-      var columnNames = lines[0].Split(',');
+      var columnNames = lines[0].Split(',',StringSplitOptions.TrimEntries);
       for (int c = 0; c < columnNames.Length; c++)
       {
         Columns.Add(columnNames[c], typeof(String));
@@ -43,31 +43,6 @@ namespace NoaaTides
       return result;
     }
 
-    static void ExportDataTableToCSV(DataTable dataTable, string filePath)
-    {
-      using (StreamWriter writer = new StreamWriter(filePath))
-      {
-        // Write header
-        for (int i = 0; i < dataTable.Columns.Count; i++)
-        {
-          writer.Write(dataTable.Columns[i]);
-          if (i < dataTable.Columns.Count - 1)
-            writer.Write(",");
-        }
-        writer.WriteLine();
-
-        // Write data
-        foreach (DataRow row in dataTable.Rows)
-        {
-          for (int i = 0; i < dataTable.Columns.Count; i++)
-          {
-            writer.Write(row[i]);
-            if (i < dataTable.Columns.Count - 1)
-              writer.Write(",");
-          }
-          writer.WriteLine();
-        }
-      }
-    }
+   
   }
 }
