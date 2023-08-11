@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoaaTides", "NoaaTides\Noaa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CwmsApi", "CwmsApi\CwmsApi.csproj", "{8D4E08FD-CB8B-4D71-90FD-9CE70E40E335}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Usgs", "Usgs\Usgs.csproj", "{E1BBB72D-4C53-4D99-BE6D-DF1AB7516D6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDEC", "CDEC\CDEC.csproj", "{D553A2D7-5B4D-4D91-93B4-D853D1BFF3EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{8D4E08FD-CB8B-4D71-90FD-9CE70E40E335}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D4E08FD-CB8B-4D71-90FD-9CE70E40E335}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D4E08FD-CB8B-4D71-90FD-9CE70E40E335}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1BBB72D-4C53-4D99-BE6D-DF1AB7516D6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1BBB72D-4C53-4D99-BE6D-DF1AB7516D6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1BBB72D-4C53-4D99-BE6D-DF1AB7516D6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1BBB72D-4C53-4D99-BE6D-DF1AB7516D6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D553A2D7-5B4D-4D91-93B4-D853D1BFF3EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D553A2D7-5B4D-4D91-93B4-D853D1BFF3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D553A2D7-5B4D-4D91-93B4-D853D1BFF3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D553A2D7-5B4D-4D91-93B4-D853D1BFF3EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
