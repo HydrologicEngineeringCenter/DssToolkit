@@ -7,7 +7,7 @@ namespace CDEC
     static async Task Main(string[] args)
     {
 
-      CdecMetaData.GetStation("CLV")
+      //CdecMetaData.GetStation("CLV");
       //http://cdec.water.ca.gov/dynamicapp/req/CSVLegacyDataServlet?station_id=CLV&sensor_num=16&dur_code=E&start_date=2006-01-01&end_date=2022-06-06
 
       var response = await Web.GetPage("http://cdec.water.ca.gov/dynamicapp/staMeta?station_id=CLV");

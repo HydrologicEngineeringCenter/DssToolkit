@@ -5,6 +5,10 @@ namespace Usgs
   internal class ReadUsgsPluginFile
   {
     /*
+     * Read usgs plugin file and output text file suitable for importing to a DSS file
+     * 
+     * get lat/long and other meta data from USGS webservice,
+     * 
       Station Name=UKIAH CA
       Stream Name=RUSSIAN R
       Station ID=11461000

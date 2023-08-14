@@ -11,9 +11,20 @@ namespace Tools
   {
     string[] data;
     int currentIndex = 0;
+
+    public string FileName { get; set; }
+    public int Length { get { return data.Length; } }
+
     public TextFile(string fileName)
     {
+      FileName = fileName;
       data = File.ReadAllLines(fileName);
+    }
+
+    public TextFile(string[] data)
+    {
+      FileName = "";
+      this.data = data;
     }
 
     public string this[int index]
