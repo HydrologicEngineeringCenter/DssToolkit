@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Usgs
+namespace Tools
 {
-  internal class TextFile
+  public class TextFile
   {
     string[] data;
     int currentIndex = 0;
@@ -21,7 +21,7 @@ namespace Usgs
       get { return data[index]; }
     }
 
-    public int FindNextBeginningWith(string text,int startIndex)
+     int FindNextBeginningWith(string text,int startIndex)
     {
 
       for (int i = startIndex; i < data.Length; i++)
@@ -40,7 +40,7 @@ namespace Usgs
     /// </summary>
     /// <param name="text">key</param>
     /// <returns></returns>
-    internal string GetNext(string text)
+    public string GetNext(string text)
     {
       int idx = FindNextBeginningWith(text + "=", currentIndex);
       if (idx < 0)

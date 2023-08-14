@@ -8,7 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\NoaaTides\Web.cs" Link="Web.cs" />
+    <ProjectReference Include="..\Tools\Tools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="CDEC_Active Real-Time Reporting Stations.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

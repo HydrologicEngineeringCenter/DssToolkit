@@ -1,0 +1,337 @@
+CDEC Data Retrieval
+
+Station Name=CLV
+Basin Name=RUSSIAN
+Station ID=CLV
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Event
+
+Station Name=HKY
+Basin Name=RUSSIAN
+Station ID=HKY
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=COY
+Basin Name=RUSSIAN
+Station ID=COY
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=STA
+Basin Name=RUSSIAN
+Station ID=STA
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=PVP
+Basin Name=RUSSIAN
+Station ID=PVP
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Hourly
+
+Station Name=PTV
+Basin Name=RUSSIAN
+Station ID=PTV
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=WIL
+Basin Name=RUSSIAN
+Station ID=WIL
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Event
+
+Station Name=CDW
+Basin Name=RUSSIAN
+Station ID=CDW
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Event
+
+Station Name=YOR
+Basin Name=RUSSIAN
+Station ID=YOR
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Event
+
+Station Name=WRS
+Basin Name=RUSSIAN
+Station ID=WRS
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=LSW
+Basin Name=RUSSIAN
+Station ID=LSW
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Event
+
+Station Name=VEN
+Basin Name=RUSSIAN
+Station ID=VEN
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Event
+
+Station Name=LYO
+Basin Name=RUSSIAN
+Station ID=LYO
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=ANG
+Basin Name=NAPA R
+Station ID=ANG
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Event
+
+Station Name=SH4
+Basin Name=NAPA R
+Station ID=SH4
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Event
+
+Station Name=ATL
+Basin Name=NAPA R
+Station ID=ATL
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Event
+
+Station Name=LIC
+Basin Name=PETALUMA R
+Station ID=LIC
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Event
+
+Station Name=PTB
+Basin Name=PETALUMA R
+Station ID=PTB
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Event
+
+Station Name=SCD
+Basin Name=EEL R
+Station ID=SCD
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Hourly
+
+Station Name=LEG
+Basin Name=EEL R
+Station ID=LEG
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Hourly
+
+Station Name=EEL
+Basin Name=EEL R
+Station ID=EEL
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=CLO
+Basin Name=EEL R
+Station ID=CLO
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Event
+
+Station Name=LAY
+Basin Name=EEL R
+Station ID=LAY
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=BNV
+Basin Name=BOONVILLE
+Station ID=BNV
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=SNO
+Basin Name=SONOMA COUNTY AIRPORT
+Station ID=SNO
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=SOD
+Basin Name=SODA CREEK
+Station ID=SOD
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=2
+Duration Code=Hourly
+
+Station Name=CRD
+Basin Name=PETALUMA R
+Station ID=CRD
+Sensor Name= PRECIP-CUM
+Version Name= CDEC
+Sensor Number=16
+Duration Code=Event
+
+Station Name=DRY
+Basin Name=Dry Creek
+Station ID=DRY
+Sensor Name= FLOW
+Version Name= CDEC
+Sensor Number=20
+Duration Code=Hourly
+
+Station Name=COYOTE
+Basin Name=RUSSIAN
+Station ID=COY
+Sensor Name= STORAGE
+Version Name= CDEC
+Sensor Number=15
+Duration Code=Hourly
+
+Station Name=COYOTE
+Basin Name=RUSSIAN
+Station ID=COY
+Sensor Name= ELEVATION
+Version Name= CDEC
+Sensor Number=6
+Duration Code=Hourly
+
+Station Name=COYOTE
+Basin Name=RUSSIAN
+Station ID=COY
+Sensor Name= FLOW-IN
+Version Name= CDEC
+Sensor Number=76
+Duration Code=Hourly
+
+Station Name=COYOTE
+Basin Name=RUSSIAN
+Station ID=COY
+Sensor Name= FLOW-OUT
+Version Name= CDEC
+Sensor Number=23
+Duration Code=Hourly
+
+Station Name=RRU
+Basin Name=RUSSIAN
+Station ID=RRU
+Sensor Name= FLOW
+Version Name= CDEC
+Sensor Number=20
+Duration Code=Event
+
+Station Name=CLV
+Basin Name=RUSSIAN
+Station ID=CLV
+Sensor Name= FLOW
+Version Name= CDEC
+Sensor Number=20
+Duration Code=Hourly
+
+Station Name=HAC
+Basin Name=RUSSIAN
+Station ID=HAC
+Sensor Name= FLOW
+Version Name= CDEC
+Sensor Number=20
+Duration Code=Hourly
+
+Station Name=HEA
+Basin Name=RUSSIAN
+Station ID=HEA
+Sensor Name= FLOW
+Version Name= CDEC
+Sensor Number=20
+Duration Code=Hourly
+
+Station Name=Hop
+Basin Name=RUSSIAN
+Station ID=HOP
+Sensor Name= FLOW
+Version Name= CDEC
+Sensor Number=20
+Duration Code=Hourly
+
+Station Name=Warm Springs
+Basin Name=Dry Creek
+Station ID=WRS
+Sensor Name= STORAGE
+Version Name= CDEC
+Sensor Number=15
+Duration Code=Hourly
+
+Station Name=Warm Springs
+Basin Name=Dry Creek
+Station ID=WRS
+Sensor Name= ELEVATION
+Version Name= CDEC
+Sensor Number=6
+Duration Code=Hourly
+
+Station Name=Warm Springs
+Basin Name=Dry Creek
+Station ID=WRS
+Sensor Name= FLOW-IN
+Version Name= CDEC
+Sensor Number=76
+Duration Code=Hourly
+
+Station Name=Warm Springs
+Basin Name=Dry Creek
+Station ID=WRS
+Sensor Name= FLOW-OUT
+Version Name= CDEC
+Sensor Number=23
+Duration Code=Hourly
+
+Station Name=POTTER VALLEY PH
+Basin Name=RUSSIAN
+Station ID=PVY
+Sensor Name= FLOW
+Version Name= CDEC
+Sensor Number=48
+Duration Code=Daily

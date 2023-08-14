@@ -17,4 +17,8 @@
     <Folder Include="UI\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Tools\Tools.csproj" />
+  </ItemGroup>
+
 </Project>

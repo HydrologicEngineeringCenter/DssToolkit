@@ -5,11 +5,11 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NoaaTides
+namespace Tools
 {
-  internal class Web
+  public class Web
   {
-    internal async static Task<string> GetPage(string url)
+    public async static Task<string> GetPage(string url)
     {
       using HttpClient client = new HttpClient();
       string rval = "";
