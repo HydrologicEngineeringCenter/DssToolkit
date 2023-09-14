@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tools;
 
 namespace CDEC
 {
@@ -12,7 +14,14 @@ namespace CDEC
   internal class CdecMetaData
   {
 
-    ///https://cdec.water.ca.gov/reportapp/javareports?name=RealStations
+     static async Task<DataTable> GetStations()
+    {
+      string content = await Web.GetPage("https://cdec.water.ca.gov/reportapp/javareports?name=RealStations");
+
+
+      return new DataTable(content);
+    }
+    ///
     ///
 
 

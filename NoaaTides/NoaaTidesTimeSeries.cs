@@ -30,7 +30,8 @@ namespace NoaaTides
     /// 
     /// </summary>
     /// <param name="station"></param>
-    /// <param name="product">one of: water_level, hourly_height,air_temperature,water_temperature, wind, one_minute_water_level </param>
+    /// <param name="product">one of: water_level, hourly_height,air_temperature,
+    ///                             water_temperature, wind, one_minute_water_level </param>
     public static async Task<DataTable> ReadTimeSeries(string station, string product, 
         DateTime startDate,DateTime endDate)
     {
