@@ -11,7 +11,7 @@ namespace CwmsData.Api
 {
   internal class CwmsDataClient
   {
-    public static async Task<SimpleTimeSeries> GetTimeSeries()
+    public static async Task<SimpleTimeSeries> GetTimeSeries(string officeID, string name, DateTime firstTime, DateTime lastTime)
     {
       /*
        * curl -X 'GET' \
@@ -19,12 +19,10 @@ namespace CwmsData.Api
   -H 'accept: application/json;version=2'
        */
       string apiUrl = "https://cwms-data.usace.army.mil/cwms-data/timeseries";
-      string name = "Mount Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev";
-      string office = "LRB";
-      string begin = "2023-06-23T06:01:00";
-      string end = "2023-06-24T06:01:00";
+      var begin = firstTime.ToString("O");
+      var end = lastTime.ToString("O");
 
-      string queryString = $"?name={Uri.EscapeDataString(name)}&office={Uri.EscapeDataString(office)}&begin={Uri.EscapeDataString(begin)}&end={Uri.EscapeDataString(end)}";
+      string queryString = $"?name={Uri.EscapeDataString(name)}&office={Uri.EscapeDataString(officeID)}&begin={Uri.EscapeDataString(begin)}&end={Uri.EscapeDataString(end)}";
       string apiUrlWithQuery = apiUrl + queryString;
 
       using (HttpClient client = new HttpClient())
@@ -65,8 +63,8 @@ namespace CwmsData.Api
           var segments = rtsv.GetProperty("segments");
           foreach (JsonElement segment in segments.EnumerateArray())
           {
-            var firstTime = segment.GetProperty("first-time").GetDateTime();
-            var lastTime = segment.GetProperty("last-time").GetDateTime();
+            var first = segment.GetProperty("first-time").GetDateTime();
+            var last = segment.GetProperty("last-time").GetDateTime();
             var t = firstTime;
             var values = segment.GetProperty("values");
             foreach (JsonElement value in values.EnumerateArray())
