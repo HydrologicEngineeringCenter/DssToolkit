@@ -14,9 +14,9 @@ namespace CwmsData.Api
       [STAThread]
       static async Task Main(string[] args)
       {
-      var s = await CwmsDataClient.GetJsonData();
-
-      Console.WriteLine(s);
+      var s = await CwmsDataClient.GetTimeSeries();
+        s.WriteToConsole();
+      //Console.WriteLine(s);
 
       }
 
