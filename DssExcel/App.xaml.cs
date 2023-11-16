@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -80,42 +81,54 @@ namespace DssExcel
 
     private bool GetUIFileNames(out string excelFileName, out string dssFileName)
     {
-      excelFileName = "";
-      dssFileName = "";
-      string[] args = Environment.GetCommandLineArgs();
-      if (args.Length == 4)
+      string[] commandLineArgs = Environment.GetCommandLineArgs();
+      if (commandLineArgs.Length == 4)
       {
-        excelFileName = args[2];
-        dssFileName = args[3];
+        // Validate file paths from command line
+        if (File.Exists(commandLineArgs[2]) )
+        {
+          excelFileName = commandLineArgs[2];
+          dssFileName = commandLineArgs[3];
+          return true;
+        }
+        else
+        {
+          MessageBox.Show("Invalid Excel input file provided: '" + commandLineArgs[2]+"'.  Does that file exist?");
+          excelFileName = dssFileName = "";
+          return false;
+        }
+      }
+
+      if (commandLineArgs.Length == 2)
+      {
+        if (TryGetFileName("Select Excel file", "Excel Files (*.xls;*.xlsx;*.csv)|*.xls;*.xlsx;*.csv", out excelFileName) &&
+            TryGetFileName("Select DSS file", "DSS Files (*.dss)|*.dss", out dssFileName))
+        {
+          return true;
+        }
+      }
+
+      MessageBox.Show(GetUsage());
+      excelFileName = dssFileName = "";
+      return false;
+    }
+
+    private bool TryGetFileName(string title, string filter, out string fileName)
+    {
+      var dialog = new Microsoft.Win32.OpenFileDialog
+      {
+        Title = title,
+        Filter = filter
+      };
+
+      var dlgResult = dialog.ShowDialog();
+      if (dlgResult.HasValue && dlgResult.Value)
+      {
+        fileName = dialog.FileName;
         return true;
       }
 
-      if (args.Length == 2)
-      {
-        var dialog = new Microsoft.Win32.OpenFileDialog();
-        dialog.Title = "Select Excel file";
-        dialog.DefaultExt = ".xls";
-        dialog.Filter = "Excel Files (*.xls;*.xlsx;*.csv)|*.xls;*.xlsx;*.csv";
-        var dlgResult = dialog.ShowDialog();
-        if (dlgResult.HasValue && dlgResult.Value)
-        {
-          excelFileName = dialog.FileName;
-          dialog.Title = "Select DSS file";
-          dialog.DefaultExt = ".dss";
-          dialog.Filter = "DSS Files (.dss)|*.dss";
-          dlgResult = dialog.ShowDialog();
-          if (dlgResult.HasValue && dlgResult.Value)
-          {
-            dssFileName = dialog.FileName;
-            return true;
-          }
-        }
-        return false;
-      }
-      
-      excelFileName = "";
-      dssFileName = "";
-      MessageBox.Show(GetUsage());
+      fileName = "";
       return false;
     }
 
