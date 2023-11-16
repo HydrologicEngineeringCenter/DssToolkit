@@ -6,6 +6,9 @@ using System.Text.Json;
 using System.Runtime.CompilerServices;
 using System.Linq;
 using CwmsApi;
+using System.Net.Http.Json;
+using System.Text;
+using System.Reflection.Metadata;
 
 namespace CwmsData.Api
 {
@@ -30,7 +33,7 @@ namespace CwmsData.Api
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-        HttpResponseMessage response = await client.GetAsync(apiUrlWithQuery,HttpCompletionOption.ResponseContentRead);
+        HttpResponseMessage response = await client.GetAsync(apiUrlWithQuery, HttpCompletionOption.ResponseContentRead);
         response.EnsureSuccessStatusCode();
 
         string jsonData = await response.Content.ReadAsStringAsync();
@@ -38,7 +41,7 @@ namespace CwmsData.Api
         var doc = JsonDocument.Parse(jsonData);
         var root = doc.RootElement;
         var ts = root.GetProperty("time-series").GetProperty("time-series");
-        if( ts.GetArrayLength() != 1)
+        if (ts.GetArrayLength() != 1)
         {
           throw new Exception("array length was " + ts.GetArrayLength() + " expected 1");
         }
@@ -51,12 +54,12 @@ namespace CwmsData.Api
         ///  "value-count":48,"comment":"value, quality code","values":[[587.03,0],[587.03,0],[587.03,0],[587.03,0],[587.03,0],[587.03,0],[587.02,0],[587.02,0],[587.02,0],[587.02,0],[587.02,0],[587.02,0],[587.01,0],[587.01,0],[587.01,0],[587.01,0],[587.01,0],[587,0],[587,0],[587,0],[587,0],[587,0],[587,0],[586.99,0],[586.99,0],[586.98,0],[586.98,0],[586.98,0],[586.98,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.98,0],[586.98,0],[586.98,0],[586.99,0],[586.99,0],[586.99,0],[587,0]]}
         /// ]}}"
         SimpleTimeSeries rval = new SimpleTimeSeries();
-        if ( ts.TryGetProperty("regular-interval-values",out JsonElement rtsv ))
+        if (ts.TryGetProperty("regular-interval-values", out JsonElement rtsv))
         {
 
           var interval = rtsv.GetProperty("interval").ToString();
 
-          TimeSpan duration = System.Xml.XmlConvert.ToTimeSpan(interval);  
+          TimeSpan duration = System.Xml.XmlConvert.ToTimeSpan(interval);
 
           var units = rtsv.GetProperty("unit");
           var segmentCount = rtsv.GetProperty("segment-count");
@@ -70,15 +73,16 @@ namespace CwmsData.Api
             foreach (JsonElement value in values.EnumerateArray())
             {
               var str = value.EnumerateArray().First().ToString();
-              if (double.TryParse(str, out double v)) {
-                    rval.Points.Add((t, v));
-                  }
+              if (double.TryParse(str, out double v))
+              {
+                rval.Points.Add((t, v));
+              }
               t = t.Add(duration);
             }
-            
+
           }
-          
-           }
+
+        }
         return rval;
         /*
          * {
@@ -334,6 +338,35 @@ namespace CwmsData.Api
       }
 
     }
-  }
 
+    public static async Task<bool> PostLocation(Location loc)
+    {
+
+      string url = "https://cwms-data.usace.army.mil/cwms-data/locations?office=" + loc.OfficeId;
+
+      var json = loc.ToJson();
+      using (HttpClient client = new HttpClient())
+      {
+        HttpRequestMessage m = new HttpRequestMessage(HttpMethod.Post, url);
+        m.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        m.Content.Headers.Add("Content-Type", "application/json");
+        m.Content.Headers.Add("accept", "*/*");
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await client.PostAsync(url, content);
+        if (response.IsSuccessStatusCode)
+        {
+          Console.WriteLine("POST request was successful.");
+          return true;
+        }
+        else
+        {
+          Console.WriteLine($"POST request failed with status code {response.StatusCode}");
+          return false;
+        }
+
+      }
+    }
+
+  }
 }
