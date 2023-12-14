@@ -9,24 +9,110 @@ using CwmsApi;
 using System.Net.Http.Json;
 using System.Text;
 using System.Reflection.Metadata;
+using System.IO;
+using System.Collections.Generic;
 
 namespace CwmsData.Api
 {
   internal class CwmsDataClient
   {
-    public static async Task<SimpleTimeSeries> GetTimeSeries(string officeID, string name, DateTime firstTime, DateTime lastTime)
+    string officeID;
+    string apiUrl;
+    public CwmsDataClient(string apiUrl, string officeID)
+    {
+      this.apiUrl = apiUrl;
+      this.officeID = officeID;
+    }
+
+    public async Task<Location[]> GetLocations(string office="")
+    {
+      /*
+       * curl -X 'GET' \
+        'https://cwms-data.usace.army.mil/cwms-data/locations?office=SPK' \
+         -H 'accept: application/json'
+       */
+      string endpoint = this.apiUrl+"/locations";
+      if( office != "")
+      {
+        endpoint = endpoint + "?office=" + Uri.EscapeDataString(office);
+      }
+
+      string jsonData = await Get(endpoint);
+      //File.WriteAllText(@"C:\project\cda-notes\location-response.json",jsonData);
+      //string jsonData = await Task.Run(() => File.ReadAllText(@"C:\project\cda-notes\location-response.json"));
+      jsonData = jsonData.Replace("\r\n", "\\n").Replace("\r", "\\r");
+      var doc = JsonDocument.Parse(jsonData);
+      var root = doc.RootElement;
+
+      var locations = root.GetProperty("locations").GetProperty("locations");
+      int size = locations.GetArrayLength();
+      var rval = new List<Location>();
+
+      foreach (JsonElement location in locations.EnumerateArray())
+      {
+        var val = new Location();
+        val.Name = GetStringProperty(location, new[] { "identity", "name" });
+        val.OfficeId = GetStringProperty(location, new[] { "identity", "office" });
+        val.Latitude = GetDoubleProperty(location, new[] { "geolocation", "latitude" });
+        val.Longitude = GetDoubleProperty(location, new[] { "geolocation", "longitude" });
+        val.TimezoneName = GetStringProperty(location, new[] { "political" , "timezone" });
+        val.LocationKind = GetStringProperty(location, new[] { "classification", "location-kind" });
+        val.Nation = GetStringProperty(location, new[] { "political", "nation" });
+        val.HorizontalDatum = GetStringProperty(location, new[] { "geolocation", "horizontal-datum" });
+        rval.Add(val);
+      }
+
+        return rval.ToArray();
+
+    }
+
+    private static double GetDoubleProperty(JsonElement e, string[] propertyNames)
+    {
+      var s = GetStringProperty(e, propertyNames);
+      double.TryParse(s, out double rval);
+      return rval;
+    }
+    private static string GetStringProperty(JsonElement e, string[] propertyNames)
+    {
+      if (propertyNames.Length == 0)
+        return "";
+      JsonElement prop = e.GetProperty(propertyNames[0]);
+      for (int i = 1; i < propertyNames.Length; i++)
+      {
+        prop = prop.GetProperty(propertyNames[i]);
+      }
+      return prop.ToString();
+    }
+
+    private async Task<string> Get(string url)
+    {
+      string rval = "";
+      using (HttpClient client = new HttpClient())
+      {
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseContentRead);
+        response.EnsureSuccessStatusCode();
+
+        rval = await response.Content.ReadAsStringAsync();
+      }
+      return rval;
+    }
+
+    public async Task<SimpleTimeSeries> GetTimeSeries(string name, DateTime firstTime, DateTime lastTime)
     {
       /*
        * curl -X 'GET' \
   'https://cwms-data.usace.army.mil/cwms-data/timeseries?name=Mount%20Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev&office=LRB&begin=2023-06-23T06%3A01%3A00&end=2023-06-24T06%3A01%3A00' \
   -H 'accept: application/json;version=2'
        */
-      string apiUrl = "https://cwms-data.usace.army.mil/cwms-data/timeseries";
+      string endpoint = this.apiUrl = "/timeseries";
       var begin = firstTime.ToString("O");
       var end = lastTime.ToString("O");
 
       string queryString = $"?name={Uri.EscapeDataString(name)}&office={Uri.EscapeDataString(officeID)}&begin={Uri.EscapeDataString(begin)}&end={Uri.EscapeDataString(end)}";
-      string apiUrlWithQuery = apiUrl + queryString;
+      string apiUrlWithQuery = endpoint + queryString;
 
       using (HttpClient client = new HttpClient())
       {
@@ -339,7 +425,7 @@ namespace CwmsData.Api
 
     }
 
-    public static async Task<bool> PostLocation(Location loc)
+    public async Task<bool> PostLocation(Location loc)
     {
 
       string url = "https://cwms-data.usace.army.mil/cwms-data/locations?office=" + loc.OfficeId;
