@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace CwmsData.Api
 {
@@ -16,15 +17,16 @@ namespace CwmsData.Api
     string officeID;
     string apiUrl;
     string apiKey;
-    string certificateFileName;
-    string certificatePassword;
+    bool trustLocalServers = false;
     public CwmsDataClient(string apiUrl, string officeID)
     {
       this.apiUrl = apiUrl;
       this.officeID = officeID;
       apiKey = Environment.GetEnvironmentVariable("CDA_API_KEY");
-      certificateFileName = Environment.GetEnvironmentVariable("CDA_CERTIFICATE_FILENAME");
-      certificatePassword = Environment.GetEnvironmentVariable("CDA_CERTIFICATE_PASSWORD");
+
+      Uri uri = new Uri(apiUrl);
+      if( IsPrivateIpAddress( uri.Host))
+        trustLocalServers = true;
 
       if( apiKey == null)
       {
@@ -32,7 +34,43 @@ namespace CwmsData.Api
       }
     }
 
-    public async Task<Location[]> GetLocations(string office="")
+    /// <summary>
+    /// curl -X 'DELETE' \
+    ///'https://cwms-data.test:8444/cwms-data/locations/karltest?office=SPK' \
+    /// -H 'accept: */*'
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="office"></param>
+    /// <returns></returns>
+    public async Task<bool> DeleteLocation(string name, string office)
+    {
+
+      string encodedLocation = HttpUtility.UrlEncode(name);
+      string encodedOffice = HttpUtility.UrlEncode(office);
+
+      // Combine the base URL with encoded location and office parameters
+      string uri = $"{apiUrl}/locations/{encodedLocation}?office={encodedOffice}";
+
+      using (HttpClient client = GetClient())
+      {
+        HttpMethod method = HttpMethod.Delete;
+        HttpRequestMessage request = new HttpRequestMessage(method, uri);
+        request.Headers.Add("accept", "*/*");
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+          return true;
+        }
+        else
+        {
+          Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+          return false;
+        }
+      }
+    }
+
+      public async Task<Location[]> GetLocations(string office="")
     {
       /*
        * curl -X 'GET' \
@@ -95,7 +133,7 @@ namespace CwmsData.Api
     private async Task<string> Get(string url)
     {
       string rval = "";
-      using (HttpClient client = new HttpClient())
+      using (HttpClient client = GetClient())
       {
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -128,7 +166,8 @@ namespace CwmsData.Api
         var ts = root.GetProperty("time-series").GetProperty("time-series");
         if (ts.GetArrayLength() != 1)
         {
-          throw new Exception("array length was " + ts.GetArrayLength() + " expected 1");
+        Console.WriteLine("Warning: no time-series data found "+queryString);
+        return new SimpleTimeSeries();
         }
         ts = ts[0];
         //ValueKind = Object : "{"office":"LRB","name":"Mount Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev",
@@ -470,22 +509,46 @@ namespace CwmsData.Api
     private HttpClient GetClient()
     {
       var handler = new HttpClientHandler();
-      if (certificateFileName != null && certificatePassword != null)
+      if (trustLocalServers)
       {
-        var certificate = new X509Certificate2(certificateFileName, certificatePassword);
-        
-        handler.ClientCertificates.Add(certificate);
         handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
         {
-          bool test = cert.GetCertHashString() == certificate.GetCertHashString();
-          Console.WriteLine(test);
-          return test;
+          return true;
         };
       }
 
       var client = new HttpClient(handler);
-      client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("apikey", apiKey);
+      if (!string.IsNullOrWhiteSpace(apiKey))
+      {
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("apikey", apiKey);
+      }
       return client;
+    }
+
+    public static bool IsPrivateIpAddress(string hostName)
+    {
+      var hostEntry = Dns.GetHostEntry(hostName);
+      foreach (var ip in hostEntry.AddressList)
+      {
+        if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+        {
+          var bytes = ip.GetAddressBytes();
+
+          switch (bytes[0])
+          {
+            case 10:
+              return true;
+            case 172:
+              return bytes[1] < 32 && bytes[1] >= 16;
+            case 192:
+              return bytes[1] == 168;
+            default:
+              return false;
+          }
+        }
+      }
+
+      return false;
     }
 
   }

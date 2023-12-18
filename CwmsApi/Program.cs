@@ -41,6 +41,11 @@ namespace CwmsData.Api
       foreach (var location in x)
       {
         Console.WriteLine(location.Name);
+        if(location.Name.StartsWith("karl"))
+        {
+          Console.WriteLine($"deleting '{location.Name}'  at office: '{location.OfficeId}'");
+         // var status = await api.DeleteLocation(location.Name, location.OfficeId);
+        }
       }
        
       //var x = await CwmsDataClient.PostLocation(CreateLocation("Test1"));
