@@ -1,16 +1,13 @@
-﻿using System;
+﻿using CwmsApi;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using System.Text.Json;
-using System.Runtime.CompilerServices;
-using System.Linq;
-using CwmsApi;
-using System.Net.Http.Json;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Reflection.Metadata;
-using System.IO;
-using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace CwmsData.Api
 {
@@ -18,10 +15,21 @@ namespace CwmsData.Api
   {
     string officeID;
     string apiUrl;
+    string apiKey;
+    string certificateFileName;
+    string certificatePassword;
     public CwmsDataClient(string apiUrl, string officeID)
     {
       this.apiUrl = apiUrl;
       this.officeID = officeID;
+      apiKey = Environment.GetEnvironmentVariable("CDA_API_KEY");
+      certificateFileName = Environment.GetEnvironmentVariable("CDA_CERTIFICATE_FILENAME");
+      certificatePassword = Environment.GetEnvironmentVariable("CDA_CERTIFICATE_PASSWORD");
+
+      if( apiKey == null)
+      {
+        throw new Exception("Error: The environment variable: 'CDA_API_KEY' is not set");
+      }
     }
 
     public async Task<Location[]> GetLocations(string office="")
@@ -416,33 +424,68 @@ namespace CwmsData.Api
 
     }
 
+
+
+
+
     public async Task<bool> PostLocation(Location loc)
     {
+      //      curl - X 'POST' \
+      //  'https://cwms-data.localhost:8444/cwms-data/locations' \
+      //  -H 'accept: */*' \
+      //  -H 'Authorization: apikey <key-here>' \
+      //  -H 'Content-Type: application/json' \
+      //  -d '{
+      //  "office-id": "SPK",
+      //  "name": "karltest7",
+      //  "latitude": 0,
+      //  "longitude": 0,
 
-      string url = "https://cwms-data.usace.army.mil/cwms-data/locations?office=" + loc.OfficeId;
+      //  "location-kind": "SITE",
+      //  "nation": "US",
+      //  "horizontal-datum": "NAD83"
+      //}'
+
+      string url = this.apiUrl + "/locations";
 
       var json = loc.ToJson();
-      using (HttpClient client = new HttpClient())
+
+      using (var client = GetClient())
       {
-        HttpRequestMessage m = new HttpRequestMessage(HttpMethod.Post, url);
-        m.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        m.Content.Headers.Add("Content-Type", "application/json");
-        m.Content.Headers.Add("accept", "*/*");
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
 
-        HttpResponseMessage response = await client.PostAsync(url, content);
-        if (response.IsSuccessStatusCode)
+        using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
         {
-          Console.WriteLine("POST request was successful.");
-          return true;
-        }
-        else
-        {
-          Console.WriteLine($"POST request failed with status code {response.StatusCode}");
-          return false;
+          var response = await client.PostAsync(url, content);
+          response.EnsureSuccessStatusCode();
+          var responseContent = await response.Content.ReadAsStringAsync();
+          Console.WriteLine(responseContent);
         }
 
+        return true;
       }
+    }
+
+    private HttpClient GetClient()
+    {
+      var handler = new HttpClientHandler();
+      if (certificateFileName != null && certificatePassword != null)
+      {
+        var certificate = new X509Certificate2(certificateFileName, certificatePassword);
+        
+        handler.ClientCertificates.Add(certificate);
+        handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
+        {
+          bool test = cert.GetCertHashString() == certificate.GetCertHashString();
+          Console.WriteLine(test);
+          return test;
+        };
+      }
+
+      var client = new HttpClient(handler);
+      client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("apikey", apiKey);
+      return client;
     }
 
   }

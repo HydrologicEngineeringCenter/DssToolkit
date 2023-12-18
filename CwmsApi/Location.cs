@@ -12,33 +12,38 @@ namespace CwmsApi
     public string Name { get; set; } = "";
     public double Latitude { get; set; } = 0;
     public double Longitude { get; set; } = 0;
-    public bool Active { get; set; } = true;
-    public string PublicName { get; set; } = "";
-    public string LongName { get; set; } = "";
-    public string Description { get; set; } = "";
     public string TimezoneName { get; set; } = "";
     public string LocationType { get; set; } = "";
     public string LocationKind { get; set; } = "";
     public string Nation { get; set; } = "US";
-    public string StateInitial { get; set; } = "";
-    public string CountyName { get; set; } = "";
-    public string NearestCity { get; set; } = "";
     public string HorizontalDatum { get; set; } = "";
-    public double PublishedLongitude { get; set; } = 0;
-    public double PublishedLatitude { get; set; } = 0;
-    public string VerticalDatum { get; set; } = "";
-    public double Elevation { get; set; } = 0;
-    public string MapLabel { get; set; } = "";
-    public string BoundingOfficeId { get; set; } = "";
     public string OfficeId { get; set; } = "";
+
+    private static string CreateJsonLocation(string officeId, string name, double latitude, double longitude, 
+      string timezoneName, string locationKind, string nation, string horizontalDatum)
+    {
+      return $@"
+    {{
+      ""office-id"": ""{officeId}"",
+      ""name"": ""{name}"",
+      ""latitude"": {latitude},
+      ""longitude"": {longitude},
+      ""timezone-name"": ""{timezoneName}"",
+      ""location-kind"": ""{locationKind}"",
+      ""nation"": ""{nation}"",
+      ""horizontal-datum"": ""{horizontalDatum}""
+    }}";
+    }
+
     public string ToJson()
     {
-      var options = new JsonSerializerOptions
-      {
-        WriteIndented = true,
-        PropertyNamingPolicy = new SnakeCaseNamingPolicy()
-      };
-      return JsonSerializer.Serialize(this, options);
+      return CreateJsonLocation(OfficeId, Name, Latitude, Longitude, TimezoneName, LocationKind, Nation, HorizontalDatum);
+      //var options = new JsonSerializerOptions
+      //{
+      //  WriteIndented = true,
+      //  PropertyNamingPolicy = new SnakeCaseNamingPolicy()
+      //};
+      //return JsonSerializer.Serialize(this, options);
     }
   }
   public class SnakeCaseNamingPolicy : JsonNamingPolicy

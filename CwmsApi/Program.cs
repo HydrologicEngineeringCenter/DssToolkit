@@ -12,14 +12,31 @@ namespace CwmsData.Api
     internal static class Program
     {
 
-      [STAThread]
-      static async Task Main(string[] args)
-      {
+    [STAThread]
+    static async Task Main(string[] args)
+    {
 
-      string apiUrl = "https://cwms-data.usace.army.mil/cwms-data";
+      //string apiUrl = "https://cwms-data.usace.army.mil/cwms-data";
+      string apiUrl = "https://cwms-data.test:8444/cwms-data";
       string officeID = "LRB";
       CwmsDataClient api = new CwmsDataClient(apiUrl, officeID);
 
+      Location location1 = new Location {
+       OfficeId = "SPK",
+       Name = "karltest-"+DateTime.Now.ToString("yyyy-MM-dd HH mm"),
+       Latitude = 0,
+       Longitude = 0,
+       TimezoneName = "UTC",
+       LocationKind = "SITE",
+       Nation = "US",
+       HorizontalDatum = "NAD83"
+    };
+
+
+      var res = await api.PostLocation(location1);
+
+
+      Console.WriteLine("hi");
       var x = await api.GetLocations("SPK");
       foreach (var location in x)
       {
