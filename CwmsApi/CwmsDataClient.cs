@@ -1,5 +1,4 @@
-﻿using CwmsApi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -17,16 +16,19 @@ namespace CwmsData.Api
     string officeID;
     string apiUrl;
     string apiKey;
-    bool trustLocalServers = false;
+    bool trustHttpServer = false;
+
+    public string OfficeID { get => officeID; set => officeID = value; }
+
     public CwmsDataClient(string apiUrl, string officeID)
     {
       this.apiUrl = apiUrl;
-      this.officeID = officeID;
+      this.OfficeID = officeID;
       apiKey = Environment.GetEnvironmentVariable("CDA_API_KEY");
 
       Uri uri = new Uri(apiUrl);
       if( IsPrivateIpAddress( uri.Host))
-        trustLocalServers = true;
+        trustHttpServer = true;
 
       if( apiKey == null)
       {
@@ -42,11 +44,11 @@ namespace CwmsData.Api
     /// <param name="name"></param>
     /// <param name="office"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteLocation(string name, string office)
+    public async Task<bool> DeleteLocation(string name)
     {
 
       string encodedLocation = HttpUtility.UrlEncode(name);
-      string encodedOffice = HttpUtility.UrlEncode(office);
+      string encodedOffice = HttpUtility.UrlEncode(OfficeID);
 
       // Combine the base URL with encoded location and office parameters
       string uri = $"{apiUrl}/locations/{encodedLocation}?office={encodedOffice}";
@@ -156,7 +158,7 @@ namespace CwmsData.Api
       var begin = firstTime.ToString("O");
       var end = lastTime.ToString("O");
 
-      string queryString = $"?name={Uri.EscapeDataString(name)}&office={Uri.EscapeDataString(officeID)}&begin={Uri.EscapeDataString(begin)}&end={Uri.EscapeDataString(end)}";
+      string queryString = $"?name={Uri.EscapeDataString(name)}&office={Uri.EscapeDataString(OfficeID)}&begin={Uri.EscapeDataString(begin)}&end={Uri.EscapeDataString(end)}";
       string apiUrlWithQuery = this.apiUrl + "/timeseries" + queryString;
 
         string jsonData = await Get(apiUrlWithQuery);
@@ -486,8 +488,10 @@ namespace CwmsData.Api
       //}'
 
       string url = this.apiUrl + "/locations";
-
+      Console.WriteLine("Caling POST "+url);
+      
       var json = loc.ToJson();
+      Console.WriteLine("with Data:"+json);
 
       using (var client = GetClient())
       {
@@ -509,7 +513,7 @@ namespace CwmsData.Api
     private HttpClient GetClient()
     {
       var handler = new HttpClientHandler();
-      if (trustLocalServers)
+      if (trustHttpServer)
       {
         handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
         {
