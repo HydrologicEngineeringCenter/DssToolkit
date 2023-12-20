@@ -13,6 +13,8 @@ namespace CwmsData.Api
 {
   internal class CwmsDataClient
   {
+    string JSONV2 = "application/json;version=2";
+
     string officeID;
     string apiUrl;
     string apiKey;
@@ -34,6 +36,37 @@ namespace CwmsData.Api
       {
         throw new Exception("Error: The environment variable: 'CDA_API_KEY' is not set");
       }
+    }
+    internal async Task SaveTimeSeries(SimpleTimeSeries ts)
+    {
+      string json = ts.ToJson(this.officeID);
+      await SaveTimeSeries(json);
+    }
+    internal async Task SaveTimeSeries(string json)
+    {
+
+      using (var client = GetClient())
+      {
+        string url = $"{apiUrl}/timeseries";
+
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Authorization = null;
+        client.DefaultRequestHeaders.Add("accept", "*/*");
+        client.DefaultRequestHeaders.Add("Authorization", "apikey sessionkey-for-testing");
+
+
+        var content = new StringContent(json, Encoding.UTF8);
+        content.Headers.Remove("Content-Type");
+        content.Headers.Add("Content-Type", JSONV2);
+
+        var response = await client.PostAsync(url, content);
+        response.EnsureSuccessStatusCode();
+        var responseContent = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(responseContent);
+
+
+      }
+
     }
 
     /// <summary>
@@ -180,6 +213,7 @@ namespace CwmsData.Api
         ///  "value-count":48,"comment":"value, quality code","values":[[587.03,0],[587.03,0],[587.03,0],[587.03,0],[587.03,0],[587.03,0],[587.02,0],[587.02,0],[587.02,0],[587.02,0],[587.02,0],[587.02,0],[587.01,0],[587.01,0],[587.01,0],[587.01,0],[587.01,0],[587,0],[587,0],[587,0],[587,0],[587,0],[587,0],[586.99,0],[586.99,0],[586.98,0],[586.98,0],[586.98,0],[586.98,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.98,0],[586.98,0],[586.98,0],[586.99,0],[586.99,0],[586.99,0],[587,0]]}
         /// ]}}"
         SimpleTimeSeries rval = new SimpleTimeSeries();
+        rval.Name = name;
       if (ts.TryGetProperty("regular-interval-values", out JsonElement rtsv))
       {
 
@@ -187,7 +221,10 @@ namespace CwmsData.Api
 
         TimeSpan duration = System.Xml.XmlConvert.ToTimeSpan(interval);
 
-        var units = rtsv.GetProperty("unit");
+        rval.Units = rtsv.GetProperty("unit").ToString().Trim();
+        var tokens = rval.Units.Split(' ');
+        if( tokens.Length == 2)
+            rval.Units = tokens[0];
         var segmentCount = rtsv.GetProperty("segment-count");
         var segments = rtsv.GetProperty("segments");
         foreach (JsonElement segment in segments.EnumerateArray())
@@ -519,9 +556,11 @@ namespace CwmsData.Api
         {
           return true;
         };
+        
       }
 
       var client = new HttpClient(handler);
+      
       if (!string.IsNullOrWhiteSpace(apiKey))
       {
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("apikey", apiKey);

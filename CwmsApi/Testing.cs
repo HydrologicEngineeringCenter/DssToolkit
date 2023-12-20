@@ -35,9 +35,17 @@ namespace CwmsData.Api
 
     internal static async Task<SimpleTimeSeries> ReadTimeSeries(CwmsDataClient api, string name, DateTime t1, DateTime t2)
     {
+      Console.WriteLine($"Reading: {name}");
       var s = await api.GetTimeSeries(name, t1, t2);
       s.WriteToConsole();
       return s;
+    }
+
+    internal static async Task WriteTimeSeries(CwmsDataClient localAPI, SimpleTimeSeries ts)
+    {
+
+      await localAPI.SaveTimeSeries(ts);
+     
     }
 
     internal static async Task ListLocations(CwmsDataClient api)

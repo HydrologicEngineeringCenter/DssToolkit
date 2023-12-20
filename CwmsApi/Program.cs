@@ -17,11 +17,16 @@ namespace CwmsData.Api
       CwmsDataClient remoteAPI = new CwmsDataClient(remoteApiUrl, "LRB");
 
 
-      await Testing.CreateLocation(localAPI, "karltest");
-      await Testing.ListLocations(localAPI);
-      await Testing.DeleteLocation(localAPI, "karltest");
-      await Testing.ReadTimeSeries(remoteAPI, "Mount Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev",
-        DateTime.Parse("2023-06-23T06:01:00"), DateTime.Parse("2023-06-24T06:01:00"));
+      //await Testing.CreateLocation(localAPI, "karltest");
+      await Testing.CreateLocation(localAPI, "Mount Morris");
+      // await Testing.ListLocations(localAPI);
+      //await Testing.DeleteLocation(localAPI, "karltest");
+      var ts = await Testing.ReadTimeSeries(remoteAPI, "Mount Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev",
+       DateTime.Parse("2023-06-23T06:01:00"), DateTime.Parse("2023-06-24T06:01:00"));
+      
+
+        
+      await localAPI.SaveTimeSeries(ts);
 
       }
     
