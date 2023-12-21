@@ -181,7 +181,7 @@ namespace CwmsData.Api
       return rval;
     }
 
-    public async Task<SimpleTimeSeries> GetTimeSeries(string name, DateTime firstTime, DateTime lastTime)
+    public async Task<SimpleTimeSeries> ReadTimeSeries(string name, DateTime firstTime, DateTime lastTime)
     {
       /*
        * curl -X 'GET' \
@@ -222,9 +222,9 @@ namespace CwmsData.Api
         TimeSpan duration = System.Xml.XmlConvert.ToTimeSpan(interval);
 
         rval.Units = rtsv.GetProperty("unit").ToString().Trim();
-        var tokens = rval.Units.Split(' ');
-        if( tokens.Length == 2)
-            rval.Units = tokens[0];
+        //var tokens = rval.Units.Split(' ');
+        //if( tokens.Length == 2)
+          //  rval.Units = tokens[0];
         var segmentCount = rtsv.GetProperty("segment-count");
         var segments = rtsv.GetProperty("segments");
         foreach (JsonElement segment in segments.EnumerateArray())
