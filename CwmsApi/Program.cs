@@ -14,25 +14,38 @@ namespace CwmsData.Api
 
       CwmsDataClient localAPI = new CwmsDataClient(localApiUrl, "SPK");
       CwmsDataClient remoteAPI = new CwmsDataClient(remoteApiUrl, "LRB");
-      
-      await Testing.CreateLocation(localAPI, "Mount Morris");
 
       string name = "Mount Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev";
+
+      Location mountMorris = new Location
+      {
+        OfficeId = localAPI.OfficeID,
+        Name = "Mount Morris",
+        Latitude = 0,
+        Longitude = 0,
+        TimezoneName = "UTC",
+        LocationKind = "SITE",
+        Nation = "US",
+        HorizontalDatum = "NAD83"
+      };
+
+      await localAPI.SaveLocation(mountMorris);
+
+      var t1 = DateTime.Parse("2023-06-23T06:01:00");
+      var t2 = DateTime.Parse("2023-06-24T06:01:00");
+
+      //await localAPI.DeleteTimeSeries(name, t1.AddYears(-100), t2.AddYears(10));
+     
       Console.WriteLine($"Reading: {name}");
-      var ts = await remoteAPI.ReadTimeSeries(name, DateTime.Parse("2023-06-23T06:01:00"), DateTime.Parse("2023-06-24T06:01:00"));
+      var ts = await remoteAPI.ReadTimeSeries(name,t1, t2);
       ts.WriteToConsole();
       Console.WriteLine("Saving to Local Source");
+      ts.Name = ts.Name + "-test";
       await localAPI.SaveTimeSeries(ts);
-      Console.WriteLine("Reading back from  local source");
 
-      ts = await localAPI.ReadTimeSeries(name, DateTime.Parse("2023-06-23T06:01:00"), DateTime.Parse("2023-06-24T06:01:00"));
+      Console.WriteLine("Reading back from  local source");
+      ts = await localAPI.ReadTimeSeries(ts.Name, t1, t2);
       ts.WriteToConsole();
     }
-/*
- *       await Testing.CreateLocation(localAPI, "karltest");
-      await Testing.CreateLocation(localAPI, "Mount Morris");
-      await Testing.ListLocations(localAPI);
-      await Testing.DeleteLocation(localAPI, "karltest");
-*/
   }
 }

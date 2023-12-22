@@ -23,8 +23,10 @@ namespace CwmsData.Api
 
     public string OfficeID { get => officeID; set => officeID = value; }
 
+    public double MissingValue { get; set; }
     public CwmsDataClient(string apiUrl, string officeID)
     {
+      MissingValue = double.MinValue;
       this.apiUrl = apiUrl;
       this.OfficeID = officeID;
       apiKey = Environment.GetEnvironmentVariable("CDA_API_KEY");
@@ -38,6 +40,45 @@ namespace CwmsData.Api
         throw new Exception("Error: The environment variable: 'CDA_API_KEY' is not set");
       }
     }
+
+    /// <summary>
+    /// curl -X 'DELETE' \
+    /// 'https://cwms-data.test:8444/cwms-data/timeseries/Mount%20Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev?office=SPK&begin=2020-06-10T13%3A00%3A00&end=2025-06-10T13%3A00%3A00' \
+    /// -H 'accept: */*' \
+    /// -H 'Authorization: apikey sessionkey-for-testing'
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    internal async Task<Boolean> DeleteTimeSeries(string name, DateTime begin, DateTime end)
+    {
+      string encodedLocation = HttpUtility.UrlEncode(name);
+      string encodedOffice = HttpUtility.UrlEncode(OfficeID);
+      string t1 = HttpUtility.UrlEncode(begin.ToString("O"));
+      string t2 = HttpUtility.UrlEncode(end.ToString("O"));
+
+      // Combine the base URL with encoded location and office parameters
+      string uri = $"{apiUrl}/timeseries/{encodedLocation}?office={encodedOffice}"
+        + $"&begin={t1}&end={t2}";
+
+      using (HttpClient client = GetClient())
+      {
+        HttpMethod method = HttpMethod.Delete;
+        HttpRequestMessage request = new HttpRequestMessage(method, uri);
+        request.Headers.Add("accept", "*/*");
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+          return true;
+        }
+        else
+        {
+          Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+          return false;
+        }
+      }
+    }
+
     internal async Task SaveTimeSeries(SimpleTimeSeries ts)
     {
       string json = ts.ToJson(this.officeID);
@@ -76,8 +117,7 @@ namespace CwmsData.Api
     /// -H 'accept: */*'
     /// </summary>
     /// <param name="name"></param>
-    /// <param name="office"></param>
-    /// <returns></returns>
+    /// <param name="office"></param>    /// <returns></returns>
     public async Task<bool> DeleteLocation(string name)
     {
 
@@ -172,9 +212,16 @@ namespace CwmsData.Api
       using (HttpClient client = GetClient())
       {
         client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(requestHeader));
+        //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(requestHeader));
 
-        HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseContentRead);
+        var request = new HttpRequestMessage
+        {
+          Method = HttpMethod.Get,
+          RequestUri = new Uri(url)
+        };
+        request.Headers.Add("Accept", requestHeader);
+
+        HttpResponseMessage response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
         response.EnsureSuccessStatusCode();
 
         rval = await response.Content.ReadAsStringAsync();
@@ -182,6 +229,104 @@ namespace CwmsData.Api
       return rval;
     }
 
+
+    /*
+     * {
+  "begin": "2023-06-23T06:01:00+0000[UTC]",
+  "end": "2023-06-24T06:01:00+0000[UTC]",
+  "interval": "PT0S",
+  "interval-offset": 0,
+  "name": "Mount Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev",
+  "office-id": "LRB",
+  "page": "MTY4NzUwMTgwMDAwMHx8NDh8fDUwMA==",
+  "page-size": 500,
+  "time-zone": "US/Eastern",
+  "total": 48,
+  "units": "ft",
+  "value-columns": [
+    {
+      "name": "date-time",
+      "ordinal": 1,
+      "datatype": "java.sql.Timestamp"
+    },
+    {
+      "name": "value",
+      "ordinal": 2,
+      "datatype": "java.lang.Double"
+    },
+    {
+      "name": "quality-code",
+      "ordinal": 3,
+      "datatype": "int"
+    }
+  ],
+  "values": [
+    [1687501800000, 587.03, 0],
+    [1687503600000, 587.03, 0],
+    [1687505400000, 587.03, 0],
+    [1687507200000, 587.03, 0],
+    [1687509000000, 587.03, 0],
+    [1687510800000, 587.03, 0],
+    [1687512600000, 587.02, 0],
+    [1687514400000, 587.02, 0],
+    [1687516200000, 587.02, 0],
+    [1687518000000, 587.02, 0],
+    [1687519800000, 587.02, 0],
+    [1687521600000, 587.02, 0],
+    [1687523400000, 587.01, 0],
+    [1687525200000, 587.01, 0],
+    [1687527000000, 587.01, 0],
+    [1687528800000, 587.01, 0],
+    [1687530600000, 587.01, 0],
+    [1687532400000, 586.9999999999999, 0],
+    [1687534200000, 586.9999999999999, 0],
+    [1687536000000, 586.9999999999999, 0],
+    [1687537800000, 586.9999999999999, 0],
+    [1687539600000, 586.9999999999999, 0],
+    [1687541400000, 586.9999999999999, 0],
+    [1687543200000, 586.9899999999999, 0],
+    [1687545000000, 586.9899999999999, 0],
+    [1687546800000, 586.98, 0],
+    [1687548600000, 586.98, 0],
+    [1687550400000, 586.98, 0],
+    [1687552200000, 586.98, 0],
+    [1687554000000, 586.9699999999999, 0],
+    [1687555800000, 586.9699999999999, 0],
+    [1687557600000, 586.9699999999999, 0],
+    [1687559400000, 586.9699999999999, 0],
+    [1687561200000, 586.9699999999999, 0],
+    [1687563000000, 586.9699999999999, 0],
+    [1687564800000, 586.9699999999999, 0],
+    [1687566600000, 586.9699999999999, 0],
+    [1687568400000, 586.9699999999999, 0],
+    [1687570200000, 586.9699999999999, 0],
+    [1687572000000, 586.9699999999999, 0],
+    [1687573800000, 586.9699999999999, 0],
+    [1687575600000, 586.98, 0],
+    [1687577400000, 586.98, 0],
+    [1687579200000, 586.98, 0],
+    [1687581000000, 586.9899999999999, 0],
+    [1687582800000, 586.9899999999999, 0],
+    [1687584600000, 586.9899999999999, 0],
+    [1687586400000, 586.9999999999999, 0]
+  ],
+  "vertical-datum-info": {
+    "office": "LRB",
+    "unit": "ft",
+    "location": "Mount Morris",
+    "native-datum": "NGVD-29",
+    "elevation": 0.0,
+    "offsets": [
+      {
+        "estimate": true,
+        "to-datum": "NAVD-88",
+        "value": -0.5353
+      }
+    ]
+  }
+}
+
+     */
     public async Task<SimpleTimeSeries> ReadTimeSeries(string name, DateTime firstTime, DateTime lastTime)
     {
       /*
@@ -195,319 +340,46 @@ namespace CwmsData.Api
       string queryString = $"?name={Uri.EscapeDataString(name)}&office={Uri.EscapeDataString(OfficeID)}&begin={Uri.EscapeDataString(begin)}&end={Uri.EscapeDataString(end)}";
       string apiUrlWithQuery = this.apiUrl + "/timeseries" + queryString;
 
-        string jsonData = await Get(apiUrlWithQuery,REQUEST_JSONV0);
+      string jsonData = await Get(apiUrlWithQuery, REQUEST_JSONV2);
 
-        var doc = JsonDocument.Parse(jsonData);
-        var root = doc.RootElement;
-        var ts = root.GetProperty("time-series").GetProperty("time-series");
-        if (ts.GetArrayLength() != 1)
-        {
-        Console.WriteLine("Warning: no time-series data found "+queryString);
-        return new SimpleTimeSeries();
-        }
-        ts = ts[0];
-        //ValueKind = Object : "{"office":"LRB","name":"Mount Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev",
-        ////   "alternate-names":["NY00468.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev"],
-        /// "regular-interval-values":{"interval":"PT30M","unit":"ft NGVD29","segment-count":1,
-        /// "segments":
-        /// [{"first-time":"2023-06-23T06:30:00Z","last-time":"2023-06-24T06:00:00Z",
-        ///  "value-count":48,"comment":"value, quality code","values":[[587.03,0],[587.03,0],[587.03,0],[587.03,0],[587.03,0],[587.03,0],[587.02,0],[587.02,0],[587.02,0],[587.02,0],[587.02,0],[587.02,0],[587.01,0],[587.01,0],[587.01,0],[587.01,0],[587.01,0],[587,0],[587,0],[587,0],[587,0],[587,0],[587,0],[586.99,0],[586.99,0],[586.98,0],[586.98,0],[586.98,0],[586.98,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.97,0],[586.98,0],[586.98,0],[586.98,0],[586.99,0],[586.99,0],[586.99,0],[587,0]]}
-        /// ]}}"
-        SimpleTimeSeries rval = new SimpleTimeSeries();
-        rval.Name = name;
-      if (ts.TryGetProperty("regular-interval-values", out JsonElement rtsv))
+      var doc = JsonDocument.Parse(jsonData);
+      var root = doc.RootElement;
+
+      SimpleTimeSeries rval = new SimpleTimeSeries();
+      rval.Name = root.GetProperty("name").ToString();
+      rval.Units = root.GetProperty("units").ToString().Trim();
+
+      var values = root.GetProperty("values");
+      var len = values.GetArrayLength();
+
+      if (values.GetArrayLength() <= 0)
       {
-
-        var interval = rtsv.GetProperty("interval").ToString();
-
-        TimeSpan duration = System.Xml.XmlConvert.ToTimeSpan(interval);
-
-        rval.Units = rtsv.GetProperty("unit").ToString().Trim();
-        var tokens = rval.Units.Split(' ');
-        if( tokens.Length == 2)
-            rval.Units = tokens[0];
-        var segmentCount = rtsv.GetProperty("segment-count");
-        var segments = rtsv.GetProperty("segments");
-        foreach (JsonElement segment in segments.EnumerateArray())
-        {
-          var first = segment.GetProperty("first-time").GetDateTime();
-          var last = segment.GetProperty("last-time").GetDateTime();
-          var t = firstTime;
-          var values = segment.GetProperty("values");
-          foreach (JsonElement value in values.EnumerateArray())
-          {
-            var str = value.EnumerateArray().First().ToString();
-            if (double.TryParse(str, out double v))
-            {
-              rval.Points.Add((t, v));
-            }
-            t = t.Add(duration);
-          }
-
-        }
-
-      }
+        Console.WriteLine("Warning: no time-series data found " + queryString);
         return rval;
-        /*
-         * {
-  "time-series": {
-    "query-info": {
-      "time-of-query": "2023-06-26T23:31:13Z",
-      "process-query": "PT0.473S",
-      "format-output": "PT0.003S",
-      "requested-start-time": "2023-06-23T06:01:00Z",
-      "requested-end-time": "2023-06-24T06:01:00Z",
-      "requested-format": "JSON",
-      "requested-office": "LRB",
-      "requested-items": [
-        {
-          "name": "Mount Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev",
-          "unit": "EN",
-          "datum": "NATIVE"
-        }
-      ],
-      "total-time-series-retrieved": 1,
-      "unique-time-series-retrieved": 1,
-      "total-values-retrieved": 48,
-      "unique-values-retrieved": 48
-    },
-    "quality-codes": {
-      "comment": "The following quality codes are used in this dataset",
-      "codes": [
-        {
-          "code": 0,
-          "meaning": "Unscreened"
-        }
-      ]
-    },
-    "time-series": [
-      {
-        "office": "LRB",
-        "name": "Mount Morris.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev",
-        "alternate-names": [
-          "NY00468.Elev.Inst.30Minutes.0.GOES-NGVD29-Rev"
-        ],
-        "regular-interval-values": {
-          "interval": "PT30M",
-          "unit": "ft NGVD29",
-          "segment-count": 1,
-          "segments": [
-            {
-              "first-time": "2023-06-23T06:30:00Z",
-              "last-time": "2023-06-24T06:00:00Z",
-              "value-count": 48,
-              "comment": "value, quality code",
-              "values": [
-                [
-                  587.03,
-                  0
-                ],
-                [
-                  587.03,
-                  0
-                ],
-                [
-                  587.03,
-                  0
-                ],
-                [
-                  587.03,
-                  0
-                ],
-                [
-                  587.03,
-                  0
-                ],
-                [
-                  587.03,
-                  0
-                ],
-                [
-                  587.02,
-                  0
-                ],
-                [
-                  587.02,
-                  0
-                ],
-                [
-                  587.02,
-                  0
-                ],
-                [
-                  587.02,
-                  0
-                ],
-                [
-                  587.02,
-                  0
-                ],
-                [
-                  587.02,
-                  0
-                ],
-                [
-                  587.01,
-                  0
-                ],
-                [
-                  587.01,
-                  0
-                ],
-                [
-                  587.01,
-                  0
-                ],
-                [
-                  587.01,
-                  0
-                ],
-                [
-                  587.01,
-                  0
-                ],
-                [
-                  587,
-                  0
-                ],
-                [
-                  587,
-                  0
-                ],
-                [
-                  587,
-                  0
-                ],
-                [
-                  587,
-                  0
-                ],
-                [
-                  587,
-                  0
-                ],
-                [
-                  587,
-                  0
-                ],
-                [
-                  586.99,
-                  0
-                ],
-                [
-                  586.99,
-                  0
-                ],
-                [
-                  586.98,
-                  0
-                ],
-                [
-                  586.98,
-                  0
-                ],
-                [
-                  586.98,
-                  0
-                ],
-                [
-                  586.98,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.97,
-                  0
-                ],
-                [
-                  586.98,
-                  0
-                ],
-                [
-                  586.98,
-                  0
-                ],
-                [
-                  586.98,
-                  0
-                ],
-                [
-                  586.99,
-                  0
-                ],
-                [
-                  586.99,
-                  0
-                ],
-                [
-                  586.99,
-                  0
-                ],
-                [
-                  587,
-                  0
-                ]
-              ]
-            }
-          ]
-        }
       }
-    ]
-  }
-}
-         */
-      
+
+      DateTime t;
+      foreach (JsonElement row in values.EnumerateArray())
+      {
+        long timestamp = row[0].GetInt64();
+
+        var s = row[1].ToString();
+
+        if (! double.TryParse(s,out double d))
+             d = MissingValue;
+        
+        t = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).DateTime;
+        
+        rval.Points.Add((t, d));
+      }
+
+      return rval;
 
     }
 
+    
 
-
-
-
-    public async Task<bool> PostLocation(Location loc)
+    public async Task<bool> SaveLocation(Location loc)
     {
       //      curl - X 'POST' \
       //  'https://cwms-data.localhost:8444/cwms-data/locations' \
@@ -561,6 +433,7 @@ namespace CwmsData.Api
       }
 
       var client = new HttpClient(handler);
+      
       
       if (!string.IsNullOrWhiteSpace(apiKey))
       {
