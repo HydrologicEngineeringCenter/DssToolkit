@@ -21,6 +21,7 @@ namespace CwmsData.Api
       Console.WriteLine($"Reading: {name}");
       var ts = await remoteAPI.ReadTimeSeries(name, DateTime.Parse("2023-06-23T06:01:00"), DateTime.Parse("2023-06-24T06:01:00"));
       ts.WriteToConsole();
+      Console.WriteLine("Saving to Local Source");
       await localAPI.SaveTimeSeries(ts);
       Console.WriteLine("Reading back from  local source");
 

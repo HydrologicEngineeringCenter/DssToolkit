@@ -13,7 +13,8 @@ namespace CwmsData.Api
 {
   internal class CwmsDataClient
   {
-    string JSONV2 = "application/json;version=2";
+    string REQUEST_JSONV2 = "application/json;version=2";
+    string REQUEST_JSONV0 = "application/json";
 
     string officeID;
     string apiUrl;
@@ -57,7 +58,7 @@ namespace CwmsData.Api
 
         var content = new StringContent(json, Encoding.UTF8);
         content.Headers.Remove("Content-Type");
-        content.Headers.Add("Content-Type", JSONV2);
+        content.Headers.Add("Content-Type", REQUEST_JSONV2);
 
         var response = await client.PostAsync(url, content);
         response.EnsureSuccessStatusCode();
@@ -118,7 +119,7 @@ namespace CwmsData.Api
         endpoint = endpoint + "?office=" + Uri.EscapeDataString(office);
       }
 
-      string jsonData = await Get(endpoint);
+      string jsonData = await Get(endpoint,REQUEST_JSONV0);
       //File.WriteAllText(@"C:\project\cda-notes\location-response.json",jsonData);
       //string jsonData = await Task.Run(() => File.ReadAllText(@"C:\project\cda-notes\location-response.json"));
       jsonData = jsonData.Replace("\r\n", "\\n").Replace("\r", "\\r");
@@ -165,13 +166,13 @@ namespace CwmsData.Api
       return prop.ToString();
     }
 
-    private async Task<string> Get(string url)
+    private async Task<string> Get(string url, string requestHeader )
     {
       string rval = "";
       using (HttpClient client = GetClient())
       {
         client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(requestHeader));
 
         HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseContentRead);
         response.EnsureSuccessStatusCode();
@@ -194,7 +195,7 @@ namespace CwmsData.Api
       string queryString = $"?name={Uri.EscapeDataString(name)}&office={Uri.EscapeDataString(OfficeID)}&begin={Uri.EscapeDataString(begin)}&end={Uri.EscapeDataString(end)}";
       string apiUrlWithQuery = this.apiUrl + "/timeseries" + queryString;
 
-        string jsonData = await Get(apiUrlWithQuery);
+        string jsonData = await Get(apiUrlWithQuery,REQUEST_JSONV0);
 
         var doc = JsonDocument.Parse(jsonData);
         var root = doc.RootElement;
