@@ -19,9 +19,15 @@ namespace CwmsData.Api
         Console.WriteLine(p.Timestamp.ToString() + "," + p.Value);
       }
     }
+    /// <summary>
+    /// need epoc milliseconds 
+    /// </summary>
+    /// <param name="dateTime"></param>
+    /// <returns></returns>
     private static long ToUnixEpoch(DateTime dateTime)
     {
-      return (long)dateTime.ToUniversalTime().Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+      TimeSpan timeSpan = dateTime.Subtract(new DateTime(1970, 1, 1));
+      return (long) timeSpan.TotalMilliseconds;
     }
 
     public string ToJson(string officeID )

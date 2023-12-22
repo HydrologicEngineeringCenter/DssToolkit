@@ -22,7 +22,10 @@ namespace CwmsData.Api
       var ts = await remoteAPI.ReadTimeSeries(name, DateTime.Parse("2023-06-23T06:01:00"), DateTime.Parse("2023-06-24T06:01:00"));
       ts.WriteToConsole();
       await localAPI.SaveTimeSeries(ts);
+      Console.WriteLine("Reading back from  local source");
 
+      ts = await localAPI.ReadTimeSeries(name, DateTime.Parse("2023-06-23T06:01:00"), DateTime.Parse("2023-06-24T06:01:00"));
+      ts.WriteToConsole();
     }
 /*
  *       await Testing.CreateLocation(localAPI, "karltest");
